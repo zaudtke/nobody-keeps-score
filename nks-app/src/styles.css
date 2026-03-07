@@ -1,0 +1,85 @@
+@import "tailwindcss";
+
+@theme {
+  /* ── Felt Green (Primary) ─────────────────── */
+  --color-felt-50:  #f0faf3;
+  --color-felt-100: #d9f2e1;
+  --color-felt-200: #b3e5c5;
+  --color-felt-300: #7dd0a0;
+  --color-felt-400: #48b87a;
+  --color-felt-500: #279e5e;
+  --color-felt-600: #1a7f4b;
+  --color-felt-700: #16643c;
+  --color-felt-800: #144f30;
+  --color-felt-900: #103f26;
+  --color-felt-950: #082518;
+
+  /* ── Card Cream (Surface / Warm Neutral) ─── */
+  --color-cream-50:  #fdfcf8;
+  --color-cream-100: #f8f4ec;
+  --color-cream-200: #f0e8d4;
+  --color-cream-300: #e4d5b4;
+  --color-cream-400: #d4ba8a;
+  --color-cream-500: #c09a62;
+  --color-cream-600: #a67d48;
+  --color-cream-700: #896337;
+  --color-cream-800: #6e4e2d;
+  --color-cream-900: #573d24;
+  --color-cream-950: #311f10;
+
+  /* ── Royal Ruby (Accent / Alerts) ────────── */
+  --color-ruby-50:  #fff1f2;
+  --color-ruby-100: #ffe0e2;
+  --color-ruby-200: #ffc7ca;
+  --color-ruby-300: #ffa0a5;
+  --color-ruby-400: #ff6470;
+  --color-ruby-500: #f83b48;
+  --color-ruby-600: #e51d2b;
+  --color-ruby-700: #c01422;
+  --color-ruby-800: #9f1420;
+  --color-ruby-900: #84151f;
+  --color-ruby-950: #48060c;
+
+  /* ── Ink (Cool Dark Neutral) ─────────────── */
+  --color-ink-50:  #f6f6f7;
+  --color-ink-100: #e2e3e6;
+  --color-ink-200: #c5c7ce;
+  --color-ink-300: #9fa3af;
+  --color-ink-400: #797f8e;
+  --color-ink-500: #5e6474;
+  --color-ink-600: #4c515f;
+  --color-ink-700: #3e4250;
+  --color-ink-800: #353843;
+  --color-ink-900: #22242d;
+  --color-ink-950: #14151c;
+
+  /* ── Gold (Winner / Trophy / Highlight) ──── */
+  --color-gold-50:  #fefce8;
+  --color-gold-100: #fef9c3;
+  --color-gold-200: #fef08a;
+  --color-gold-300: #fde047;
+  --color-gold-400: #facc15;
+  --color-gold-500: #eab308;
+  --color-gold-600: #ca8a04;
+  --color-gold-700: #a16207;
+  --color-gold-800: #854d0e;
+  --color-gold-900: #713f12;
+  --color-gold-950: #3f2006;
+
+  /* ── Typography ───────────────────────────── */
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-body:    'DM Sans', sans-serif;
+}
+
+/* Dark mode variant */
+@variant dark (&:where(.dark, .dark *));
+
+/* Base styles */
+body {
+  font-family: var(--font-body);
+  @apply bg-cream-50 text-ink-900;
+}
+
+.dark body {
+  @apply bg-ink-950 text-cream-100;
+}

@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Card Game Tracker — Color Palette Explorer</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,700;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --font-display: 'Fraunces', Georgia, serif;
+    --font-body: 'DM Sans', sans-serif;
+
+    /* === FELT GREEN — Primary palette === */
+    --felt-50:  #f0faf3;
+    --felt-100: #d9f2e1;
+    --felt-200: #b3e5c5;
+    --felt-300: #7dd0a0;
+    --felt-400: #48b87a;
+    --felt-500: #279e5e;
+    --felt-600: #1a7f4b;
+    --felt-700: #16643c;
+    --felt-800: #144f30;
+    --felt-900: #103f26;
+    --felt-950: #082518;
+
+    /* === CARD CREAM — Surface / neutral palette === */
+    --cream-50:  #fdfcf8;
+    --cream-100: #f8f4ec;
+    --cream-200: #f0e8d4;
+    --cream-300: #e4d5b4;
+    --cream-400: #d4ba8a;
+    --cream-500: #c09a62;
+    --cream-600: #a67d48;
+    --cream-700: #896337;
+    --cream-800: #6e4e2d;
+    --cream-900: #573d24;
+    --cream-950: #311f10;
+
+    /* === ROYAL RUBY — Accent palette === */
+    --ruby-50:  #fff1f2;
+    --ruby-100: #ffe0e2;
+    --ruby-200: #ffc7ca;
+    --ruby-300: #ffa0a5;
+    --ruby-400: #ff6470;
+    --ruby-500: #f83b48;
+    --ruby-600: #e51d2b;
+    --ruby-700: #c01422;
+    --ruby-800: #9f1420;
+    --ruby-900: #84151f;
+    --ruby-950: #48060c;
+
+    /* === INK — Dark neutral palette === */
+    --ink-50:  #f6f6f7;
+    --ink-100: #e2e3e6;
+    --ink-200: #c5c7ce;
+    --ink-300: #9fa3af;
+    --ink-400: #797f8e;
+    --ink-500: #5e6474;
+    --ink-600: #4c515f;
+    --ink-700: #3e4250;
+    --ink-800: #353843;
+    --ink-900: #22242d;
+    --ink-950: #14151c;
+
+    /* === GOLD — Special / highlight palette === */
+    --gold-50:  #fefce8;
+    --gold-100: #fef9c3;
+    --gold-200: #fef08a;
+    --gold-300: #fde047;
+    --gold-400: #facc15;
+    --gold-500: #eab308;
+    --gold-600: #ca8a04;
+    --gold-700: #a16207;
+    --gold-800: #854d0e;
+    --gold-900: #713f12;
+    --gold-950: #3f2006;
+  }
+
+  body {
+    font-family: var(--font-body);
+    background: #f8f4ec;
+    color: #22242d;
+    min-height: 100vh;
+  }
+
+  /* ---- Layout ---- */
+  header {
+    background: linear-gradient(135deg, var(--ink-950) 0%, var(--felt-900) 100%);
+    padding: 3rem 2rem 2.5rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '♠ ♥ ♦ ♣';
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 8rem;
+    opacity: 0.04;
+    letter-spacing: 1rem;
+    pointer-events: none;
+    white-space: nowrap;
+  }
+  header h1 {
+    font-family: var(--font-display);
+    font-size: clamp(1.8rem, 5vw, 3rem);
+    font-weight: 700;
+    color: var(--cream-100);
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    position: relative;
+  }
+  header h1 em {
+    font-style: italic;
+    color: var(--gold-400);
+  }
+  header p {
+    margin-top: 0.75rem;
+    color: var(--ink-300);
+    font-size: 0.95rem;
+    font-weight: 300;
+    position: relative;
+  }
+
+  main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 2.5rem 1.5rem 4rem;
+  }
+
+  /* ---- Section labels ---- */
+  .section-label {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--ink-900);
+    margin-bottom: 1rem;
+    margin-top: 2.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--ink-200);
+    margin-left: 0.5rem;
+  }
+
+  /* ---- Palette grid ---- */
+  .palette-group {
+    margin-bottom: 2rem;
+  }
+  .palette-name {
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-500);
+    margin-bottom: 0.5rem;
+  }
+  .palette-row {
+    display: grid;
+    grid-template-columns: repeat(11, 1fr);
+    gap: 0;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+  }
+  .swatch {
+    aspect-ratio: 1 / 1.4;
+    position: relative;
+    cursor: pointer;
+    transition: transform 0.15s ease, z-index 0s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    padding-bottom: 6px;
+  }
+  .swatch:hover {
+    transform: scaleY(1.08) translateY(-3px);
+    z-index: 10;
+    border-radius: 0 0 6px 6px;
+  }
+  .swatch-label {
+    font-size: 0.55rem;
+    font-weight: 600;
+    opacity: 0;
+    transition: opacity 0.15s;
+    letter-spacing: 0.02em;
+    padding: 2px 4px;
+    border-radius: 3px;
+    background: rgba(0,0,0,0.3);
+    color: white;
+    white-space: nowrap;
+  }
+  .swatch:hover .swatch-label { opacity: 1; }
+
+  /* ---- Theme preview cards ---- */
+  .previews {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-top: 1rem;
+  }
+  @media (max-width: 700px) {
+    .previews { grid-template-columns: 1fr; }
+    .palette-row { grid-template-columns: repeat(6, 1fr); }
+    .palette-row .swatch:nth-child(n+8) { display: none; }
+  }
+
+  .theme-card {
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+    font-family: var(--font-body);
+  }
+
+  /* Light theme card */
+  .theme-light {
+    background: var(--cream-50);
+    border: 1px solid var(--cream-200);
+  }
+  .theme-light .t-topbar {
+    background: var(--felt-600);
+    padding: 1rem 1.25rem 0.9rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .theme-light .t-topbar-title {
+    font-family: var(--font-display);
+    color: var(--cream-50);
+    font-size: 1.1rem;
+    font-weight: 700;
+    font-style: italic;
+  }
+  .theme-light .t-topbar-suits {
+    color: var(--felt-300);
+    font-size: 0.85rem;
+    letter-spacing: 0.2em;
+  }
+  .theme-light .t-body { padding: 1.25rem; }
+  .theme-light .t-game-name {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--ink-800);
+    margin-bottom: 0.75rem;
+  }
+  .theme-light .t-player-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 0.75rem;
+    border-radius: 8px;
+    margin-bottom: 0.4rem;
+    background: white;
+    border: 1px solid var(--cream-200);
+  }
+  .theme-light .t-player-row.leader {
+    background: var(--felt-50);
+    border-color: var(--felt-300);
+  }
+  .theme-light .t-player-name { font-size: 0.85rem; color: var(--ink-700); font-weight: 500; }
+  .theme-light .t-player-score {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--felt-700);
+  }
+  .theme-light .t-player-row.leader .t-player-score { color: var(--felt-600); }
+  .theme-light .t-crown { color: var(--gold-500); margin-right: 4px; }
+  .theme-light .t-btn {
+    display: block;
+    width: 100%;
+    margin-top: 1rem;
+    padding: 0.6rem;
+    background: var(--felt-600);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+    letter-spacing: 0.03em;
+  }
+  .theme-light .t-badge {
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background: var(--ruby-100);
+    color: var(--ruby-700);
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+  .theme-light .t-theme-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-400);
+    text-align: center;
+    padding: 0.75rem;
+    background: var(--cream-100);
+    border-top: 1px solid var(--cream-200);
+  }
+
+  /* Dark theme card */
+  .theme-dark {
+    background: var(--ink-950);
+    border: 1px solid var(--ink-800);
+  }
+  .theme-dark .t-topbar {
+    background: var(--ink-900);
+    padding: 1rem 1.25rem 0.9rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--ink-700);
+  }
+  .theme-dark .t-topbar-title {
+    font-family: var(--font-display);
+    color: var(--cream-100);
+    font-size: 1.1rem;
+    font-weight: 700;
+    font-style: italic;
+  }
+  .theme-dark .t-topbar-suits {
+    color: var(--felt-400);
+    font-size: 0.85rem;
+    letter-spacing: 0.2em;
+  }
+  .theme-dark .t-body { padding: 1.25rem; }
+  .theme-dark .t-game-name {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--cream-200);
+    margin-bottom: 0.75rem;
+  }
+  .theme-dark .t-player-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 0.75rem;
+    border-radius: 8px;
+    margin-bottom: 0.4rem;
+    background: var(--ink-800);
+    border: 1px solid var(--ink-700);
+  }
+  .theme-dark .t-player-row.leader {
+    background: var(--felt-950);
+    border-color: var(--felt-800);
+  }
+  .theme-dark .t-player-name { font-size: 0.85rem; color: var(--ink-200); font-weight: 500; }
+  .theme-dark .t-player-score {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--felt-400);
+  }
+  .theme-dark .t-player-row.leader .t-player-score { color: var(--felt-300); }
+  .theme-dark .t-crown { color: var(--gold-400); margin-right: 4px; }
+  .theme-dark .t-btn {
+    display: block;
+    width: 100%;
+    margin-top: 1rem;
+    padding: 0.6rem;
+    background: var(--felt-600);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+    letter-spacing: 0.03em;
+  }
+  .theme-dark .t-badge {
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background: var(--ruby-950);
+    color: var(--ruby-400);
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+  .theme-dark .t-theme-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-500);
+    text-align: center;
+    padding: 0.75rem;
+    background: var(--ink-900);
+    border-top: 1px solid var(--ink-800);
+  }
+
+  /* ---- CSS Code block ---- */
+  .code-section {
+    margin-top: 2.5rem;
+  }
+  .code-wrapper {
+    background: var(--ink-950);
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.2);
+  }
+  .code-topbar {
+    background: var(--ink-800);
+    padding: 0.7rem 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .code-dots { display: flex; gap: 6px; }
+  .code-dot {
+    width: 12px; height: 12px;
+    border-radius: 50%;
+  }
+  .code-dot.red { background: var(--ruby-500); }
+  .code-dot.yellow { background: var(--gold-400); }
+  .code-dot.green { background: var(--felt-400); }
+  .code-filename {
+    font-size: 0.75rem;
+    color: var(--ink-300);
+    font-family: 'Courier New', monospace;
+  }
+  .copy-btn {
+    background: var(--felt-700);
+    color: white;
+    border: none;
+    padding: 4px 12px;
+    border-radius: 6px;
+    font-size: 0.72rem;
+    font-family: var(--font-body);
+    font-weight: 600;
+    cursor: pointer;
+    letter-spacing: 0.05em;
+    transition: background 0.15s;
+  }
+  .copy-btn:hover { background: var(--felt-500); }
+  .copy-btn.copied { background: var(--gold-600); }
+
+  pre {
+    padding: 1.5rem 1.25rem;
+    overflow-x: auto;
+    font-size: 0.78rem;
+    line-height: 1.7;
+    color: var(--ink-200);
+    font-family: 'Courier New', Consolas, monospace;
+  }
+  .c-comment { color: var(--ink-500); }
+  .c-prop { color: var(--felt-400); }
+  .c-val-green { color: var(--felt-300); }
+  .c-val-cream { color: var(--gold-300); }
+  .c-val-ruby { color: var(--ruby-400); }
+  .c-val-ink { color: var(--ink-300); }
+  .c-val-gold { color: var(--gold-400); }
+  .c-at { color: var(--ruby-400); }
+  .c-brace { color: var(--cream-300); }
+
+  /* ---- Usage note ---- */
+  .usage-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+  .usage-card {
+    background: white;
+    border: 1px solid var(--cream-200);
+    border-radius: 12px;
+    padding: 1rem 1.1rem;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+  }
+  .usage-card h4 {
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .usage-dot {
+    width: 10px; height: 10px; border-radius: 50%; display: inline-block;
+  }
+  .usage-card ul {
+    list-style: none;
+    padding: 0;
+  }
+  .usage-card li {
+    font-size: 0.82rem;
+    color: var(--ink-600);
+    padding: 3px 0;
+    border-bottom: 1px solid var(--cream-100);
+    font-family: 'Courier New', monospace;
+  }
+  .usage-card li:last-child { border-bottom: none; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Card Tracker — <em>Palette Explorer</em></h1>
+  <p>5 curated color scales for your Angular PWA · Tailwind v4 ready</p>
+</header>
+
+<main>
+
+  <!-- Palette swatches -->
+  <div class="section-label">Color Scales</div>
+
+  <!-- Felt Green -->
+  <div class="palette-group">
+    <div class="palette-name">Felt Green — Primary</div>
+    <div class="palette-row">
+      <div class="swatch" style="background:var(--felt-50)"><span class="swatch-label">50</span></div>
+      <div class="swatch" style="background:var(--felt-100)"><span class="swatch-label">100</span></div>
+      <div class="swatch" style="background:var(--felt-200)"><span class="swatch-label">200</span></div>
+      <div class="swatch" style="background:var(--felt-300)"><span class="swatch-label">300</span></div>
+      <div class="swatch" style="background:var(--felt-400)"><span class="swatch-label">400</span></div>
+      <div class="swatch" style="background:var(--felt-500)"><span class="swatch-label">500</span></div>
+      <div class="swatch" style="background:var(--felt-600)"><span class="swatch-label">600</span></div>
+      <div class="swatch" style="background:var(--felt-700)"><span class="swatch-label">700</span></div>
+      <div class="swatch" style="background:var(--felt-800)"><span class="swatch-label">800</span></div>
+      <div class="swatch" style="background:var(--felt-900)"><span class="swatch-label">900</span></div>
+      <div class="swatch" style="background:var(--felt-950)"><span class="swatch-label">950</span></div>
+    </div>
+  </div>
+
+  <!-- Card Cream -->
+  <div class="palette-group">
+    <div class="palette-name">Card Cream — Surface / Neutral Warm</div>
+    <div class="palette-row">
+      <div class="swatch" style="background:var(--cream-50)"><span class="swatch-label">50</span></div>
+      <div class="swatch" style="background:var(--cream-100)"><span class="swatch-label">100</span></div>
+      <div class="swatch" style="background:var(--cream-200)"><span class="swatch-label">200</span></div>
+      <div class="swatch" style="background:var(--cream-300)"><span class="swatch-label">300</span></div>
+      <div class="swatch" style="background:var(--cream-400)"><span class="swatch-label">400</span></div>
+      <div class="swatch" style="background:var(--cream-500)"><span class="swatch-label">500</span></div>
+      <div class="swatch" style="background:var(--cream-600)"><span class="swatch-label">600</span></div>
+      <div class="swatch" style="background:var(--cream-700)"><span class="swatch-label">700</span></div>
+      <div class="swatch" style="background:var(--cream-800)"><span class="swatch-label">800</span></div>
+      <div class="swatch" style="background:var(--cream-900)"><span class="swatch-label">900</span></div>
+      <div class="swatch" style="background:var(--cream-950)"><span class="swatch-label">950</span></div>
+    </div>
+  </div>
+
+  <!-- Royal Ruby -->
+  <div class="palette-group">
+    <div class="palette-name">Royal Ruby — Accent / Alerts / Hearts & Diamonds</div>
+    <div class="palette-row">
+      <div class="swatch" style="background:var(--ruby-50)"><span class="swatch-label">50</span></div>
+      <div class="swatch" style="background:var(--ruby-100)"><span class="swatch-label">100</span></div>
+      <div class="swatch" style="background:var(--ruby-200)"><span class="swatch-label">200</span></div>
+      <div class="swatch" style="background:var(--ruby-300)"><span class="swatch-label">300</span></div>
+      <div class="swatch" style="background:var(--ruby-400)"><span class="swatch-label">400</span></div>
+      <div class="swatch" style="background:var(--ruby-500)"><span class="swatch-label">500</span></div>
+      <div class="swatch" style="background:var(--ruby-600)"><span class="swatch-label">600</span></div>
+      <div class="swatch" style="background:var(--ruby-700)"><span class="swatch-label">700</span></div>
+      <div class="swatch" style="background:var(--ruby-800)"><span class="swatch-label">800</span></div>
+      <div class="swatch" style="background:var(--ruby-900)"><span class="swatch-label">900</span></div>
+      <div class="swatch" style="background:var(--ruby-950)"><span class="swatch-label">950</span></div>
+    </div>
+  </div>
+
+  <!-- Ink -->
+  <div class="palette-group">
+    <div class="palette-name">Ink — Cool Dark Neutral</div>
+    <div class="palette-row">
+      <div class="swatch" style="background:var(--ink-50)"><span class="swatch-label">50</span></div>
+      <div class="swatch" style="background:var(--ink-100)"><span class="swatch-label">100</span></div>
+      <div class="swatch" style="background:var(--ink-200)"><span class="swatch-label">200</span></div>
+      <div class="swatch" style="background:var(--ink-300)"><span class="swatch-label">300</span></div>
+      <div class="swatch" style="background:var(--ink-400)"><span class="swatch-label">400</span></div>
+      <div class="swatch" style="background:var(--ink-500)"><span class="swatch-label">500</span></div>
+      <div class="swatch" style="background:var(--ink-600)"><span class="swatch-label">600</span></div>
+      <div class="swatch" style="background:var(--ink-700)"><span class="swatch-label">700</span></div>
+      <div class="swatch" style="background:var(--ink-800)"><span class="swatch-label">800</span></div>
+      <div class="swatch" style="background:var(--ink-900)"><span class="swatch-label">900</span></div>
+      <div class="swatch" style="background:var(--ink-950)"><span class="swatch-label">950</span></div>
+    </div>
+  </div>
+
+  <!-- Gold -->
+  <div class="palette-group">
+    <div class="palette-name">Gold — Winner / Trophy / Highlight</div>
+    <div class="palette-row">
+      <div class="swatch" style="background:var(--gold-50)"><span class="swatch-label">50</span></div>
+      <div class="swatch" style="background:var(--gold-100)"><span class="swatch-label">100</span></div>
+      <div class="swatch" style="background:var(--gold-200)"><span class="swatch-label">200</span></div>
+      <div class="swatch" style="background:var(--gold-300)"><span class="swatch-label">300</span></div>
+      <div class="swatch" style="background:var(--gold-400)"><span class="swatch-label">400</span></div>
+      <div class="swatch" style="background:var(--gold-500)"><span class="swatch-label">500</span></div>
+      <div class="swatch" style="background:var(--gold-600)"><span class="swatch-label">600</span></div>
+      <div class="swatch" style="background:var(--gold-700)"><span class="swatch-label">700</span></div>
+      <div class="swatch" style="background:var(--gold-800)"><span class="swatch-label">800</span></div>
+      <div class="swatch" style="background:var(--gold-900)"><span class="swatch-label">900</span></div>
+      <div class="swatch" style="background:var(--gold-950)"><span class="swatch-label">950</span></div>
+    </div>
+  </div>
+
+  <!-- Theme Previews -->
+  <div class="section-label">Theme Previews</div>
+  <div class="previews">
+
+    <!-- Light -->
+    <div class="theme-card theme-light">
+      <div class="t-topbar">
+        <span class="t-topbar-title">♠ Card Tracker</span>
+        <span class="t-topbar-suits">♥ ♦ ♣</span>
+      </div>
+      <div class="t-body">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem">
+          <div class="t-game-name">Friday Night Rummy</div>
+          <span class="t-badge">Round 4</span>
+        </div>
+        <div class="t-player-row leader">
+          <span class="t-player-name"><span class="t-crown">♛</span>Sarah</span>
+          <span class="t-player-score">142</span>
+        </div>
+        <div class="t-player-row">
+          <span class="t-player-name">Marcus</span>
+          <span class="t-player-score">98</span>
+        </div>
+        <div class="t-player-row">
+          <span class="t-player-name">Priya</span>
+          <span class="t-player-score">87</span>
+        </div>
+        <div class="t-player-row">
+          <span class="t-player-name">Dave</span>
+          <span class="t-player-score">54</span>
+        </div>
+        <button class="t-btn">+ Add Round Score</button>
+      </div>
+      <div class="t-theme-label">☀ Light Theme</div>
+    </div>
+
+    <!-- Dark -->
+    <div class="theme-card theme-dark">
+      <div class="t-topbar">
+        <span class="t-topbar-title">♠ Card Tracker</span>
+        <span class="t-topbar-suits">♥ ♦ ♣</span>
+      </div>
+      <div class="t-body">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem">
+          <div class="t-game-name">Friday Night Rummy</div>
+          <span class="t-badge">Round 4</span>
+        </div>
+        <div class="t-player-row leader">
+          <span class="t-player-name"><span class="t-crown">♛</span>Sarah</span>
+          <span class="t-player-score">142</span>
+        </div>
+        <div class="t-player-row">
+          <span class="t-player-name">Marcus</span>
+          <span class="t-player-score">98</span>
+        </div>
+        <div class="t-player-row">
+          <span class="t-player-name">Priya</span>
+          <span class="t-player-score">87</span>
+        </div>
+        <div class="t-player-row">
+          <span class="t-player-name">Dave</span>
+          <span class="t-player-score">54</span>
+        </div>
+        <button class="t-btn">+ Add Round Score</button>
+      </div>
+      <div class="t-theme-label">☾ Dark Theme</div>
+    </div>
+
+  </div>
+
+  <!-- Usage Guide -->
+  <div class="section-label">Suggested Usage</div>
+  <div class="usage-grid">
+    <div class="usage-card">
+      <h4><span class="usage-dot" style="background:var(--felt-500)"></span>Felt Green</h4>
+      <ul>
+        <li>bg-felt-600 (nav/header)</li>
+        <li>bg-felt-500 (buttons)</li>
+        <li>text-felt-700 (scores)</li>
+        <li>bg-felt-50 (row hovers)</li>
+      </ul>
+    </div>
+    <div class="usage-card">
+      <h4><span class="usage-dot" style="background:var(--cream-300)"></span>Card Cream</h4>
+      <ul>
+        <li>bg-cream-50 (page bg)</li>
+        <li>bg-cream-100 (card bg)</li>
+        <li>border-cream-200</li>
+        <li>text-cream-600 (muted)</li>
+      </ul>
+    </div>
+    <div class="usage-card">
+      <h4><span class="usage-dot" style="background:var(--ruby-500)"></span>Royal Ruby</h4>
+      <ul>
+        <li>text-ruby-600 (alerts)</li>
+        <li>bg-ruby-100 (badges)</li>
+        <li>♥ ♦ suit icons</li>
+        <li>danger states</li>
+      </ul>
+    </div>
+    <div class="usage-card">
+      <h4><span class="usage-dot" style="background:var(--ink-700)"></span>Ink</h4>
+      <ul>
+        <li>bg-ink-950 (dark bg)</li>
+        <li>bg-ink-900 (dark nav)</li>
+        <li>text-ink-300 (dark body)</li>
+        <li>text-ink-600 (subtitles)</li>
+      </ul>
+    </div>
+    <div class="usage-card">
+      <h4><span class="usage-dot" style="background:var(--gold-400)"></span>Gold</h4>
+      <ul>
+        <li>text-gold-500 (winner ♛)</li>
+        <li>bg-gold-100 (highlight)</li>
+        <li>border-gold-400</li>
+        <li>trophy / 1st place</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Code Block -->
+  <div class="code-section">
+    <div class="section-label">styles.css — Drop-in @theme Block</div>
+    <div class="code-wrapper">
+      <div class="code-topbar">
+        <div class="code-dots">
+          <div class="code-dot red"></div>
+          <div class="code-dot yellow"></div>
+          <div class="code-dot green"></div>
+        </div>
+        <span class="code-filename">styles.css</span>
+        <button class="copy-btn" id="copyBtn" onclick="copyCode()">Copy</button>
+      </div>
+<pre id="codeBlock"><span class="c-at">@import</span> <span class="c-val-cream">"tailwindcss"</span>;
+
+<span class="c-at">@theme</span> <span class="c-brace">{</span>
+  <span class="c-comment">/* ── Felt Green (Primary) ─────────────────── */</span>
+  <span class="c-prop">--color-felt-50</span>:  <span class="c-val-green">#f0faf3</span>;
+  <span class="c-prop">--color-felt-100</span>: <span class="c-val-green">#d9f2e1</span>;
+  <span class="c-prop">--color-felt-200</span>: <span class="c-val-green">#b3e5c5</span>;
+  <span class="c-prop">--color-felt-300</span>: <span class="c-val-green">#7dd0a0</span>;
+  <span class="c-prop">--color-felt-400</span>: <span class="c-val-green">#48b87a</span>;
+  <span class="c-prop">--color-felt-500</span>: <span class="c-val-green">#279e5e</span>;
+  <span class="c-prop">--color-felt-600</span>: <span class="c-val-green">#1a7f4b</span>;
+  <span class="c-prop">--color-felt-700</span>: <span class="c-val-green">#16643c</span>;
+  <span class="c-prop">--color-felt-800</span>: <span class="c-val-green">#144f30</span>;
+  <span class="c-prop">--color-felt-900</span>: <span class="c-val-green">#103f26</span>;
+  <span class="c-prop">--color-felt-950</span>: <span class="c-val-green">#082518</span>;
+
+  <span class="c-comment">/* ── Card Cream (Surface / Warm Neutral) ─── */</span>
+  <span class="c-prop">--color-cream-50</span>:  <span class="c-val-cream">#fdfcf8</span>;
+  <span class="c-prop">--color-cream-100</span>: <span class="c-val-cream">#f8f4ec</span>;
+  <span class="c-prop">--color-cream-200</span>: <span class="c-val-cream">#f0e8d4</span>;
+  <span class="c-prop">--color-cream-300</span>: <span class="c-val-cream">#e4d5b4</span>;
+  <span class="c-prop">--color-cream-400</span>: <span class="c-val-cream">#d4ba8a</span>;
+  <span class="c-prop">--color-cream-500</span>: <span class="c-val-cream">#c09a62</span>;
+  <span class="c-prop">--color-cream-600</span>: <span class="c-val-cream">#a67d48</span>;
+  <span class="c-prop">--color-cream-700</span>: <span class="c-val-cream">#896337</span>;
+  <span class="c-prop">--color-cream-800</span>: <span class="c-val-cream">#6e4e2d</span>;
+  <span class="c-prop">--color-cream-900</span>: <span class="c-val-cream">#573d24</span>;
+  <span class="c-prop">--color-cream-950</span>: <span class="c-val-cream">#311f10</span>;
+
+  <span class="c-comment">/* ── Royal Ruby (Accent / Hearts & Diamonds) */</span>
+  <span class="c-prop">--color-ruby-50</span>:  <span class="c-val-ruby">#fff1f2</span>;
+  <span class="c-prop">--color-ruby-100</span>: <span class="c-val-ruby">#ffe0e2</span>;
+  <span class="c-prop">--color-ruby-200</span>: <span class="c-val-ruby">#ffc7ca</span>;
+  <span class="c-prop">--color-ruby-300</span>: <span class="c-val-ruby">#ffa0a5</span>;
+  <span class="c-prop">--color-ruby-400</span>: <span class="c-val-ruby">#ff6470</span>;
+  <span class="c-prop">--color-ruby-500</span>: <span class="c-val-ruby">#f83b48</span>;
+  <span class="c-prop">--color-ruby-600</span>: <span class="c-val-ruby">#e51d2b</span>;
+  <span class="c-prop">--color-ruby-700</span>: <span class="c-val-ruby">#c01422</span>;
+  <span class="c-prop">--color-ruby-800</span>: <span class="c-val-ruby">#9f1420</span>;
+  <span class="c-prop">--color-ruby-900</span>: <span class="c-val-ruby">#84151f</span>;
+  <span class="c-prop">--color-ruby-950</span>: <span class="c-val-ruby">#48060c</span>;
+
+  <span class="c-comment">/* ── Ink (Cool Dark Neutral) ─────────────── */</span>
+  <span class="c-prop">--color-ink-50</span>:  <span class="c-val-ink">#f6f6f7</span>;
+  <span class="c-prop">--color-ink-100</span>: <span class="c-val-ink">#e2e3e6</span>;
+  <span class="c-prop">--color-ink-200</span>: <span class="c-val-ink">#c5c7ce</span>;
+  <span class="c-prop">--color-ink-300</span>: <span class="c-val-ink">#9fa3af</span>;
+  <span class="c-prop">--color-ink-400</span>: <span class="c-val-ink">#797f8e</span>;
+  <span class="c-prop">--color-ink-500</span>: <span class="c-val-ink">#5e6474</span>;
+  <span class="c-prop">--color-ink-600</span>: <span class="c-val-ink">#4c515f</span>;
+  <span class="c-prop">--color-ink-700</span>: <span class="c-val-ink">#3e4250</span>;
+  <span class="c-prop">--color-ink-800</span>: <span class="c-val-ink">#353843</span>;
+  <span class="c-prop">--color-ink-900</span>: <span class="c-val-ink">#22242d</span>;
+  <span class="c-prop">--color-ink-950</span>: <span class="c-val-ink">#14151c</span>;
+
+  <span class="c-comment">/* ── Gold (Winner / Trophy / Highlight) ──── */</span>
+  <span class="c-prop">--color-gold-50</span>:  <span class="c-val-gold">#fefce8</span>;
+  <span class="c-prop">--color-gold-100</span>: <span class="c-val-gold">#fef9c3</span>;
+  <span class="c-prop">--color-gold-200</span>: <span class="c-val-gold">#fef08a</span>;
+  <span class="c-prop">--color-gold-300</span>: <span class="c-val-gold">#fde047</span>;
+  <span class="c-prop">--color-gold-400</span>: <span class="c-val-gold">#facc15</span>;
+  <span class="c-prop">--color-gold-500</span>: <span class="c-val-gold">#eab308</span>;
+  <span class="c-prop">--color-gold-600</span>: <span class="c-val-gold">#ca8a04</span>;
+  <span class="c-prop">--color-gold-700</span>: <span class="c-val-gold">#a16207</span>;
+  <span class="c-prop">--color-gold-800</span>: <span class="c-val-gold">#854d0e</span>;
+  <span class="c-prop">--color-gold-900</span>: <span class="c-val-gold">#713f12</span>;
+  <span class="c-prop">--color-gold-950</span>: <span class="c-val-gold">#3f2006</span>;
+<span class="c-brace">}</span></pre>
+    </div>
+  </div>
+
+</main>
+
+<script>
+function copyCode() {
+  const raw = `@import "tailwindcss";
+
+@theme {
+  /* ── Felt Green (Primary) ─────────────────── */
+  --color-felt-50:  #f0faf3;
+  --color-felt-100: #d9f2e1;
+  --color-felt-200: #b3e5c5;
+  --color-felt-300: #7dd0a0;
+  --color-felt-400: #48b87a;
+  --color-felt-500: #279e5e;
+  --color-felt-600: #1a7f4b;
+  --color-felt-700: #16643c;
+  --color-felt-800: #144f30;
+  --color-felt-900: #103f26;
+  --color-felt-950: #082518;
+
+  /* ── Card Cream (Surface / Warm Neutral) ─── */
+  --color-cream-50:  #fdfcf8;
+  --color-cream-100: #f8f4ec;
+  --color-cream-200: #f0e8d4;
+  --color-cream-300: #e4d5b4;
+  --color-cream-400: #d4ba8a;
+  --color-cream-500: #c09a62;
+  --color-cream-600: #a67d48;
+  --color-cream-700: #896337;
+  --color-cream-800: #6e4e2d;
+  --color-cream-900: #573d24;
+  --color-cream-950: #311f10;
+
+  /* ── Royal Ruby (Accent / Hearts & Diamonds) */
+  --color-ruby-50:  #fff1f2;
+  --color-ruby-100: #ffe0e2;
+  --color-ruby-200: #ffc7ca;
+  --color-ruby-300: #ffa0a5;
+  --color-ruby-400: #ff6470;
+  --color-ruby-500: #f83b48;
+  --color-ruby-600: #e51d2b;
+  --color-ruby-700: #c01422;
+  --color-ruby-800: #9f1420;
+  --color-ruby-900: #84151f;
+  --color-ruby-950: #48060c;
+
+  /* ── Ink (Cool Dark Neutral) ─────────────── */
+  --color-ink-50:  #f6f6f7;
+  --color-ink-100: #e2e3e6;
+  --color-ink-200: #c5c7ce;
+  --color-ink-300: #9fa3af;
+  --color-ink-400: #797f8e;
+  --color-ink-500: #5e6474;
+  --color-ink-600: #4c515f;
+  --color-ink-700: #3e4250;
+  --color-ink-800: #353843;
+  --color-ink-900: #22242d;
+  --color-ink-950: #14151c;
+
+  /* ── Gold (Winner / Trophy / Highlight) ──── */
+  --color-gold-50:  #fefce8;
+  --color-gold-100: #fef9c3;
+  --color-gold-200: #fef08a;
+  --color-gold-300: #fde047;
+  --color-gold-400: #facc15;
+  --color-gold-500: #eab308;
+  --color-gold-600: #ca8a04;
+  --color-gold-700: #a16207;
+  --color-gold-800: #854d0e;
+  --color-gold-900: #713f12;
+  --color-gold-950: #3f2006;
+}`;
+  navigator.clipboard.writeText(raw).then(() => {
+    const btn = document.getElementById('copyBtn');
+    btn.textContent = '✓ Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+</script>
+
+</body>
+</html>
