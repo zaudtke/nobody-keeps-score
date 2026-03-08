@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NKS — Home Screen Mockup v3</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,700;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-body: 'DM Sans', sans-serif;
+
+  --felt-50:  #f0faf3; --felt-100: #d9f2e1; --felt-200: #b3e5c5;
+  --felt-300: #7dd0a0; --felt-400: #48b87a; --felt-500: #279e5e;
+  --felt-600: #1a7f4b; --felt-700: #16643c; --felt-800: #144f30;
+  --felt-900: #103f26; --felt-950: #082518;
+
+  --cream-50: #fdfcf8; --cream-100: #f8f4ec; --cream-200: #f0e8d4;
+  --cream-300: #e4d5b4; --cream-400: #d4ba8a; --cream-500: #c09a62;
+  --cream-600: #a67d48; --cream-700: #896337; --cream-800: #6e4e2d;
+  --cream-900: #573d24; --cream-950: #311f10;
+
+  --ruby-50:  #fff1f2; --ruby-100: #ffe0e2; --ruby-200: #ffc7ca;
+  --ruby-300: #ffa0a5; --ruby-400: #ff6470; --ruby-500: #f83b48;
+  --ruby-600: #e51d2b; --ruby-700: #c01422; --ruby-800: #9f1420;
+  --ruby-900: #84151f; --ruby-950: #48060c;
+
+  --ink-50:  #f6f6f7; --ink-100: #e2e3e6; --ink-200: #c5c7ce;
+  --ink-300: #9fa3af; --ink-400: #797f8e; --ink-500: #5e6474;
+  --ink-600: #4c515f; --ink-700: #3e4250; --ink-800: #353843;
+  --ink-900: #22242d; --ink-950: #14151c;
+
+  --gold-50:  #fefce8; --gold-100: #fef9c3; --gold-200: #fef08a;
+  --gold-300: #fde047; --gold-400: #facc15; --gold-500: #eab308;
+  --gold-600: #ca8a04; --gold-700: #a16207; --gold-800: #854d0e;
+  --gold-900: #713f12; --gold-950: #3f2006;
+}
+
+/* ── Page Shell ─────────────────────────────────────────── */
+body {
+  font-family: var(--font-body);
+  background: #12121a;
+  color: var(--ink-100);
+  min-height: 100vh;
+  padding: 2rem 1rem 5rem;
+}
+.page-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 4vw, 2rem);
+  font-weight: 700;
+  color: var(--cream-100);
+  text-align: center;
+  margin-bottom: 0.2rem;
+}
+.page-title em { color: var(--gold-400); font-style: italic; }
+.page-sub {
+  text-align: center;
+  color: var(--ink-500);
+  font-size: 0.8rem;
+  margin-bottom: 2rem;
+  font-weight: 300;
+}
+
+/* ── State Nav ──────────────────────────────────────────── */
+.state-nav {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 1.25rem;
+}
+.state-nav button {
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 500;
+  padding: 0.4rem 0.85rem;
+  border-radius: 999px;
+  border: 1.5px solid var(--ink-700);
+  background: transparent;
+  color: var(--ink-400);
+  cursor: pointer;
+  transition: all 0.18s;
+}
+.state-nav button:hover { border-color: var(--felt-500); color: var(--felt-300); }
+.state-nav button.active { background: var(--felt-600); border-color: var(--felt-600); color: white; }
+
+/* ── Theme Toggle ───────────────────────────────────────── */
+.theme-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-bottom: 2rem;
+  font-size: 0.78rem;
+  color: var(--ink-500);
+}
+.toggle-pill {
+  width: 44px; height: 24px;
+  background: var(--ink-700);
+  border-radius: 999px;
+  position: relative;
+  cursor: pointer;
+  transition: background 0.2s;
+  border: none;
+}
+.toggle-pill.light { background: var(--felt-500); }
+.toggle-pill::after {
+  content: '';
+  position: absolute;
+  top: 3px; left: 3px;
+  width: 18px; height: 18px;
+  background: white;
+  border-radius: 50%;
+  transition: transform 0.2s;
+}
+.toggle-pill.light::after { transform: translateX(20px); }
+
+/* ── Phone Stage ────────────────────────────────────────── */
+.phone-stage {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 2.5rem;
+  flex-wrap: wrap;
+}
+.phone-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.55rem;
+}
+.phone-label {
+  font-size: 0.7rem;
+  color: var(--ink-600);
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+.phone-frame {
+  width: 320px;
+  height: 568px;
+  background: #0a0a10;
+  border-radius: 44px;
+  border: 6px solid #252530;
+  box-shadow:
+    0 0 0 1px #35354a,
+    0 28px 90px rgba(0,0,0,0.75),
+    inset 0 0 0 1px #080810;
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.phone-frame::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 50%;
+  transform: translateX(-50%);
+  width: 120px; height: 22px;
+  background: #0a0a10;
+  border-radius: 0 0 14px 14px;
+  z-index: 100;
+}
+.phone-frame::after {
+  content: '';
+  position: absolute;
+  bottom: 8px; left: 50%;
+  transform: translateX(-50%);
+  width: 80px; height: 4px;
+  background: rgba(255,255,255,0.18);
+  border-radius: 999px;
+  z-index: 100;
+}
+.phone-screen {
+  width: 100%; height: 100%;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Status Bar ─────────────────────────────────────────── */
+.status-bar {
+  height: 28px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding: 0 16px 4px;
+  font-size: 0.65rem;
+  font-weight: 600;
+  position: relative;
+  z-index: 10;
+  flex-shrink: 0;
+}
+.status-time { font-size: 0.72rem; letter-spacing: -0.01em; }
+.status-icons { display: flex; align-items: center; gap: 4px; font-size: 0.6rem; }
+
+/* ── Screen Content ─────────────────────────────────────── */
+.screen-content {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.scrollable {
+  overflow-y: auto;
+  flex: 1;
+  scrollbar-width: none;
+  padding-bottom: 20px;
+}
+.scrollable::-webkit-scrollbar { display: none; }
+
+/* ── App Bar ────────────────────────────────────────────── */
+.app-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  flex-shrink: 0;
+}
+.app-bar-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1rem;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+}
+.app-bar-title small {
+  display: block;
+  font-family: var(--font-body);
+  font-size: 0.58rem;
+  font-weight: 300;
+  letter-spacing: 0.04em;
+  opacity: 0.65;
+}
+.icon-btn {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.85rem;
+  border: none;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.host-avatar {
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  flex-shrink: 0;
+  border: 2px solid;
+}
+
+/* ══════════════════════════════════════════════════════════
+   SHARED COMPONENTS
+══════════════════════════════════════════════════════════ */
+
+/* Hero */
+.hero {
+  position: relative;
+  overflow: hidden;
+  padding: 28px 20px 22px;
+  text-align: center;
+}
+.hero-suits {
+  font-size: 1.1rem;
+  letter-spacing: 0.18em;
+  margin-bottom: 10px;
+  position: relative;
+}
+.hero-title {
+  font-family: var(--font-display);
+  font-size: 1.55rem;
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+  margin-bottom: 6px;
+  position: relative;
+}
+.hero-title em { font-style: italic; font-weight: 400; color: var(--gold-400); }
+.hero-tagline {
+  font-size: 0.72rem;
+  font-weight: 300;
+  letter-spacing: 0.03em;
+  position: relative;
+}
+
+/* Description */
+.desc-blurb {
+  padding: 0 18px;
+  margin-bottom: 14px;
+  text-align: center;
+}
+.desc-text {
+  font-size: 0.75rem;
+  line-height: 1.55;
+  font-weight: 400;
+}
+
+/* Games grid */
+.games-section { padding: 0 14px; margin-bottom: 16px; }
+.games-label {
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  text-align: center;
+}
+.games-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.game-chip {
+  border-radius: 10px;
+  padding: 9px 10px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.game-chip.full { grid-column: 1 / -1; }
+.game-chip-icon { font-size: 1rem; flex-shrink: 0; line-height: 1; }
+.game-chip-name { font-size: 0.72rem; font-weight: 600; line-height: 1.2; }
+.game-chip-tag { font-size: 0.58rem; font-weight: 400; line-height: 1; display: block; margin-top: 1px; }
+
+/* Hairline */
+.hairline { height: 1px; margin: 0 16px 16px; }
+
+/* Google Sign-In */
+.sign-in-area { padding: 0 14px; }
+.btn-google {
+  width: 100%;
+  padding: 11px 16px;
+  border-radius: 10px;
+  border: 1.5px solid;
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: transparent;
+  transition: all 0.15s;
+}
+.google-logo { width: 16px; height: 16px; flex-shrink: 0; }
+.sign-in-hint {
+  text-align: center;
+  font-size: 0.62rem;
+  margin-top: 7px;
+}
+
+/* Authenticated hero */
+.auth-hero {
+  padding: 20px 18px 16px;
+  position: relative;
+  overflow: hidden;
+}
+.auth-greeting {
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 2px;
+}
+.auth-name {
+  font-family: var(--font-display);
+  font-size: 1.45rem;
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  position: relative;
+}
+.auth-suits {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.6rem;
+  line-height: 1;
+  letter-spacing: -0.05em;
+}
+
+/* Start CTA */
+.start-area { padding: 4px 14px 0; }
+.btn-start {
+  width: 100%;
+  padding: 15px 16px;
+  border-radius: 12px;
+  border: none;
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  letter-spacing: -0.01em;
+  position: relative;
+  overflow: hidden;
+  transition: opacity 0.15s;
+  background: linear-gradient(135deg, var(--felt-600) 0%, var(--felt-700) 100%);
+  color: white;
+}
+.btn-start::after {
+  content: '♣';
+  position: absolute;
+  right: 16px;
+  font-size: 2rem;
+  opacity: 0.12;
+  line-height: 1;
+}
+.start-hint { text-align: center; font-size: 0.63rem; margin-top: 7px; }
+
+/* Games pills */
+.games-compact { padding: 16px 14px 0; }
+.games-compact-label {
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.games-row { display: flex; gap: 5px; flex-wrap: wrap; }
+.game-pill {
+  padding: 4px 9px;
+  border-radius: 999px;
+  font-size: 0.65rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Sign out */
+.sign-out-row {
+  padding: 20px 14px 0;
+  display: flex;
+  justify-content: center;
+}
+.btn-sign-out {
+  font-family: var(--font-body);
+  font-size: 0.68rem;
+  font-weight: 500;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* ══════════════════════════════════════════════════════════
+   UNAUTHORISED SCREEN  /unauthorized
+══════════════════════════════════════════════════════════ */
+.unauth-screen {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 20px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Subtle ruby glow — wrong place, warm but closed */
+.theme-dark .unauth-screen::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 70% 50% at 50% 40%, rgba(159,20,32,0.12) 0%, transparent 70%);
+  pointer-events: none;
+}
+.theme-light .unauth-screen::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 70% 50% at 50% 40%, rgba(159,20,32,0.06) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.unauth-icon {
+  font-size: 2.8rem;
+  margin-bottom: 16px;
+  line-height: 1;
+  position: relative;
+}
+
+.unauth-title {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  margin-bottom: 10px;
+  position: relative;
+}
+
+.unauth-body {
+  font-size: 0.78rem;
+  line-height: 1.6;
+  font-weight: 400;
+  margin-bottom: 28px;
+  position: relative;
+  max-width: 240px;
+}
+
+.btn-try-again {
+  width: 100%;
+  padding: 11px 16px;
+  border-radius: 10px;
+  border: 1.5px solid;
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: transparent;
+  transition: all 0.15s;
+  position: relative;
+}
+
+.unauth-nks-sig {
+  position: absolute;
+  bottom: 28px;
+  left: 0; right: 0;
+  text-align: center;
+  font-family: var(--font-display);
+  font-size: 0.68rem;
+  font-weight: 300;
+  font-style: italic;
+  letter-spacing: 0.03em;
+}
+
+/* ══════════════════════════════════════════════════════════
+   THEME
+══════════════════════════════════════════════════════════ */
+
+/* Dark */
+.theme-dark .status-bar { background: var(--ink-950); color: var(--ink-300); }
+.theme-dark .screen-content { background: var(--ink-950); color: var(--ink-100); }
+.theme-dark .app-bar { background: var(--ink-900); }
+.theme-dark .app-bar-title { color: var(--cream-100); }
+.theme-dark .icon-btn { background: rgba(255,255,255,0.07); color: var(--ink-300); }
+.theme-dark .host-avatar { background: rgba(161,98,7,0.2); border-color: rgba(234,179,8,0.4); color: var(--gold-400); }
+.theme-dark .hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 80% 60% at 50% 30%, rgba(26,127,75,0.18) 0%, transparent 70%);
+  pointer-events: none;
+}
+.theme-dark .hero-suits { color: rgba(71,184,122,0.45); }
+.theme-dark .hero-title { color: var(--cream-100); }
+.theme-dark .hero-tagline { color: var(--ink-500); }
+.theme-dark .desc-text { color: var(--ink-400); }
+.theme-dark .games-label { color: var(--ink-600); }
+.theme-dark .game-chip { background: var(--ink-800); border: 1px solid rgba(255,255,255,0.05); }
+.theme-dark .game-chip-name { color: var(--ink-200); }
+.theme-dark .game-chip-tag { color: var(--ink-600); }
+.theme-dark .hairline { background: rgba(255,255,255,0.06); }
+.theme-dark .btn-google { border-color: var(--ink-600); color: var(--ink-100); }
+.theme-dark .sign-in-hint { color: var(--ink-700); }
+.theme-dark .auth-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 100% 80% at 10% 50%, rgba(26,127,75,0.12) 0%, transparent 65%);
+  pointer-events: none;
+}
+.theme-dark .auth-greeting { color: var(--felt-400); }
+.theme-dark .auth-name { color: var(--cream-100); }
+.theme-dark .auth-suits { color: rgba(71,184,122,0.2); }
+.theme-dark .btn-start { box-shadow: 0 4px 20px rgba(26,127,75,0.35); }
+.theme-dark .start-hint { color: var(--ink-700); }
+.theme-dark .games-compact-label { color: var(--ink-600); }
+.theme-dark .game-pill { background: var(--ink-800); color: var(--felt-300); border: 1px solid rgba(255,255,255,0.05); }
+.theme-dark .btn-sign-out { color: var(--ink-600); }
+/* Unauthorised — dark */
+.theme-dark .unauth-title { color: var(--cream-100); }
+.theme-dark .unauth-body { color: var(--ink-400); }
+.theme-dark .btn-try-again { border-color: var(--ink-600); color: var(--ink-300); }
+.theme-dark .unauth-nks-sig { color: var(--ink-700); }
+
+/* Light */
+.theme-light .status-bar { background: var(--felt-600); color: var(--cream-100); }
+.theme-light .screen-content { background: var(--cream-50); color: var(--ink-900); }
+.theme-light .app-bar { background: var(--felt-600); }
+.theme-light .app-bar-title { color: var(--cream-100); }
+.theme-light .icon-btn { background: rgba(255,255,255,0.15); color: white; }
+.theme-light .host-avatar { background: var(--gold-100); border-color: var(--gold-300); color: var(--gold-700); }
+.theme-light .hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 80% 60% at 50% 30%, rgba(26,127,75,0.10) 0%, transparent 70%);
+  pointer-events: none;
+}
+.theme-light .hero-suits { color: rgba(26,127,75,0.35); }
+.theme-light .hero-title { color: var(--ink-900); }
+.theme-light .hero-tagline { color: var(--ink-400); }
+.theme-light .desc-text { color: var(--ink-500); }
+.theme-light .games-label { color: var(--ink-400); }
+.theme-light .game-chip { background: white; border: 1px solid var(--cream-200); box-shadow: 0 1px 4px rgba(0,0,0,0.05); }
+.theme-light .game-chip-name { color: var(--ink-700); }
+.theme-light .game-chip-tag { color: var(--ink-400); }
+.theme-light .hairline { background: var(--cream-200); }
+.theme-light .btn-google { border-color: var(--cream-300); color: var(--ink-800); background: white; box-shadow: 0 1px 4px rgba(0,0,0,0.07); }
+.theme-light .sign-in-hint { color: var(--ink-400); }
+.theme-light .auth-greeting { color: var(--felt-600); }
+.theme-light .auth-name { color: var(--ink-900); }
+.theme-light .auth-suits { color: rgba(26,127,75,0.12); }
+.theme-light .btn-start { box-shadow: 0 4px 16px rgba(26,127,75,0.25); }
+.theme-light .start-hint { color: var(--ink-400); }
+.theme-light .games-compact-label { color: var(--ink-400); }
+.theme-light .game-pill { background: var(--felt-50); color: var(--felt-700); border: 1px solid var(--felt-100); }
+.theme-light .btn-sign-out { color: var(--ink-400); }
+/* Unauthorised — light */
+.theme-light .unauth-title { color: var(--ink-900); }
+.theme-light .unauth-body { color: var(--ink-500); }
+.theme-light .btn-try-again { border-color: var(--cream-300); color: var(--ink-600); background: white; }
+.theme-light .unauth-nks-sig { color: var(--ink-300); }
+
+/* ── Screen View Toggle ─────────────────────────────────── */
+.screen-view { display: none; }
+.screen-view.active { display: block; }
+
+/* ── Annotations ────────────────────────────────────────── */
+.annotations {
+  max-width: 720px;
+  margin: 2.5rem auto 0;
+  background: rgba(255,255,255,0.025);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 16px;
+  padding: 1.5rem;
+  display: none;
+}
+.annotations.visible { display: block; }
+.annotations h3 {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  color: var(--cream-200);
+  margin-bottom: 1rem;
+}
+.annotation-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+.annotation-list li {
+  font-size: 0.82rem;
+  color: var(--ink-400);
+  line-height: 1.55;
+  padding-left: 1.1rem;
+  position: relative;
+}
+.annotation-list li::before { content: '→'; position: absolute; left: 0; color: var(--felt-500); }
+.annotation-list li strong { color: var(--cream-300); }
+.annotation-list li code {
+  font-family: 'Courier New', monospace;
+  font-size: 0.75rem;
+  background: rgba(255,255,255,0.06);
+  padding: 1px 5px;
+  border-radius: 4px;
+  color: var(--felt-300);
+}
+</style>
+</head>
+<body>
+
+<h1 class="page-title">Nobody's Keeping Score <em>♠</em></h1>
+<p class="page-sub">Home Screen v3 · 3 states + /unauthorized · iPhone SE (375 × 667)</p>
+
+<!-- State Nav -->
+<div class="state-nav">
+  <button class="active" onclick="showState('unauth')">① Unauthenticated</button>
+  <button onclick="showState('auth')">② Host — Signed In</button>
+  <button onclick="showState('denied')">③ Unauthorised · /unauthorized</button>
+</div>
+
+<!-- Theme Toggle -->
+<div class="theme-row">
+  <span>Dark</span>
+  <button class="toggle-pill" id="themeToggle" onclick="toggleTheme()"></button>
+  <span>Light</span>
+</div>
+
+
+<!-- ══════════════════ ① UNAUTHENTICATED ══════════════════ -->
+<div class="screen-view active phone-stage" id="state-unauth">
+  <div class="phone-wrapper">
+    <div class="phone-label">Home · / · Unauthenticated</div>
+    <div class="phone-frame">
+      <div class="phone-screen theme-dark" id="phone-unauth">
+        <div class="status-bar">
+          <span class="status-time">9:41</span>
+          <div class="status-icons">▲▲▲ ◉ ▐▐</div>
+        </div>
+        <div class="screen-content">
+          <div class="app-bar">
+            <div class="app-bar-title">NKS <small>Nobody's Keeping Score</small></div>
+            <button class="icon-btn">☾</button>
+          </div>
+          <div class="scrollable">
+            <div class="hero">
+              <div class="hero-suits">♠ ♥ ♦ ♣</div>
+              <div class="hero-title">Nobody's<br>Keeping <em>Score</em></div>
+              <div class="hero-tagline">Not that anyone's counting</div>
+            </div>
+            <div class="desc-blurb">
+              <p class="desc-text">A personal scorekeeper for card game nights — fast to start, simple to track, satisfying to settle.</p>
+            </div>
+            <div class="games-section">
+              <div class="games-label">Supported Games</div>
+              <div class="games-grid">
+                <div class="game-chip">
+                  <span class="game-chip-icon">♣</span>
+                  <div>
+                    <span class="game-chip-name">Dirty Clubs</span>
+                    <span class="game-chip-tag">Trump trick-taking</span>
+                  </div>
+                </div>
+                <div class="game-chip">
+                  <span class="game-chip-icon">🃏</span>
+                  <div>
+                    <span class="game-chip-name">Canasta</span>
+                    <span class="game-chip-tag">Meld &amp; draw</span>
+                  </div>
+                </div>
+                <div class="game-chip">
+                  <span class="game-chip-icon">👑</span>
+                  <div>
+                    <span class="game-chip-name">5 Crowns</span>
+                    <span class="game-chip-tag">Rummy variant</span>
+                  </div>
+                </div>
+                <div class="game-chip">
+                  <span class="game-chip-icon">✏️</span>
+                  <div>
+                    <span class="game-chip-name">Open Scoring</span>
+                    <span class="game-chip-tag">Any game</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="hairline"></div>
+            <div class="sign-in-area">
+              <button class="btn-google">
+                <svg class="google-logo" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                  <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                  <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
+                  <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.47 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+                </svg>
+                Sign in with Google
+              </button>
+              <div class="sign-in-hint">Host access only · Private use</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════ ② HOST SIGNED IN ══════════════════════ -->
+<div class="screen-view phone-stage" id="state-auth">
+  <div class="phone-wrapper">
+    <div class="phone-label">Home · / · Host Signed In</div>
+    <div class="phone-frame">
+      <div class="phone-screen theme-dark" id="phone-auth">
+        <div class="status-bar">
+          <span class="status-time">9:41</span>
+          <div class="status-icons">▲▲▲ ◉ ▐▐</div>
+        </div>
+        <div class="screen-content">
+          <div class="app-bar">
+            <div class="app-bar-title">NKS <small>Nobody's Keeping Score</small></div>
+            <div class="host-avatar">M</div>
+          </div>
+          <div class="scrollable">
+            <div class="auth-hero">
+              <div class="auth-greeting">Good evening</div>
+              <div class="auth-name">Maureen</div>
+              <div class="auth-suits">♠♣</div>
+            </div>
+            <div class="start-area">
+              <button class="btn-start">🃏 &nbsp;Start Game Night</button>
+              <div class="start-hint">Routes to Game Setup</div>
+            </div>
+            <div class="games-compact">
+              <div class="games-compact-label">Available Games</div>
+              <div class="games-row">
+                <span class="game-pill">♣ Dirty Clubs</span>
+                <span class="game-pill">🃏 Canasta</span>
+                <span class="game-pill">👑 5 Crowns</span>
+                <span class="game-pill">✏️ Open</span>
+              </div>
+            </div>
+            <div class="sign-out-row">
+              <button class="btn-sign-out">Sign out</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════ ③ UNAUTHORISED ════════════════════════ -->
+<div class="screen-view phone-stage" id="state-denied">
+  <div class="phone-wrapper">
+    <div class="phone-label">Unauthorized · /unauthorized</div>
+    <div class="phone-frame">
+      <div class="phone-screen theme-dark" id="phone-denied">
+        <div class="status-bar">
+          <span class="status-time">9:41</span>
+          <div class="status-icons">▲▲▲ ◉ ▐▐</div>
+        </div>
+        <div class="screen-content">
+          <!-- Minimal app bar — no host controls, no avatar -->
+          <div class="app-bar">
+            <div class="app-bar-title">NKS <small>Nobody's Keeping Score</small></div>
+            <button class="icon-btn">☾</button>
+          </div>
+
+          <!-- Centred, vertically balanced unauthorised message -->
+          <div class="unauth-screen">
+            <div class="unauth-icon">🃏</div>
+            <div class="unauth-title">This app is for<br>private use</div>
+            <div class="unauth-body">You've signed in with a Google account that doesn't have access to this app.</div>
+            <button class="btn-try-again" style="max-width: 220px;">
+              <svg class="google-logo" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
+                <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.47 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+              </svg>
+              Try a different account
+            </button>
+            <div class="unauth-nks-sig">Nobody's Keeping Score</div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════ ANNOTATIONS ═══════════════════════════ -->
+<div class="annotations visible" id="ann-unauth">
+  <h3>① Unauthenticated — Design Notes</h3>
+  <ul class="annotation-list">
+    <li><strong>Single action:</strong> The entire screen leads to one outcome — Sign in with Google. Everything above it is context, not navigation.</li>
+    <li><strong>App description:</strong> One sentence, centred, muted. Sets the purpose without over-explaining. "Fast to start, simple to track, satisfying to settle."</li>
+    <li><strong>Games grid:</strong> 2×2 — all four games equal size. Informational only, not tappable here. Icon + name + genre descriptor gives just enough context without detailing rules.</li>
+    <li><strong>Google Sign-In button:</strong> Outlined style with real Google G logo SVG. Not a filled primary button — this is a personal app, not a conversion funnel. Hint text "Host access only · Private use" signals the intent without being alarming.</li>
+    <li><strong>Auth flow:</strong> On tap → Firebase Google OAuth popup → on success, app queries <code>authorisedUsers/{uid}</code> in Firestore → if found, route to <code>/</code> (authenticated state) → if not found, sign out Firebase user and route to <code>/unauthorized</code>.</li>
+  </ul>
+</div>
+
+<div class="annotations" id="ann-auth">
+  <h3>② Host Signed In — Design Notes</h3>
+  <ul class="annotation-list">
+    <li><strong>Host avatar in app bar:</strong> First initial of the Google display name, gold ring. Replaces the theme toggle — signals authenticated state persistently without a text label.</li>
+    <li><strong>Personal greeting:</strong> Time-aware (morning / afternoon / evening) + first name from Google profile. Warm and personal — this is always the same one user.</li>
+    <li><strong>Start Game Night:</strong> The singular CTA. Large Fraunces button with green gradient and a ghosted ♣ watermark. Routes to Game Setup. Nothing else competes for attention.</li>
+    <li><strong>Games pill row:</strong> Compact secondary reference — all four games at a glance before entering setup. Not a navigation element.</li>
+    <li><strong>Sign out:</strong> Small, muted, below the fold on iPhone SE. Present but unobtrusive — won't be tapped accidentally.</li>
+    <li><strong>No session history:</strong> Deliberately omitted for v1. Firestore stores session data but there is no archive UI in this release.</li>
+  </ul>
+</div>
+
+<div class="annotations" id="ann-denied">
+  <h3>③ Unauthorised · /unauthorized — Design Notes</h3>
+  <ul class="annotation-list">
+    <li><strong>Separate route:</strong> Alice lands at <code>/unauthorized</code> — not the home screen. The app bar is minimal (no host controls, no avatar). She knows she's in the wrong place.</li>
+    <li><strong>Tone — friendly and vague:</strong> "This app is for private use" — no technical detail, no "you have been denied", no mention of allowlists or Firestore. Warm but final.</li>
+    <li><strong>Card suit icon:</strong> 🃏 rather than a lock or error symbol — maintains the app's personality even in an error state. Not alarming.</li>
+    <li><strong>Try a different account:</strong> The only action available. Outlined button with Google logo — triggers a fresh Google sign-in popup, which re-runs the full auth + Firestore check flow. Firebase user from the failed attempt is signed out before this screen renders.</li>
+    <li><strong>NKS signature:</strong> "Nobody's Keeping Score" in small italic Fraunces at the bottom — a quiet brand echo. Reinforces that this is an intentional, designed app, not a broken one.</li>
+    <li><strong>Auth flow on this screen:</strong> On "Try a different account" tap → <code>signOut()</code> then re-trigger Google OAuth → same <code>authorisedUsers</code> check → authorised routes to <code>/</code>, unauthorised loops back to <code>/unauthorized</code>.</li>
+  </ul>
+</div>
+
+<script>
+let isDark = true;
+
+function showState(name) {
+  document.querySelectorAll('.screen-view').forEach(el => el.classList.remove('active'));
+  document.getElementById('state-' + name).classList.add('active');
+  const btns = document.querySelectorAll('.state-nav button');
+  const map = { unauth: 0, auth: 1, denied: 2 };
+  btns.forEach((b, i) => b.classList.toggle('active', i === map[name]));
+  document.querySelectorAll('.annotations').forEach(el => el.classList.remove('visible'));
+  document.getElementById('ann-' + name).classList.add('visible');
+  applyTheme();
+}
+
+function applyTheme() {
+  document.querySelectorAll('.phone-screen').forEach(p => {
+    p.classList.remove('theme-light', 'theme-dark');
+    p.classList.add(isDark ? 'theme-dark' : 'theme-light');
+  });
+}
+
+function toggleTheme() {
+  isDark = !isDark;
+  document.getElementById('themeToggle').classList.toggle('light', !isDark);
+  applyTheme();
+}
+
+applyTheme();
+</script>
+</body>
+</html>
