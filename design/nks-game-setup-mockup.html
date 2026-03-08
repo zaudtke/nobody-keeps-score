@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NKS — Game Setup Mockup v2</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,700;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-body: 'DM Sans', sans-serif;
+
+  --felt-50:  #f0faf3; --felt-100: #d9f2e1; --felt-200: #b3e5c5;
+  --felt-300: #7dd0a0; --felt-400: #48b87a; --felt-500: #279e5e;
+  --felt-600: #1a7f4b; --felt-700: #16643c; --felt-800: #144f30;
+  --felt-900: #103f26; --felt-950: #082518;
+
+  --cream-50: #fdfcf8; --cream-100: #f8f4ec; --cream-200: #f0e8d4;
+  --cream-300: #e4d5b4; --cream-400: #d4ba8a;
+
+  --ruby-50:  #fff1f2; --ruby-100: #ffe0e2;
+  --ruby-400: #ff6470; --ruby-500: #f83b48; --ruby-600: #e51d2b;
+
+  --ink-50:  #f6f6f7; --ink-100: #e2e3e6; --ink-200: #c5c7ce;
+  --ink-300: #9fa3af; --ink-400: #797f8e; --ink-500: #5e6474;
+  --ink-600: #4c515f; --ink-700: #3e4250; --ink-800: #353843;
+  --ink-900: #22242d; --ink-950: #14151c;
+
+  --gold-400: #facc15; --gold-500: #eab308; --gold-600: #ca8a04;
+
+  --amber-400: #fbbf24; --amber-500: #f59e0b; --amber-600: #d97706;
+  --amber-900: #451a03;
+}
+
+/* ── Page Shell ─────────────────────────────────────────── */
+body { font-family: var(--font-body); background: #12121a; color: var(--ink-100); min-height: 100vh; padding: 2rem 1rem 5rem; }
+.page-title { font-family: var(--font-display); font-size: clamp(1.3rem, 4vw, 1.9rem); font-weight: 700; color: var(--cream-100); text-align: center; margin-bottom: 0.2rem; }
+.page-title em { color: var(--gold-400); font-style: italic; }
+.page-sub { text-align: center; color: var(--ink-500); font-size: 0.8rem; margin-bottom: 2rem; font-weight: 300; }
+
+/* ── State Nav ──────────────────────────────────────────── */
+.state-nav { display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap; margin-bottom: 1.25rem; }
+.state-nav button { font-family: var(--font-body); font-size: 0.78rem; font-weight: 500; padding: 0.4rem 0.85rem; border-radius: 999px; border: 1.5px solid var(--ink-700); background: transparent; color: var(--ink-400); cursor: pointer; transition: all 0.18s; }
+.state-nav button:hover { border-color: var(--felt-500); color: var(--felt-300); }
+.state-nav button.active { background: var(--felt-600); border-color: var(--felt-600); color: white; }
+
+/* ── Theme Toggle ───────────────────────────────────────── */
+.theme-row { display: flex; align-items: center; justify-content: center; gap: 0.75rem; margin-bottom: 2rem; font-size: 0.78rem; color: var(--ink-500); }
+.toggle-pill { width: 44px; height: 24px; background: var(--ink-700); border-radius: 999px; position: relative; cursor: pointer; transition: background 0.2s; border: none; }
+.toggle-pill.light { background: var(--felt-500); }
+.toggle-pill::after { content: ''; position: absolute; top: 3px; left: 3px; width: 18px; height: 18px; background: white; border-radius: 50%; transition: transform 0.2s; }
+.toggle-pill.light::after { transform: translateX(20px); }
+
+/* ── Phone Stage ────────────────────────────────────────── */
+.phone-stage { display: flex; justify-content: center; align-items: flex-start; gap: 2.5rem; flex-wrap: wrap; }
+.phone-wrapper { display: flex; flex-direction: column; align-items: center; gap: 0.55rem; }
+.phone-label { font-size: 0.7rem; color: var(--ink-600); letter-spacing: 0.07em; text-transform: uppercase; font-weight: 500; }
+.phone-frame { width: 320px; height: 568px; background: #0a0a10; border-radius: 44px; border: 6px solid #252530; box-shadow: 0 0 0 1px #35354a, 0 28px 90px rgba(0,0,0,0.75), inset 0 0 0 1px #080810; position: relative; overflow: hidden; flex-shrink: 0; }
+.phone-frame::before { content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 120px; height: 22px; background: #0a0a10; border-radius: 0 0 14px 14px; z-index: 100; }
+.phone-frame::after { content: ''; position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); width: 80px; height: 4px; background: rgba(255,255,255,0.18); border-radius: 999px; z-index: 100; }
+.phone-screen { width: 100%; height: 100%; overflow: hidden; position: relative; display: flex; flex-direction: column; }
+
+/* ── Status Bar ─────────────────────────────────────────── */
+.status-bar { height: 28px; display: flex; align-items: flex-end; justify-content: space-between; padding: 0 16px 4px; font-size: 0.65rem; font-weight: 600; position: relative; z-index: 10; flex-shrink: 0; }
+.status-time { font-size: 0.72rem; letter-spacing: -0.01em; }
+.status-icons { display: flex; align-items: center; gap: 4px; font-size: 0.6rem; }
+
+/* ── App Bar ────────────────────────────────────────────── */
+.app-bar { display: flex; align-items: center; justify-content: space-between; padding: 10px 16px; flex-shrink: 0; }
+.app-bar-title { font-family: var(--font-display); font-weight: 700; font-size: 1rem; line-height: 1.1; letter-spacing: -0.01em; }
+.app-bar-title small { display: block; font-family: var(--font-body); font-size: 0.58rem; font-weight: 300; letter-spacing: 0.04em; opacity: 0.65; }
+.back-btn { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1rem; border: none; cursor: pointer; flex-shrink: 0; font-weight: 600; }
+
+/* ── Screen Content ─────────────────────────────────────── */
+.screen-content { flex: 1; overflow: hidden; display: flex; flex-direction: column; }
+.scrollable { overflow-y: auto; flex: 1; scrollbar-width: none; padding-bottom: 24px; }
+.scrollable::-webkit-scrollbar { display: none; }
+
+/* ── Section Label ──────────────────────────────────────── */
+.section-label { font-size: 0.62rem; font-weight: 600; letter-spacing: 0.09em; text-transform: uppercase; padding: 14px 16px 8px; }
+
+/* ── Game Type Cards ────────────────────────────────────── */
+.game-type-list { padding: 0 12px; display: flex; flex-direction: column; gap: 6px; }
+.game-card { border-radius: 12px; padding: 11px 14px; display: flex; align-items: center; gap: 12px; cursor: pointer; transition: all 0.15s; border: 2px solid transparent; position: relative; }
+.game-card-icon { font-size: 1.3rem; flex-shrink: 0; line-height: 1; width: 28px; text-align: center; }
+.game-card-info { flex: 1; min-width: 0; }
+.game-card-name { font-size: 0.88rem; font-weight: 600; line-height: 1.2; }
+.game-card-meta { font-size: 0.65rem; font-weight: 400; margin-top: 2px; }
+.game-card-players { font-size: 0.62rem; font-weight: 500; margin-top: 1px; letter-spacing: 0.02em; }
+.game-card-check { width: 20px; height: 20px; border-radius: 50%; border: 2px solid; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; flex-shrink: 0; transition: all 0.15s; }
+
+/* ── Open Scoring Win Direction Expansion ───────────────── */
+.win-direction-panel {
+  margin: 4px 12px 0;
+  border-radius: 0 0 12px 12px;
+  padding: 10px 14px 12px;
+  border-top: none;
+}
+.win-direction-label {
+  font-size: 0.62rem; font-weight: 600; letter-spacing: 0.08em;
+  text-transform: uppercase; margin-bottom: 8px;
+}
+.win-direction-toggle {
+  display: flex;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1.5px solid;
+}
+.win-dir-option {
+  flex: 1; padding: 7px 10px;
+  display: flex; align-items: center; justify-content: center;
+  gap: 5px; cursor: pointer; transition: all 0.15s;
+  font-family: var(--font-body); font-size: 0.78rem; font-weight: 600;
+  border: none;
+}
+.win-dir-option:first-child { border-right: 1.5px solid; }
+.win-dir-option .win-dir-icon { font-size: 0.8rem; }
+.win-dir-hint { font-size: 0.62rem; margin-top: 6px; }
+
+/* Game name input (Open Scoring only) */
+.game-name-input-row { margin-top: 8px; }
+.game-name-label { font-size: 0.62rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 5px; display: block; }
+.game-name-input {
+  width: 100%; padding: 7px 10px; border-radius: 8px; border: 1.5px solid;
+  font-family: var(--font-body); font-size: 0.82rem; outline: none;
+  background: transparent;
+}
+
+/* ── Divider ────────────────────────────────────────────── */
+.hairline { height: 1px; margin: 12px 16px; }
+
+/* ── Players Section ────────────────────────────────────── */
+.player-count-row { display: flex; align-items: center; justify-content: space-between; padding: 0 16px 8px; }
+.player-count-label { font-size: 0.62rem; font-weight: 600; letter-spacing: 0.09em; text-transform: uppercase; }
+.player-count-badge { font-size: 0.65rem; font-weight: 600; padding: 2px 8px; border-radius: 999px; }
+
+.player-list { padding: 0 12px; display: flex; flex-direction: column; gap: 6px; }
+.player-row { display: flex; align-items: center; gap: 10px; border-radius: 10px; padding: 8px 10px; }
+.player-avatar-circle { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-size: 0.9rem; font-weight: 700; flex-shrink: 0; }
+.player-name-display { flex: 1; font-size: 0.88rem; font-weight: 500; min-width: 0; }
+.player-remove { width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; border: none; cursor: pointer; flex-shrink: 0; }
+
+.add-player-row { display: flex; align-items: center; gap: 10px; border-radius: 10px; padding: 8px 10px; border: 1.5px dashed; cursor: pointer; margin: 0 12px; }
+.add-player-icon { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; }
+.add-player-label { font-size: 0.85rem; font-weight: 500; }
+
+.player-input-row { display: flex; align-items: center; gap: 8px; border-radius: 10px; padding: 6px 10px; border: 2px solid; margin: 0 12px; }
+.player-input-avatar { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-size: 0.9rem; font-weight: 700; flex-shrink: 0; }
+.player-name-input { flex: 1; border: none; background: transparent; font-family: var(--font-body); font-size: 0.88rem; font-weight: 500; outline: none; min-width: 0; }
+.player-input-confirm { width: 28px; height: 28px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; border: none; cursor: pointer; flex-shrink: 0; font-weight: 700; }
+
+/* ── CTA ────────────────────────────────────────────────── */
+.cta-area { padding: 14px 12px 0; }
+.btn-start-game { width: 100%; padding: 14px 16px; border-radius: 12px; border: none; font-family: var(--font-display); font-size: 1rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; letter-spacing: -0.01em; position: relative; overflow: hidden; background: linear-gradient(135deg, var(--felt-600) 0%, var(--felt-700) 100%); color: white; transition: opacity 0.15s; }
+.btn-start-game:disabled { opacity: 0.35; cursor: not-allowed; }
+.btn-start-game.ready { box-shadow: 0 4px 20px rgba(26,127,75,0.35); }
+.btn-start-game::after { content: '✏️'; position: absolute; right: 14px; font-size: 1.1rem; opacity: 0.2; line-height: 1; }
+.btn-start-game.clubs-cta::after { content: '♣'; font-size: 2rem; opacity: 0.12; }
+.cta-hint { text-align: center; font-size: 0.63rem; margin-top: 6px; }
+
+/* ── Returning Banner ───────────────────────────────────── */
+.returning-banner { margin: 10px 12px 0; padding: 10px 12px; border-radius: 10px; display: flex; align-items: center; gap: 10px; }
+.returning-banner-title { font-size: 0.78rem; font-weight: 600; }
+.returning-banner-sub { font-size: 0.65rem; margin-top: 1px; }
+
+/* ══════════════════════════════════════════════════════════
+   AVATAR COLOURS
+══════════════════════════════════════════════════════════ */
+.av-1-dark  { background: rgba(26,127,75,0.25);  color: var(--felt-300); }
+.av-2-dark  { background: rgba(234,179,8,0.2);   color: var(--gold-400); }
+.av-3-dark  { background: rgba(248,59,72,0.2);   color: #ff8089; }
+.av-4-dark  { background: rgba(96,165,250,0.2);  color: #93c5fd; }
+.av-5-dark  { background: rgba(192,132,252,0.2); color: #d8b4fe; }
+.av-6-dark  { background: rgba(251,146,60,0.2);  color: #fdba74; }
+.av-1-light { background: var(--felt-100); color: var(--felt-700); }
+.av-2-light { background: #fef9c3;         color: #a16207; }
+.av-3-light { background: #ffe0e2;         color: var(--ruby-600); }
+.av-4-light { background: #dbeafe;         color: #1d4ed8; }
+.av-5-light { background: #f3e8ff;         color: #7c3aed; }
+.av-6-light { background: #ffedd5;         color: #c2410c; }
+
+/* ══════════════════════════════════════════════════════════
+   THEME — DARK
+══════════════════════════════════════════════════════════ */
+.theme-dark .status-bar  { background: var(--ink-950); color: var(--ink-300); }
+.theme-dark .screen-content { background: var(--ink-950); color: var(--ink-100); }
+.theme-dark .app-bar     { background: var(--ink-900); }
+.theme-dark .app-bar-title { color: var(--cream-100); }
+.theme-dark .back-btn    { background: rgba(255,255,255,0.07); color: var(--ink-200); }
+.theme-dark .section-label { color: var(--ink-600); }
+.theme-dark .hairline    { background: rgba(255,255,255,0.06); }
+
+.theme-dark .game-card   { background: var(--ink-800); border-color: transparent; }
+.theme-dark .game-card.selected { background: rgba(26,127,75,0.15); border-color: var(--felt-500); }
+.theme-dark .game-card-name { color: var(--ink-100); }
+.theme-dark .game-card-meta { color: var(--ink-500); }
+.theme-dark .game-card-players { color: var(--felt-400); }
+.theme-dark .game-card-check { border-color: var(--ink-600); color: transparent; }
+.theme-dark .game-card.selected .game-card-check { background: var(--felt-600); border-color: var(--felt-600); color: white; }
+
+/* Win direction panel — dark */
+.theme-dark .win-direction-panel { background: rgba(26,127,75,0.08); border: 1px solid rgba(26,127,75,0.2); border-top: none; }
+.theme-dark .win-direction-label { color: var(--ink-500); }
+.theme-dark .win-direction-toggle { border-color: var(--ink-700); background: var(--ink-900); }
+.theme-dark .win-dir-option { background: transparent; color: var(--ink-400); }
+.theme-dark .win-dir-option:first-child { border-color: var(--ink-700); }
+.theme-dark .win-dir-option.active { background: var(--felt-700); color: white; }
+.theme-dark .win-dir-option.active-amber { background: rgba(217,119,6,0.3); color: var(--amber-400); }
+.theme-dark .win-dir-hint { color: var(--ink-600); }
+.theme-dark .game-name-label { color: var(--ink-500); }
+.theme-dark .game-name-input { border-color: var(--ink-700); color: var(--ink-100); }
+.theme-dark .game-name-input::placeholder { color: var(--ink-600); }
+
+.theme-dark .player-count-label { color: var(--ink-600); }
+.theme-dark .player-count-badge { background: var(--ink-800); color: var(--ink-400); }
+.theme-dark .player-count-badge.valid { background: rgba(26,127,75,0.2); color: var(--felt-400); }
+.theme-dark .player-row  { background: var(--ink-800); }
+.theme-dark .player-name-display { color: var(--ink-100); }
+.theme-dark .player-remove { background: rgba(255,255,255,0.05); color: var(--ink-500); }
+.theme-dark .add-player-row { border-color: var(--ink-700); }
+.theme-dark .add-player-icon { background: rgba(255,255,255,0.05); color: var(--ink-500); }
+.theme-dark .add-player-label { color: var(--ink-500); }
+.theme-dark .player-input-row { background: var(--ink-800); border-color: var(--felt-500); }
+.theme-dark .player-name-input { color: var(--ink-100); }
+.theme-dark .player-name-input::placeholder { color: var(--ink-600); }
+.theme-dark .player-input-confirm { background: var(--felt-600); color: white; }
+.theme-dark .cta-hint { color: var(--ink-700); }
+.theme-dark .returning-banner { background: rgba(26,127,75,0.12); border: 1px solid rgba(26,127,75,0.2); }
+.theme-dark .returning-banner-title { color: var(--felt-300); }
+.theme-dark .returning-banner-sub { color: var(--ink-500); }
+
+/* ══════════════════════════════════════════════════════════
+   THEME — LIGHT
+══════════════════════════════════════════════════════════ */
+.theme-light .status-bar { background: var(--felt-600); color: var(--cream-100); }
+.theme-light .screen-content { background: var(--cream-50); color: var(--ink-900); }
+.theme-light .app-bar    { background: var(--felt-600); }
+.theme-light .app-bar-title { color: var(--cream-100); }
+.theme-light .back-btn   { background: rgba(255,255,255,0.15); color: white; }
+.theme-light .section-label { color: var(--ink-400); }
+.theme-light .hairline   { background: var(--cream-200); }
+
+.theme-light .game-card  { background: white; border-color: transparent; box-shadow: 0 1px 4px rgba(0,0,0,0.07); }
+.theme-light .game-card.selected { background: var(--felt-50); border-color: var(--felt-500); }
+.theme-light .game-card-name { color: var(--ink-800); }
+.theme-light .game-card-meta { color: var(--ink-400); }
+.theme-light .game-card-players { color: var(--felt-600); }
+.theme-light .game-card-check { border-color: var(--cream-300); color: transparent; }
+.theme-light .game-card.selected .game-card-check { background: var(--felt-600); border-color: var(--felt-600); color: white; }
+
+/* Win direction panel — light */
+.theme-light .win-direction-panel { background: var(--felt-50); border: 1px solid var(--felt-100); border-top: none; }
+.theme-light .win-direction-label { color: var(--ink-500); }
+.theme-light .win-direction-toggle { border-color: var(--felt-200); background: white; }
+.theme-light .win-dir-option { background: transparent; color: var(--ink-400); }
+.theme-light .win-dir-option:first-child { border-color: var(--felt-200); }
+.theme-light .win-dir-option.active { background: var(--felt-600); color: white; }
+.theme-light .win-dir-option.active-amber { background: #fef3c7; color: var(--amber-600); }
+.theme-light .win-dir-hint { color: var(--ink-400); }
+.theme-light .game-name-label { color: var(--ink-500); }
+.theme-light .game-name-input { border-color: var(--cream-300); color: var(--ink-900); background: white; }
+.theme-light .game-name-input::placeholder { color: var(--ink-300); }
+
+.theme-light .player-count-label { color: var(--ink-400); }
+.theme-light .player-count-badge { background: var(--cream-100); color: var(--ink-400); border: 1px solid var(--cream-200); }
+.theme-light .player-count-badge.valid { background: var(--felt-50); color: var(--felt-600); border-color: var(--felt-100); }
+.theme-light .player-row { background: white; box-shadow: 0 1px 4px rgba(0,0,0,0.05); }
+.theme-light .player-name-display { color: var(--ink-800); }
+.theme-light .player-remove { background: var(--cream-100); color: var(--ink-400); }
+.theme-light .add-player-row { border-color: var(--cream-300); background: white; }
+.theme-light .add-player-icon { background: var(--cream-100); color: var(--ink-400); }
+.theme-light .add-player-label { color: var(--ink-400); }
+.theme-light .player-input-row { background: white; border-color: var(--felt-500); box-shadow: 0 0 0 3px rgba(26,127,75,0.1); }
+.theme-light .player-name-input { color: var(--ink-900); }
+.theme-light .player-name-input::placeholder { color: var(--ink-300); }
+.theme-light .player-input-confirm { background: var(--felt-600); color: white; }
+.theme-light .cta-hint { color: var(--ink-400); }
+.theme-light .returning-banner { background: var(--felt-50); border: 1px solid var(--felt-100); }
+.theme-light .returning-banner-title { color: var(--felt-700); }
+.theme-light .returning-banner-sub { color: var(--ink-400); }
+
+/* ── Screen View Toggle ─────────────────────────────────── */
+.screen-view { display: none; }
+.screen-view.active { display: block; }
+
+/* ── Annotations ────────────────────────────────────────── */
+.annotations { max-width: 720px; margin: 2.5rem auto 0; background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.07); border-radius: 16px; padding: 1.5rem; display: none; }
+.annotations.visible { display: block; }
+.annotations h3 { font-family: var(--font-display); font-size: 1rem; color: var(--cream-200); margin-bottom: 1rem; }
+.annotation-list { list-style: none; display: flex; flex-direction: column; gap: 0.7rem; }
+.annotation-list li { font-size: 0.82rem; color: var(--ink-400); line-height: 1.55; padding-left: 1.1rem; position: relative; }
+.annotation-list li::before { content: '→'; position: absolute; left: 0; color: var(--felt-500); }
+.annotation-list li strong { color: var(--cream-300); }
+.annotation-list li code { font-family: 'Courier New', monospace; font-size: 0.75rem; background: rgba(255,255,255,0.06); padding: 1px 5px; border-radius: 4px; color: var(--felt-300); }
+</style>
+</head>
+<body>
+
+<h1 class="page-title">Nobody's Keeping Score <em>♠</em></h1>
+<p class="page-sub">Game Setup · /game-setup · v2 · iPhone SE (375 × 667)</p>
+
+<div class="state-nav">
+  <button class="active" onclick="showState('fresh')">① Fresh Start</button>
+  <button onclick="showState('selecting')">② Game Selected</button>
+  <button onclick="showState('open-high')">③ Open · High Wins</button>
+  <button onclick="showState('open-low')">④ Open · Low Wins</button>
+  <button onclick="showState('ready')">⑤ Ready · Dirty Clubs</button>
+  <button onclick="showState('returning')">⑥ Returning Players</button>
+</div>
+
+<div class="theme-row">
+  <span>Dark</span>
+  <button class="toggle-pill" id="themeToggle" onclick="toggleTheme()"></button>
+  <span>Light</span>
+</div>
+
+
+<!-- ══════════════════ ① FRESH START ════════════════════════ -->
+<div class="screen-view active phone-stage" id="state-fresh">
+  <div class="phone-wrapper">
+    <div class="phone-label">Game Setup · Fresh start</div>
+    <div class="phone-frame"><div class="phone-screen theme-dark" id="phone-fresh">
+      <div class="status-bar"><span class="status-time">9:41</span><div class="status-icons">▲▲▲ ◉ ▐▐</div></div>
+      <div class="screen-content">
+        <div class="app-bar">
+          <button class="back-btn">‹</button>
+          <div class="app-bar-title" style="text-align:center;">Game Setup <small>Pick a game · Add players</small></div>
+          <div style="width:32px;"></div>
+        </div>
+        <div class="scrollable">
+          <div class="section-label">Game Type</div>
+          <div class="game-type-list">
+            <div class="game-card"><div class="game-card-icon">♣</div><div class="game-card-info"><div class="game-card-name">Dirty Clubs</div><div class="game-card-meta">Trump trick-taking · first to 15 pts</div><div class="game-card-players">3 – 6 players</div></div><div class="game-card-check"></div></div>
+            <div class="game-card"><div class="game-card-icon">🃏</div><div class="game-card-info"><div class="game-card-name">Canasta</div><div class="game-card-meta">Meld &amp; draw · point totals</div><div class="game-card-players">2 – 6 players</div></div><div class="game-card-check"></div></div>
+            <div class="game-card"><div class="game-card-icon">👑</div><div class="game-card-info"><div class="game-card-name">5 Crowns</div><div class="game-card-meta">Rummy variant · lowest score wins</div><div class="game-card-players">2 – 7 players</div></div><div class="game-card-check"></div></div>
+            <div class="game-card"><div class="game-card-icon">✏️</div><div class="game-card-info"><div class="game-card-name">Open Scoring</div><div class="game-card-meta">Any game · you set the rules</div><div class="game-card-players">2 – 8 players</div></div><div class="game-card-check"></div></div>
+          </div>
+          <div class="hairline"></div>
+          <div class="player-count-row"><div class="player-count-label">Players</div><div class="player-count-badge">0 added</div></div>
+          <div class="add-player-row" style="opacity:0.4;cursor:not-allowed;"><div class="add-player-icon">＋</div><div class="add-player-label">Select a game first</div></div>
+          <div class="cta-area">
+            <button class="btn-start-game clubs-cta" disabled>Start Game</button>
+            <div class="cta-hint">Select a game and add players to begin</div>
+          </div>
+        </div>
+      </div>
+    </div></div>
+  </div>
+</div>
+
+
+<!-- ══════════════════ ② GAME SELECTED (Dirty Clubs) ════════ -->
+<div class="screen-view phone-stage" id="state-selecting">
+  <div class="phone-wrapper">
+    <div class="phone-label">Game Setup · Dirty Clubs selected</div>
+    <div class="phone-frame"><div class="phone-screen theme-dark" id="phone-selecting">
+      <div class="status-bar"><span class="status-time">9:41</span><div class="status-icons">▲▲▲ ◉ ▐▐</div></div>
+      <div class="screen-content">
+        <div class="app-bar">
+          <button class="back-btn">‹</button>
+          <div class="app-bar-title" style="text-align:center;">Game Setup <small>Pick a game · Add players</small></div>
+          <div style="width:32px;"></div>
+        </div>
+        <div class="scrollable">
+          <div class="section-label">Game Type</div>
+          <div class="game-type-list">
+            <div class="game-card selected"><div class="game-card-icon">♣</div><div class="game-card-info"><div class="game-card-name">Dirty Clubs</div><div class="game-card-meta">Trump trick-taking · first to 15 pts</div><div class="game-card-players">3 – 6 players</div></div><div class="game-card-check">✓</div></div>
+            <div class="game-card"><div class="game-card-icon">🃏</div><div class="game-card-info"><div class="game-card-name">Canasta</div><div class="game-card-meta">Meld &amp; draw · point totals</div><div class="game-card-players">2 – 6 players</div></div><div class="game-card-check"></div></div>
+            <div class="game-card"><div class="game-card-icon">👑</div><div class="game-card-info"><div class="game-card-name">5 Crowns</div><div class="game-card-meta">Rummy variant · lowest score wins</div><div class="game-card-players">2 – 7 players</div></div><div class="game-card-check"></div></div>
+            <div class="game-card"><div class="game-card-icon">✏️</div><div class="game-card-info"><div class="game-card-name">Open Scoring</div><div class="game-card-meta">Any game · you set the rules</div><div class="game-card-players">2 – 8 players</div></div><div class="game-card-check"></div></div>
+          </div>
+          <div class="hairline"></div>
+          <div class="player-count-row"><div class="player-count-label">Players</div><div class="player-count-badge">0 of 3 – 6</div></div>
+          <div class="add-player-row"><div class="add-player-icon">＋</div><div class="add-player-label">Add a player</div></div>
+          <div class="cta-area">
+            <button class="btn-start-game clubs-cta" disabled>Start Dirty Clubs</button>
+            <div class="cta-hint">Add at least 3 players to begin</div>
+          </div>
+        </div>
+      </div>
+    </div></div>
+  </div>
+</div>
+
+
+<!-- ══════════════════ ③ OPEN SCORING — HIGH WINS ══════════ -->
+<div class="screen-view phone-stage" id="state-open-high">
+  <div class="phone-wrapper">
+    <div class="phone-label">Game Setup · Open · High Score Wins</div>
+    <div class="phone-frame"><div class="phone-screen theme-dark" id="phone-open-high">
+      <div class="status-bar"><span class="status-time">9:41</span><div class="status-icons">▲▲▲ ◉ ▐▐</div></div>
+      <div class="screen-content">
+        <div class="app-bar">
+          <button class="back-btn">‹</button>
+          <div class="app-bar-title" style="text-align:center;">Game Setup <small>Pick a game · Add players</small></div>
+          <div style="width:32px;"></div>
+        </div>
+        <div class="scrollable">
+          <div class="section-label">Game Type</div>
+          <div class="game-type-list">
+            <div class="game-card"><div class="game-card-icon">♣</div><div class="game-card-info"><div class="game-card-name">Dirty Clubs</div><div class="game-card-meta">Trump trick-taking · first to 15 pts</div><div class="game-card-players">3 – 6 players</div></div><div class="game-card-check"></div></div>
+            <div class="game-card"><div class="game-card-icon">🃏</div><div class="game-card-info"><div class="game-card-name">Canasta</div><div class="game-card-meta">Meld &amp; draw · point totals</div><div class="game-card-players">2 – 6 players</div></div><div class="game-card-check"></div></div>
+            <div class="game-card"><div class="game-card-icon">👑</div><div class="game-card-info"><div class="game-card-name">5 Crowns</div><div class="game-card-meta">Rummy variant · lowest score wins</div><div class="game-card-players">2 – 7 players</div></div><div class="game-card-check"></div></div>
+            <!-- Open Scoring selected — no border-radius bottom on card, panel attaches below -->
+            <div class="game-card selected" style="border-radius: 12px 12px 0 0; margin-bottom:0;">
+              <div class="game-card-icon">✏️</div>
+              <div class="game-card-info"><div class="game-card-name">Open Scoring</div><div class="game-card-meta">Any game · you set the rules</div><div class="game-card-players">2 – 8 players</div></div>
+              <div class="game-card-check">✓</div>
+            </div>
+          </div>
+
+          <!-- Win direction expansion panel -->
+          <div class="win-direction-panel">
+            <div class="win-direction-label">Win Direction</div>
+            <div class="win-direction-toggle">
+              <button class="win-dir-option active">
+                <span class="win-dir-icon">↑</span> High Score Wins
+              </button>
+              <button class="win-dir-option">
+                <span class="win-dir-icon">↓</span> Low Score Wins
+              </button>
+            </div>
+            <div class="win-dir-hint">↑ High score wins · host ends the game manually</div>
+            <div class="game-name-input-row">
+              <label class="game-name-label">Game Name <span style="font-weight:400;text-transform:none;letter-spacing:0;">(optional)</span></label>
+              <input class="game-name-input" type="text" placeholder="e.g. Scrabble, Yahtzee…">
+            </div>
+          </div>
+
+          <div class="hairline"></div>
+          <div class="player-count-row"><div class="player-count-label">Players</div><div class="player-count-badge valid">3 of 2 – 8</div></div>
+          <div class="player-list">
+            <div class="player-row"><div class="player-avatar-circle av-1-dark">M</div><div class="player-name-display">Maureen</div><button class="player-remove">✕</button></div>
+            <div class="player-row"><div class="player-avatar-circle av-2-dark">J</div><div class="player-name-display">Jim</div><button class="player-remove">✕</button></div>
+            <div class="player-row"><div class="player-avatar-circle av-3-dark">S</div><div class="player-name-display">Sandra</div><button class="player-remove">✕</button></div>
+          </div>
+          <div class="add-player-row" style="margin-top:6px;"><div class="add-player-icon">＋</div><div class="add-player-label">Add another player</div></div>
+          <div class="cta-area">
+            <button class="btn-start-game ready">✏️ &nbsp;Start Open Scoring</button>
+            <div class="cta-hint">3 players · ↑ high score wins</div>
+          </div>
+        </div>
+      </div>
+    </div></div>
+  </div>
+</div>
+
+
+<!-- ══════════════════ ④ OPEN SCORING — LOW WINS ═══════════ -->
+<div class="screen-view phone-stage" id="state-open-low">
+  <div class="phone-wrapper">
+    <div class="phone-label">Game Setup · Open · Low Score Wins</div>
+    <div class="phone-frame"><div class="phone-screen theme-dark" id="phone-open-low">
+      <div class="status-bar"><span class="status-time">9:41</span><div class="status-icons">▲▲▲ ◉ ▐▐</div></div>
+      <div class="screen-content">
+        <div class="app-bar">
+          <button class="back-btn">‹</button>
+          <div class="app-bar-title" style="text-align:center;">Game Setup <small>Pick a game · Add players</small></div>
+          <div style="width:32px;"></div>
+        </div>
+        <div class="scrollable">
+          <div class="section-label">Game Type</div>
+          <div class="game-type-list">
+            <div class="game-card"><div class="game-card-icon">♣</div><div class="game-card-info"><div class="game-card-name">Dirty Clubs</div><div class="game-card-meta">Trump trick-taking · first to 15 pts</div><div class="game-card-players">3 – 6 players</div></div><div class="game-card-check"></div></div>
+            <div class="game-card"><div class="game-card-icon">🃏</div><div class="game-card-info"><div class="game-card-name">Canasta</div><div class="game-card-meta">Meld &amp; draw · point totals</div><div class="game-card-players">2 – 6 players</div></div><div class="game-card-check"></div></div>
+            <div class="game-card"><div class="game-card-icon">👑</div><div class="game-card-info"><div class="game-card-name">5 Crowns</div><div class="game-card-meta">Rummy variant · lowest score wins</div><div class="game-card-players">2 – 7 players</div></div><div class="game-card-check"></div></div>
+            <div class="game-card selected" style="border-radius: 12px 12px 0 0; margin-bottom:0;">
+              <div class="game-card-icon">✏️</div>
+              <div class="game-card-info"><div class="game-card-name">Open Scoring</div><div class="game-card-meta">Any game · you set the rules</div><div class="game-card-players">2 – 8 players</div></div>
+              <div class="game-card-check">✓</div>
+            </div>
+          </div>
+
+          <!-- Win direction expansion panel — Low Wins active -->
+          <div class="win-direction-panel">
+            <div class="win-direction-label">Win Direction</div>
+            <div class="win-direction-toggle">
+              <button class="win-dir-option">
+                <span class="win-dir-icon">↑</span> High Score Wins
+              </button>
+              <button class="win-dir-option active-amber">
+                <span class="win-dir-icon">↓</span> Low Score Wins
+              </button>
+            </div>
+            <div class="win-dir-hint">↓ Low score wins · host ends the game manually</div>
+            <div class="game-name-input-row">
+              <label class="game-name-label">Game Name <span style="font-weight:400;text-transform:none;letter-spacing:0;">(optional)</span></label>
+              <input class="game-name-input" type="text" placeholder="e.g. Golf, Mini-golf…" value="Golf">
+            </div>
+          </div>
+
+          <div class="hairline"></div>
+          <div class="player-count-row"><div class="player-count-label">Players</div><div class="player-count-badge valid">3 of 2 – 8</div></div>
+          <div class="player-list">
+            <div class="player-row"><div class="player-avatar-circle av-1-dark">M</div><div class="player-name-display">Maureen</div><button class="player-remove">✕</button></div>
+            <div class="player-row"><div class="player-avatar-circle av-2-dark">J</div><div class="player-name-display">Jim</div><button class="player-remove">✕</button></div>
+            <div class="player-row"><div class="player-avatar-circle av-3-dark">S</div><div class="player-name-display">Sandra</div><button class="player-remove">✕</button></div>
+          </div>
+          <div class="add-player-row" style="margin-top:6px;"><div class="add-player-icon">＋</div><div class="add-player-label">Add another player</div></div>
+          <div class="cta-area">
+            <button class="btn-start-game ready">✏️ &nbsp;Start Golf</button>
+            <div class="cta-hint">3 players · ↓ low score wins</div>
+          </div>
+        </div>
+      </div>
+    </div></div>
+  </div>
+</div>
+
+
+<!-- ══════════════════ ⑤ READY — DIRTY CLUBS ════════════════ -->
+<div class="screen-view phone-stage" id="state-ready">
+  <div class="phone-wrapper">
+    <div class="phone-label">Game Setup · Dirty Clubs · 4 players ready</div>
+    <div class="phone-frame"><div class="phone-screen theme-dark" id="phone-ready">
+      <div class="status-bar"><span class="status-time">9:41</span><div class="status-icons">▲▲▲ ◉ ▐▐</div></div>
+      <div class="screen-content">
+        <div class="app-bar">
+          <button class="back-btn">‹</button>
+          <div class="app-bar-title" style="text-align:center;">Game Setup <small>Pick a game · Add players</small></div>
+          <div style="width:32px;"></div>
+        </div>
+        <div class="scrollable">
+          <div class="section-label">Game Type</div>
+          <div class="game-type-list">
+            <div class="game-card selected"><div class="game-card-icon">♣</div><div class="game-card-info"><div class="game-card-name">Dirty Clubs</div><div class="game-card-meta">Trump trick-taking · first to 15 pts</div><div class="game-card-players">3 – 6 players</div></div><div class="game-card-check">✓</div></div>
+          </div>
+          <div class="hairline"></div>
+          <div class="player-count-row"><div class="player-count-label">Players</div><div class="player-count-badge valid">4 of 3 – 6</div></div>
+          <div class="player-list">
+            <div class="player-row"><div class="player-avatar-circle av-1-dark">M</div><div class="player-name-display">Maureen</div><button class="player-remove">✕</button></div>
+            <div class="player-row"><div class="player-avatar-circle av-2-dark">J</div><div class="player-name-display">Jim</div><button class="player-remove">✕</button></div>
+            <div class="player-row"><div class="player-avatar-circle av-3-dark">S</div><div class="player-name-display">Sandra</div><button class="player-remove">✕</button></div>
+            <div class="player-row"><div class="player-avatar-circle av-4-dark">D</div><div class="player-name-display">Dave</div><button class="player-remove">✕</button></div>
+          </div>
+          <div class="add-player-row" style="margin-top:6px;"><div class="add-player-icon">＋</div><div class="add-player-label">Add another player</div></div>
+          <div class="cta-area">
+            <button class="btn-start-game clubs-cta ready">♣ &nbsp;Start Dirty Clubs</button>
+            <div class="cta-hint">4 players · first to 15 points wins</div>
+          </div>
+        </div>
+      </div>
+    </div></div>
+  </div>
+</div>
+
+
+<!-- ══════════════════ ⑥ RETURNING PLAYERS ══════════════════ -->
+<div class="screen-view phone-stage" id="state-returning">
+  <div class="phone-wrapper">
+    <div class="phone-label">Game Setup · Returning players</div>
+    <div class="phone-frame"><div class="phone-screen theme-dark" id="phone-returning">
+      <div class="status-bar"><span class="status-time">9:41</span><div class="status-icons">▲▲▲ ◉ ▐▐</div></div>
+      <div class="screen-content">
+        <div class="app-bar">
+          <button class="back-btn">‹</button>
+          <div class="app-bar-title" style="text-align:center;">New Game <small>Same night · adjust if needed</small></div>
+          <div style="width:32px;"></div>
+        </div>
+        <div class="scrollable">
+          <div class="returning-banner">
+            <span style="font-size:1.1rem;">🔁</span>
+            <div><div class="returning-banner-title">Players carried over</div><div class="returning-banner-sub">From previous Dirty Clubs game</div></div>
+          </div>
+          <div class="section-label" style="padding-top:12px;">Game Type</div>
+          <div class="game-type-list">
+            <div class="game-card selected"><div class="game-card-icon">♣</div><div class="game-card-info"><div class="game-card-name">Dirty Clubs</div><div class="game-card-meta">Trump trick-taking · first to 15 pts</div><div class="game-card-players">3 – 6 players</div></div><div class="game-card-check">✓</div></div>
+            <div class="game-card"><div class="game-card-icon">🃏</div><div class="game-card-info"><div class="game-card-name">Canasta</div><div class="game-card-meta">Meld &amp; draw · point totals</div><div class="game-card-players">2 – 6 players</div></div><div class="game-card-check"></div></div>
+            <div class="game-card"><div class="game-card-icon">👑</div><div class="game-card-info"><div class="game-card-name">5 Crowns</div><div class="game-card-meta">Rummy variant · lowest score wins</div><div class="game-card-players">2 – 7 players</div></div><div class="game-card-check"></div></div>
+            <div class="game-card"><div class="game-card-icon">✏️</div><div class="game-card-info"><div class="game-card-name">Open Scoring</div><div class="game-card-meta">Any game · you set the rules</div><div class="game-card-players">2 – 8 players</div></div><div class="game-card-check"></div></div>
+          </div>
+          <div class="hairline"></div>
+          <div class="player-count-row"><div class="player-count-label">Players</div><div class="player-count-badge valid">4 of 3 – 6</div></div>
+          <div class="player-list">
+            <div class="player-row"><div class="player-avatar-circle av-1-dark">M</div><div class="player-name-display">Maureen</div><button class="player-remove">✕</button></div>
+            <div class="player-row"><div class="player-avatar-circle av-2-dark">J</div><div class="player-name-display">Jim</div><button class="player-remove">✕</button></div>
+            <div class="player-row"><div class="player-avatar-circle av-3-dark">S</div><div class="player-name-display">Sandra</div><button class="player-remove">✕</button></div>
+            <div class="player-row"><div class="player-avatar-circle av-4-dark">D</div><div class="player-name-display">Dave</div><button class="player-remove">✕</button></div>
+          </div>
+          <div class="add-player-row" style="margin-top:6px;"><div class="add-player-icon">＋</div><div class="add-player-label">Add another player</div></div>
+          <div class="cta-area">
+            <button class="btn-start-game clubs-cta ready">♣ &nbsp;Start Dirty Clubs</button>
+            <div class="cta-hint">4 players · first to 15 points wins</div>
+          </div>
+        </div>
+      </div>
+    </div></div>
+  </div>
+</div>
+
+
+<!-- ══════════════════ ANNOTATIONS ═══════════════════════════ -->
+<div class="annotations visible" id="ann-fresh">
+  <h3>① Fresh Start — Design Notes</h3>
+  <ul class="annotation-list">
+    <li><strong>Add player row disabled:</strong> Shown at reduced opacity with "Select a game first" label until a game card is tapped. Enforces the intended top-down flow.</li>
+    <li><strong>Start button generic:</strong> Label reads "Start Game" with disabled state until both a game is selected and the minimum player count is met.</li>
+  </ul>
+</div>
+<div class="annotations" id="ann-selecting">
+  <h3>② Game Selected (Dirty Clubs) — Design Notes</h3>
+  <ul class="annotation-list">
+    <li><strong>Selected state:</strong> Felt-green border + tinted bg + filled ✓ check circle. One card at a time — tapping another deselects the current one.</li>
+    <li><strong>Player count badge:</strong> Updates to "0 of 3 – 6" immediately — the range comes from the game's constraints. Muted until minimum is met.</li>
+    <li><strong>CTA label updates:</strong> "Start Game" → "Start Dirty Clubs" as soon as a game is selected. No win-direction panel appears for fixed-rule games.</li>
+  </ul>
+</div>
+<div class="annotations" id="ann-open-high">
+  <h3>③ Open Scoring — High Score Wins — Design Notes</h3>
+  <ul class="annotation-list">
+    <li><strong>Card shape change on selection:</strong> When Open Scoring is selected, the card's bottom border-radius is removed (0 0 on bottom corners) so the win-direction panel attaches flush beneath it — visually one connected surface.</li>
+    <li><strong>Win direction panel:</strong> Appears only for Open Scoring. Tinted felt-green bg + subtle border. Contains the toggle and the optional game name input.</li>
+    <li><strong>Toggle pill:</strong> Two side-by-side buttons inside a bordered container. "High Score Wins" is active by default — felt-green fill. "Low Score Wins" is inactive/muted. Tapping switches the active state.</li>
+    <li><strong>Hint text:</strong> Small line below the toggle: "↑ High score wins · host ends the game manually" — sets expectation that there's no auto-win condition.</li>
+    <li><strong>Game Name input:</strong> Optional free-text field. Placeholder examples reflect the win direction — "e.g. Scrabble, Yahtzee…" for High. When filled, the Start button label uses the name: "Start Scrabble".</li>
+    <li><strong>CTA hint:</strong> "3 players · ↑ high score wins" — summarises both key settings at a glance before committing.</li>
+  </ul>
+</div>
+<div class="annotations" id="ann-open-low">
+  <h3>④ Open Scoring — Low Score Wins — Design Notes</h3>
+  <ul class="annotation-list">
+    <li><strong>Amber active state:</strong> Low Score Wins uses an amber/gold tint rather than felt-green — visually distinct from the default, signals a different win condition at a glance. Consistent with the amber = low-wins convention used on the scoreboard win-direction chip.</li>
+    <li><strong>Hint text updates:</strong> "↓ Low score wins · host ends the game manually" — matches the new direction.</li>
+    <li><strong>Game Name placeholder updates:</strong> When Low wins is active, placeholder suggests "e.g. Golf, Mini-golf…" — contextually appropriate examples.</li>
+    <li><strong>Start button uses game name:</strong> When the host has typed "Golf", the CTA reads "✏️ Start Golf" instead of "✏️ Start Open Scoring" — personal and specific.</li>
+    <li><strong>CTA hint:</strong> "3 players · ↓ low score wins" — direction symbol and label both update.</li>
+  </ul>
+</div>
+<div class="annotations" id="ann-ready">
+  <h3>⑤ Ready — Dirty Clubs — Design Notes</h3>
+  <ul class="annotation-list">
+    <li><strong>Game list collapses:</strong> Once a game is selected and the host moves to adding players, the game type list compresses to just the selected card — conserves vertical space on iPhone SE.</li>
+    <li><strong>Player count badge turns green:</strong> "4 of 3 – 6" in felt tint once minimum is met.</li>
+    <li><strong>Start button activates:</strong> Full gradient + shadow. Label: "♣ Start Dirty Clubs". CTA hint: rule summary "first to 15 points wins".</li>
+  </ul>
+</div>
+<div class="annotations" id="ann-returning">
+  <h3>⑥ Returning Players — Design Notes</h3>
+  <ul class="annotation-list">
+    <li><strong>Context banner:</strong> "🔁 Players carried over · From previous Dirty Clubs game" at the top — warm, not alarming. Explains the pre-populated state.</li>
+    <li><strong>App bar sub-label:</strong> "Same night · adjust if needed" — contextual signal this is a continuation.</li>
+    <li><strong>Full game list shown:</strong> Host may want to switch game type for the next round — all four options visible and tappable. If they switch to Open Scoring, the win direction panel appears as normal.</li>
+    <li><strong>Start immediately active:</strong> Carried-over player count satisfies the minimum — host can tap straight through without any changes.</li>
+  </ul>
+</div>
+
+<script>
+let isDark = true;
+const stateMap = { fresh:0, selecting:1, 'open-high':2, 'open-low':3, ready:4, returning:5 };
+
+function showState(name) {
+  document.querySelectorAll('.screen-view').forEach(el => el.classList.remove('active'));
+  document.getElementById('state-' + name).classList.add('active');
+  document.querySelectorAll('.state-nav button').forEach((b,i) => b.classList.toggle('active', i === stateMap[name]));
+  document.querySelectorAll('.annotations').forEach(el => el.classList.remove('visible'));
+  document.getElementById('ann-' + name).classList.add('visible');
+  applyTheme();
+}
+
+function applyTheme() {
+  document.querySelectorAll('.phone-screen').forEach(p => {
+    p.classList.remove('theme-light','theme-dark');
+    p.classList.add(isDark ? 'theme-dark' : 'theme-light');
+  });
+  const s = isDark ? 'dark' : 'light';
+  for (let i=1;i<=6;i++) {
+    document.querySelectorAll('.av-'+i+'-dark, .av-'+i+'-light').forEach(el => {
+      el.classList.remove('av-'+i+'-dark','av-'+i+'-light');
+      el.classList.add('av-'+i+'-'+s);
+    });
+  }
+}
+
+function toggleTheme() {
+  isDark = !isDark;
+  document.getElementById('themeToggle').classList.toggle('light', !isDark);
+  applyTheme();
+}
+
+applyTheme();
+</script>
+</body>
+</html>

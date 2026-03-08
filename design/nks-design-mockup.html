@@ -1,0 +1,1549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NKS — Design Mockup</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,700;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-body: 'DM Sans', sans-serif;
+
+  --felt-50:  #f0faf3; --felt-100: #d9f2e1; --felt-200: #b3e5c5;
+  --felt-300: #7dd0a0; --felt-400: #48b87a; --felt-500: #279e5e;
+  --felt-600: #1a7f4b; --felt-700: #16643c; --felt-800: #144f30;
+  --felt-900: #103f26; --felt-950: #082518;
+
+  --cream-50: #fdfcf8; --cream-100: #f8f4ec; --cream-200: #f0e8d4;
+  --cream-300: #e4d5b4; --cream-400: #d4ba8a; --cream-500: #c09a62;
+  --cream-600: #a67d48; --cream-700: #896337; --cream-800: #6e4e2d;
+  --cream-900: #573d24; --cream-950: #311f10;
+
+  --ruby-50:  #fff1f2; --ruby-100: #ffe0e2; --ruby-200: #ffc7ca;
+  --ruby-300: #ffa0a5; --ruby-400: #ff6470; --ruby-500: #f83b48;
+  --ruby-600: #e51d2b; --ruby-700: #c01422; --ruby-800: #9f1420;
+  --ruby-900: #84151f; --ruby-950: #48060c;
+
+  --ink-50:  #f6f6f7; --ink-100: #e2e3e6; --ink-200: #c5c7ce;
+  --ink-300: #9fa3af; --ink-400: #797f8e; --ink-500: #5e6474;
+  --ink-600: #4c515f; --ink-700: #3e4250; --ink-800: #353843;
+  --ink-900: #22242d; --ink-950: #14151c;
+
+  --gold-50:  #fefce8; --gold-100: #fef9c3; --gold-200: #fef08a;
+  --gold-300: #fde047; --gold-400: #facc15; --gold-500: #eab308;
+  --gold-600: #ca8a04; --gold-700: #a16207; --gold-800: #854d0e;
+  --gold-900: #713f12; --gold-950: #3f2006;
+}
+
+/* ── Page Shell ─────────────────────────────────────────── */
+body {
+  font-family: var(--font-body);
+  background: #1a1a24;
+  color: var(--ink-100);
+  min-height: 100vh;
+  padding: 2rem 1rem 4rem;
+}
+
+.page-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 4vw, 2.2rem);
+  font-weight: 700;
+  color: var(--cream-100);
+  text-align: center;
+  margin-bottom: 0.25rem;
+}
+.page-title em { color: var(--gold-400); font-style: italic; }
+.page-sub {
+  text-align: center;
+  color: var(--ink-400);
+  font-size: 0.85rem;
+  margin-bottom: 2.5rem;
+  font-weight: 300;
+}
+
+/* ── Screen Nav ─────────────────────────────────────────── */
+.screen-nav {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+}
+.screen-nav button {
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 500;
+  padding: 0.45rem 0.9rem;
+  border-radius: 999px;
+  border: 1.5px solid var(--ink-700);
+  background: transparent;
+  color: var(--ink-300);
+  cursor: pointer;
+  transition: all 0.18s;
+}
+.screen-nav button:hover { border-color: var(--felt-500); color: var(--felt-300); }
+.screen-nav button.active { background: var(--felt-600); border-color: var(--felt-600); color: white; }
+
+/* ── Theme Toggle ───────────────────────────────────────── */
+.theme-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  font-size: 0.8rem;
+  color: var(--ink-400);
+}
+.toggle-pill {
+  width: 44px; height: 24px;
+  background: var(--ink-700);
+  border-radius: 999px;
+  position: relative;
+  cursor: pointer;
+  transition: background 0.2s;
+  border: none;
+}
+.toggle-pill.light { background: var(--felt-500); }
+.toggle-pill::after {
+  content: '';
+  position: absolute;
+  top: 3px; left: 3px;
+  width: 18px; height: 18px;
+  background: white;
+  border-radius: 50%;
+  transition: transform 0.2s;
+}
+.toggle-pill.light::after { transform: translateX(20px); }
+
+/* ── Phone Frame ────────────────────────────────────────── */
+.phone-stage {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 2.5rem;
+  flex-wrap: wrap;
+}
+
+.phone-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+}
+.phone-label {
+  font-size: 0.72rem;
+  color: var(--ink-500);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+/* iPhone SE 2nd gen: 375×667 logical; we show at ~85% scale */
+.phone-frame {
+  width: 320px;
+  height: 568px;
+  background: #0e0e14;
+  border-radius: 44px;
+  border: 6px solid #2a2a38;
+  box-shadow:
+    0 0 0 1px #3a3a50,
+    0 24px 80px rgba(0,0,0,0.7),
+    inset 0 0 0 1px #0a0a10;
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.phone-frame::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 50%;
+  transform: translateX(-50%);
+  width: 120px; height: 22px;
+  background: #0e0e14;
+  border-radius: 0 0 14px 14px;
+  z-index: 100;
+}
+/* Home button bar */
+.phone-frame::after {
+  content: '';
+  position: absolute;
+  bottom: 8px; left: 50%;
+  transform: translateX(-50%);
+  width: 80px; height: 4px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 999px;
+  z-index: 100;
+}
+
+.phone-screen {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+/* ── STATUS BAR ─────────────────────────────────────────── */
+.status-bar {
+  height: 28px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding: 0 16px 4px;
+  font-size: 0.65rem;
+  font-weight: 600;
+  position: relative;
+  z-index: 10;
+  flex-shrink: 0;
+}
+.status-time { font-size: 0.72rem; letter-spacing: -0.01em; }
+.status-icons { display: flex; align-items: center; gap: 4px; font-size: 0.6rem; }
+
+/* ── SCREEN CONTENT ─────────────────────────────────────── */
+.screen-content {
+  height: calc(100% - 28px);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  scrollbar-width: none;
+}
+.screen-content::-webkit-scrollbar { display: none; }
+
+/* ════════════════════════════════════════════════════════
+   LIGHT THEME
+════════════════════════════════════════════════════════ */
+.theme-light .status-bar { background: var(--felt-600); color: var(--cream-100); }
+.theme-light .screen-content { background: var(--cream-50); color: var(--ink-900); }
+
+/* Top Nav / App Bar */
+.app-bar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 16px;
+  flex-shrink: 0;
+}
+.theme-light .app-bar { background: var(--felt-600); }
+.theme-dark .app-bar { background: var(--ink-900); }
+
+.app-bar-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1rem;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+}
+.app-bar-title em { font-style: italic; font-weight: 400; }
+.theme-light .app-bar-title { color: var(--cream-100); }
+.theme-dark .app-bar-title { color: var(--cream-100); }
+
+.app-bar-title small {
+  display: block;
+  font-family: var(--font-body);
+  font-size: 0.6rem;
+  font-weight: 300;
+  letter-spacing: 0.04em;
+  opacity: 0.7;
+}
+
+.icon-btn {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.9rem;
+  border: none;
+  cursor: pointer;
+}
+.theme-light .icon-btn { background: rgba(255,255,255,0.15); color: white; }
+.theme-dark .icon-btn { background: rgba(255,255,255,0.08); color: var(--ink-200); }
+
+/* ── CARD ───────────────────────────────────────────────── */
+.card {
+  border-radius: 14px;
+  padding: 14px 16px;
+  margin: 0 12px 10px;
+}
+.theme-light .card { background: white; border: 1px solid var(--cream-200); box-shadow: 0 1px 6px rgba(0,0,0,0.06); }
+.theme-dark .card { background: var(--ink-800); border: 1px solid rgba(255,255,255,0.06); }
+
+.card-title {
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-bottom: 10px;
+  display: flex; align-items: center; gap: 6px;
+}
+.theme-light .card-title { color: var(--ink-700); }
+.theme-dark .card-title { color: var(--ink-200); }
+
+/* ── BUTTONS ────────────────────────────────────────────── */
+.btn-primary {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 10px;
+  border: none;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  transition: opacity 0.15s;
+}
+.btn-felt { background: var(--felt-600); color: white; }
+.btn-ruby { background: var(--ruby-600); color: white; }
+.btn-outline {
+  width: 100%;
+  padding: 11px 16px;
+  border-radius: 10px;
+  border: 1.5px solid;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  background: transparent;
+}
+.theme-light .btn-outline { border-color: var(--felt-300); color: var(--felt-700); }
+.theme-dark .btn-outline { border-color: var(--felt-600); color: var(--felt-400); }
+
+/* ── INPUTS ─────────────────────────────────────────────── */
+.input-group { margin-bottom: 10px; }
+.input-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 5px;
+  display: block;
+}
+.theme-light .input-label { color: var(--ink-500); }
+.theme-dark .input-label { color: var(--ink-400); }
+
+.input-field {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1.5px solid;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  outline: none;
+}
+.theme-light .input-field {
+  background: var(--cream-100);
+  border-color: var(--cream-300);
+  color: var(--ink-900);
+}
+.theme-dark .input-field {
+  background: var(--ink-900);
+  border-color: var(--ink-700);
+  color: var(--ink-100);
+}
+
+/* ── SECTION HEADER ─────────────────────────────────────── */
+.section-header {
+  padding: 10px 16px 4px;
+  flex-shrink: 0;
+}
+.section-header-title {
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.theme-light .section-header-title { color: var(--ink-400); }
+.theme-dark .section-header-title { color: var(--ink-500); }
+
+/* ── PLAYER ROW ─────────────────────────────────────────── */
+.player-row {
+  display: flex; align-items: center;
+  padding: 10px 16px;
+  border-bottom: 1px solid;
+  gap: 10px;
+}
+.theme-light .player-row { border-color: var(--cream-200); }
+.theme-dark .player-row { border-color: rgba(255,255,255,0.05); }
+
+.player-avatar {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700;
+  font-size: 0.85rem;
+  flex-shrink: 0;
+}
+.avatar-felt { background: var(--felt-100); color: var(--felt-700); }
+.avatar-ruby { background: var(--ruby-100); color: var(--ruby-700); }
+.avatar-gold { background: var(--gold-100); color: var(--gold-700); }
+.avatar-ink { background: var(--ink-200); color: var(--ink-700); }
+.theme-dark .avatar-felt { background: var(--felt-900); color: var(--felt-300); }
+.theme-dark .avatar-ruby { background: rgba(159,20,32,0.2); color: var(--ruby-400); }
+.theme-dark .avatar-gold { background: rgba(133,77,14,0.2); color: var(--gold-400); }
+.theme-dark .avatar-ink { background: var(--ink-700); color: var(--ink-200); }
+
+.player-info { flex: 1; min-width: 0; }
+.player-name {
+  font-size: 0.88rem;
+  font-weight: 600;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.theme-light .player-name { color: var(--ink-900); }
+.theme-dark .player-name { color: var(--ink-100); }
+.player-status { font-size: 0.68rem; }
+.theme-light .player-status { color: var(--ink-400); }
+.theme-dark .player-status { color: var(--ink-500); }
+
+.player-score {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 700;
+  min-width: 44px;
+  text-align: right;
+}
+.theme-light .player-score { color: var(--felt-700); }
+.theme-dark .player-score { color: var(--felt-400); }
+
+.score-badge {
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  font-weight: 600;
+}
+.badge-claim {
+  background: var(--felt-100); color: var(--felt-700);
+  border: 1px solid var(--felt-200);
+}
+.badge-claimed {
+  background: var(--gold-100); color: var(--gold-700);
+  border: 1px solid var(--gold-200);
+}
+.badge-host {
+  background: var(--felt-600); color: white;
+}
+.theme-dark .badge-claim { background: var(--felt-900); color: var(--felt-300); border-color: var(--felt-800); }
+.theme-dark .badge-claimed { background: rgba(133,77,14,0.25); color: var(--gold-400); border-color: rgba(133,77,14,0.4); }
+
+/* ── SCOREBOARD TABLE ───────────────────────────────────── */
+.score-table {
+  width: calc(100% - 24px);
+  margin: 0 12px 10px;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid;
+}
+.theme-light .score-table { border-color: var(--cream-200); }
+.theme-dark .score-table { border-color: rgba(255,255,255,0.07); }
+
+.score-table-head {
+  display: grid;
+  grid-template-columns: 1fr repeat(3, 44px);
+  padding: 7px 10px;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.theme-light .score-table-head { background: var(--felt-50); color: var(--felt-700); }
+.theme-dark .score-table-head { background: var(--felt-950); color: var(--felt-400); }
+
+.score-table-row {
+  display: grid;
+  grid-template-columns: 1fr repeat(3, 44px);
+  padding: 8px 10px;
+  align-items: center;
+  border-top: 1px solid;
+  transition: background 0.1s;
+}
+.theme-light .score-table-row { border-color: var(--cream-100); }
+.theme-dark .score-table-row { border-color: rgba(255,255,255,0.04); }
+.score-table-row.winner {
+  background: linear-gradient(90deg, rgba(234,179,8,0.12) 0%, transparent 100%);
+}
+.score-table-row > span:not(:first-child) {
+  text-align: center;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+.theme-light .score-table-row > span:not(:first-child) { color: var(--felt-700); }
+.theme-dark .score-table-row > span:not(:first-child) { color: var(--felt-400); }
+
+.score-table-row .player-cell {
+  display: flex; align-items: center; gap: 7px;
+  min-width: 0;
+}
+.score-table-row .mini-avatar {
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.6rem; font-weight: 700;
+  flex-shrink: 0;
+}
+.rank-badge {
+  font-size: 0.75rem;
+  min-width: 18px;
+}
+
+/* ── ROUND ENTRY ────────────────────────────────────────── */
+.round-entry {
+  padding: 10px 12px 14px;
+  border-radius: 14px;
+  margin: 0 12px 10px;
+  border: 1px solid;
+}
+.theme-light .round-entry {
+  background: var(--felt-50);
+  border-color: var(--felt-200);
+}
+.theme-dark .round-entry {
+  background: rgba(8,37,24,0.5);
+  border-color: var(--felt-800);
+}
+.round-entry-title {
+  font-family: var(--font-display);
+  font-size: 0.82rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+  display: flex; align-items: center; gap: 6px;
+}
+.theme-light .round-entry-title { color: var(--felt-800); }
+.theme-dark .round-entry-title { color: var(--felt-300); }
+
+.score-input-row {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 7px;
+  gap: 8px;
+}
+.score-input-name {
+  font-size: 0.82rem;
+  font-weight: 500;
+  flex: 1;
+}
+.theme-light .score-input-name { color: var(--ink-700); }
+.theme-dark .score-input-name { color: var(--ink-200); }
+
+.score-stepper {
+  display: flex; align-items: center; gap: 0;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1.5px solid;
+}
+.theme-light .score-stepper { border-color: var(--felt-300); }
+.theme-dark .score-stepper { border-color: var(--felt-700); }
+
+.stepper-btn {
+  width: 30px; height: 30px;
+  border: none;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem;
+  cursor: pointer;
+  font-weight: 300;
+}
+.theme-light .stepper-btn { background: var(--felt-100); color: var(--felt-700); }
+.theme-dark .stepper-btn { background: var(--felt-900); color: var(--felt-400); }
+.stepper-val {
+  width: 36px;
+  text-align: center;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+.theme-light .stepper-val { background: white; color: var(--ink-900); }
+.theme-dark .stepper-val { background: var(--ink-900); color: var(--ink-100); }
+
+/* ── GAME TYPE PICKER ───────────────────────────────────── */
+.game-type-card {
+  border-radius: 12px;
+  padding: 12px 14px;
+  margin: 0 12px 8px;
+  border: 2px solid;
+  display: flex; align-items: center; gap: 12px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.game-type-card.selected {
+  border-color: var(--felt-500);
+}
+.theme-light .game-type-card {
+  background: white;
+  border-color: var(--cream-200);
+}
+.theme-light .game-type-card.selected {
+  background: var(--felt-50);
+  border-color: var(--felt-500);
+}
+.theme-dark .game-type-card {
+  background: var(--ink-800);
+  border-color: rgba(255,255,255,0.07);
+}
+.theme-dark .game-type-card.selected {
+  background: rgba(26,127,75,0.12);
+  border-color: var(--felt-600);
+}
+.game-icon {
+  width: 40px; height: 40px;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+.theme-light .game-icon { background: var(--felt-100); }
+.theme-dark .game-icon { background: var(--felt-950); }
+.game-type-info { flex: 1; }
+.game-type-name {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+.theme-light .game-type-name { color: var(--ink-800); }
+.theme-dark .game-type-name { color: var(--ink-100); }
+.game-type-desc { font-size: 0.7rem; margin-top: 2px; }
+.theme-light .game-type-desc { color: var(--ink-400); }
+.theme-dark .game-type-desc { color: var(--ink-500); }
+.select-indicator {
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  border: 2px solid;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.65rem;
+  flex-shrink: 0;
+}
+.theme-light .select-indicator { border-color: var(--cream-300); color: transparent; }
+.theme-light .game-type-card.selected .select-indicator {
+  background: var(--felt-600); border-color: var(--felt-600); color: white;
+}
+.theme-dark .select-indicator { border-color: var(--ink-600); color: transparent; }
+.theme-dark .game-type-card.selected .select-indicator {
+  background: var(--felt-600); border-color: var(--felt-600); color: white;
+}
+
+/* ── ARCHIVE ITEM ───────────────────────────────────────── */
+.archive-item {
+  padding: 12px 14px;
+  border-radius: 12px;
+  margin: 0 12px 8px;
+  border: 1px solid;
+  display: flex; align-items: flex-start; justify-content: space-between;
+  gap: 10px;
+}
+.theme-light .archive-item { background: white; border-color: var(--cream-200); }
+.theme-dark .archive-item { background: var(--ink-800); border-color: rgba(255,255,255,0.06); }
+
+.archive-code {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  line-height: 1;
+}
+.theme-light .archive-code { color: var(--felt-700); }
+.theme-dark .archive-code { color: var(--felt-400); }
+
+.archive-meta { font-size: 0.68rem; margin-top: 3px; }
+.theme-light .archive-meta { color: var(--ink-400); }
+.theme-dark .archive-meta { color: var(--ink-500); }
+
+.archive-games { display: flex; gap: 4px; margin-top: 7px; flex-wrap: wrap; }
+.game-pip {
+  padding: 2px 7px;
+  border-radius: 999px;
+  font-size: 0.63rem;
+  font-weight: 600;
+}
+.theme-light .game-pip { background: var(--felt-100); color: var(--felt-700); }
+.theme-dark .game-pip { background: var(--felt-950); color: var(--felt-400); }
+
+.archive-winner {
+  display: flex; flex-direction: column; align-items: flex-end; gap: 4px;
+}
+.winner-label { font-size: 0.6rem; color: var(--gold-600); font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; }
+.winner-name {
+  font-family: var(--font-display);
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+.theme-light .winner-name { color: var(--ink-800); }
+.theme-dark .winner-name { color: var(--ink-100); }
+
+/* ── ROOM CODE DISPLAY ──────────────────────────────────── */
+.room-code-hero {
+  text-align: center;
+  padding: 16px 12px 10px;
+}
+.room-code-label {
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.theme-light .room-code-label { color: var(--ink-400); }
+.theme-dark .room-code-label { color: var(--ink-500); }
+
+.room-code-digits {
+  display: flex; gap: 6px; justify-content: center;
+}
+.digit-block {
+  width: 52px; height: 60px;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+.theme-light .digit-block { background: var(--felt-600); color: white; box-shadow: 0 3px 10px rgba(26,127,75,0.3); }
+.theme-dark .digit-block { background: var(--felt-800); color: var(--felt-100); box-shadow: 0 3px 10px rgba(8,37,24,0.5); }
+
+/* ── BOTTOM TAB BAR ─────────────────────────────────────── */
+.tab-bar {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 56px;
+  display: flex;
+  border-top: 1px solid;
+  flex-shrink: 0;
+}
+.theme-light .tab-bar { background: white; border-color: var(--cream-200); }
+.theme-dark .tab-bar { background: var(--ink-900); border-color: rgba(255,255,255,0.07); }
+
+.tab-item {
+  flex: 1;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 2px;
+  cursor: pointer;
+}
+.tab-icon { font-size: 1.1rem; line-height: 1; }
+.tab-label { font-size: 0.58rem; font-weight: 600; letter-spacing: 0.02em; }
+.tab-item.active .tab-label,
+.tab-item.active .tab-icon { color: var(--felt-600) !important; }
+.theme-light .tab-item .tab-label,
+.theme-light .tab-item .tab-icon { color: var(--ink-400); }
+.theme-dark .tab-item .tab-label,
+.theme-dark .tab-item .tab-icon { color: var(--ink-500); }
+
+/* ── SCROLL AREA ────────────────────────────────────────── */
+.scrollable { overflow-y: auto; flex: 1; padding-bottom: 62px; scrollbar-width: none; }
+.scrollable::-webkit-scrollbar { display: none; }
+
+/* ── EMPTY STATE ────────────────────────────────────────── */
+.empty-state {
+  display: flex; flex-direction: column; align-items: center;
+  padding: 28px 20px; text-align: center;
+}
+.empty-icon { font-size: 2.4rem; margin-bottom: 8px; opacity: 0.4; }
+.empty-text { font-size: 0.82rem; }
+.theme-light .empty-text { color: var(--ink-400); }
+.theme-dark .empty-text { color: var(--ink-600); }
+
+/* ── HOME HERO ──────────────────────────────────────────── */
+.home-hero {
+  text-align: center;
+  padding: 20px 16px 14px;
+}
+.hero-suits {
+  font-size: 1.4rem;
+  margin-bottom: 8px;
+  letter-spacing: 0.1em;
+  opacity: 0.6;
+}
+.hero-title {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin-bottom: 4px;
+}
+.theme-light .hero-title { color: var(--ink-900); }
+.theme-dark .hero-title { color: var(--cream-100); }
+.hero-title em { font-style: italic; color: var(--gold-500); }
+.hero-tagline { font-size: 0.75rem; font-weight: 300; }
+.theme-light .hero-tagline { color: var(--ink-400); }
+.theme-dark .hero-tagline { color: var(--ink-500); }
+
+/* ── DIVIDER ────────────────────────────────────────────── */
+.divider {
+  height: 1px;
+  margin: 6px 16px 10px;
+}
+.theme-light .divider { background: var(--cream-200); }
+.theme-dark .divider { background: rgba(255,255,255,0.06); }
+
+/* ── HOST LINK ──────────────────────────────────────────── */
+.host-link {
+  text-align: center;
+  font-size: 0.68rem;
+  padding: 6px;
+  cursor: pointer;
+}
+.theme-light .host-link { color: var(--ink-300); }
+.theme-dark .host-link { color: var(--ink-600); }
+
+/* ── WINNER BANNER ──────────────────────────────────────── */
+.winner-banner {
+  margin: 6px 12px;
+  padding: 9px 12px;
+  border-radius: 10px;
+  display: flex; align-items: center; gap: 10px;
+}
+.theme-light .winner-banner {
+  background: linear-gradient(90deg, var(--gold-50) 0%, var(--cream-100) 100%);
+  border: 1px solid var(--gold-200);
+}
+.theme-dark .winner-banner {
+  background: linear-gradient(90deg, rgba(161,98,7,0.18) 0%, transparent 100%);
+  border: 1px solid rgba(161,98,7,0.3);
+}
+.trophy { font-size: 1.5rem; }
+.winner-banner-text {}
+.winner-banner-label { font-size: 0.62rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--gold-600); }
+.winner-banner-name {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+.theme-light .winner-banner-name { color: var(--ink-900); }
+.theme-dark .winner-banner-name { color: var(--cream-100); }
+
+/* ── HINT TEXT ──────────────────────────────────────────── */
+.hint {
+  font-size: 0.68rem;
+  text-align: center;
+  padding: 0 16px 8px;
+}
+.theme-light .hint { color: var(--ink-300); }
+.theme-dark .hint { color: var(--ink-600); }
+
+/* ── DARK MODE ──────────────────────────────────────────── */
+.theme-dark .status-bar { background: var(--ink-950); color: var(--ink-300); }
+.theme-dark .screen-content { background: var(--ink-950); color: var(--ink-100); }
+
+/* ── UTILITY ────────────────────────────────────────────── */
+.spacer-sm { height: 8px; }
+.spacer-md { height: 14px; }
+.pb-tabbar { padding-bottom: 62px; }
+.ruby-text { color: var(--ruby-500); }
+.gold-text { color: var(--gold-500); }
+.felt-text { color: var(--felt-500); }
+.mono-code {
+  font-family: 'Courier New', monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+}
+
+/* ══════════════════════════════════════════════
+   ANNOTATIONS PANEL
+══════════════════════════════════════════════ */
+.annotations {
+  max-width: 700px;
+  margin: 2.5rem auto 0;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 16px;
+  padding: 1.5rem;
+}
+.annotations h3 {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  color: var(--cream-200);
+  margin-bottom: 1rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+}
+.annotation-list { list-style: none; }
+.annotation-list li {
+  font-size: 0.8rem;
+  color: var(--ink-300);
+  padding: 5px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  line-height: 1.5;
+  display: flex; gap: 8px;
+}
+.annotation-list li::before { content: '→'; color: var(--felt-500); flex-shrink: 0; }
+.annotation-list li strong { color: var(--cream-200); }
+
+/* Hide all screens by default */
+.screen-view { display: none; }
+.screen-view.active { display: flex; flex-direction: column; gap: 1.5rem; flex-wrap: wrap; justify-content: center; }
+</style>
+</head>
+<body>
+
+<h1 class="page-title">Nobody's Keeping Score <em>♠</em></h1>
+<p class="page-sub">Interactive design mockup · iPhone SE optimised (375 × 667)</p>
+
+<!-- Screen Nav -->
+<div class="screen-nav">
+  <button class="active" onclick="showScreen('home')">① Home</button>
+  <button onclick="showScreen('lobby')">② Lobby</button>
+  <button onclick="showScreen('setup')">③ Game Setup</button>
+  <button onclick="showScreen('scoreboard')">④ Scoreboard</button>
+  <button onclick="showScreen('archive')">⑤ Archive</button>
+</div>
+
+<!-- Theme Toggle -->
+<div class="theme-row">
+  <span>Dark</span>
+  <button class="toggle-pill" id="themeToggle" onclick="toggleTheme()"></button>
+  <span>Light</span>
+</div>
+
+<!-- ════════════════════ SCREEN VIEWS ════════════════════ -->
+
+<!-- ① HOME -->
+<div class="screen-view active" id="screen-home">
+  <div class="phone-wrapper">
+    <div class="phone-label">Home · /</div>
+    <div class="phone-frame">
+      <div class="phone-screen theme-dark" id="phone-home">
+        <div class="status-bar"><span class="status-time">9:41</span><div class="status-icons">▲▲▲ ◉ ▐▐</div></div>
+        <div class="screen-content">
+          <div class="app-bar">
+            <div class="app-bar-title">NKS <small>Nobody's Keeping Score</small></div>
+            <button class="icon-btn">☾</button>
+          </div>
+          <div class="scrollable">
+            <div class="home-hero">
+              <div class="hero-suits">♠ ♥ ♦ ♣</div>
+              <div class="hero-title">Nobody's<br>Keeping Score</div>
+              <div class="hero-tagline">Not that anyone's counting</div>
+            </div>
+            <div style="padding: 0 12px; display: flex; flex-direction: column; gap: 10px;">
+              <div class="card">
+                <div class="card-title">🎮 Join a Session</div>
+                <div class="input-group">
+                  <label class="input-label">Room Code</label>
+                  <input class="input-field" type="text" placeholder="1234" maxlength="4" style="font-family: 'Fraunces'; font-size: 1.4rem; letter-spacing: 0.2em; text-align: center;">
+                </div>
+                <button class="btn-primary btn-felt">Join Game Night</button>
+              </div>
+              <div class="host-link">Host access ···</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="phone-wrapper">
+    <div class="phone-label">Home · Host Mode</div>
+    <div class="phone-frame">
+      <div class="phone-screen theme-dark" id="phone-home-host">
+        <div class="status-bar"><span class="status-time">9:41</span><div class="status-icons">▲▲▲ ◉ ▐▐</div></div>
+        <div class="screen-content">
+          <div class="app-bar">
+            <div class="app-bar-title">NKS <small>Nobody's Keeping Score</small></div>
+            <button class="icon-btn">☾</button>
+          </div>
+          <div class="scrollable">
+            <div class="home-hero">
+              <div class="hero-suits">♠ ♥ ♦ ♣</div>
+              <div class="hero-title">Nobody's<br>Keeping Score</div>
+              <div class="hero-tagline">Not that anyone's counting</div>
+            </div>
+            <div style="padding: 0 12px; display: flex; flex-direction: column; gap: 8px;">
+              <div class="card">
+                <div class="card-title" style="color: var(--gold-400);">⭐ Host Controls</div>
+                <button class="btn-primary btn-felt" style="margin-bottom: 8px;">🃏 Start New Game Night</button>
+                <div class="divider"></div>
+                <div class="input-group">
+                  <label class="input-label">Or Join Existing Session</label>
+                  <input class="input-field" type="text" placeholder="1234" maxlength="4" style="font-family: 'Fraunces'; font-size: 1.4rem; letter-spacing: 0.2em; text-align: center; margin-bottom: 8px;">
+                </div>
+                <button class="btn-outline">Join as Host</button>
+              </div>
+              <div class="hint">Admin access active · expires in 28 days</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ② LOBBY -->
+<div class="screen-view" id="screen-lobby">
+  <div class="phone-wrapper">
+    <div class="phone-label">Lobby · Viewer</div>
+    <div class="phone-frame">
+      <div class="phone-screen theme-dark" id="phone-lobby">
+        <div class="status-bar"><span class="status-time">9:41</span><div class="status-icons">▲▲▲ ◉ ▐▐</div></div>
+        <div class="screen-content">
+          <div class="app-bar">
+            <div class="app-bar-title">Game Night <small>Lobby</small></div>
+            <button class="icon-btn">⚙</button>
+          </div>
+          <div class="scrollable">
+            <div class="room-code-hero">
+              <div class="room-code-label">Room Code</div>
+              <div class="room-code-digits">
+                <div class="digit-block">7</div>
+                <div class="digit-block">4</div>
+                <div class="digit-block">2</div>
+                <div class="digit-block">1</div>
+              </div>
+            </div>
+            <div class="section-header"><div class="section-header-title">Players — 4 joined</div></div>
+            <div class="player-row">
+              <div class="player-avatar avatar-felt">M</div>
+              <div class="player-info"><div class="player-name">Maureen</div><div class="player-status">👑 Host</div></div>
+              <span class="score-badge badge-host">host</span>
+            </div>
+            <div class="player-row">
+              <div class="player-avatar avatar-gold">J</div>
+              <div class="player-info"><div class="player-name">Jim</div><div class="player-status">Claimed · you</div></div>
+              <span class="score-badge badge-claimed">✓ claimed</span>
+            </div>
+            <div class="player-row">
+              <div class="player-avatar avatar-ruby">S</div>
+              <div class="player-info"><div class="player-name">Sandra</div><div class="player-status">Claimed</div></div>
+              <span class="score-badge badge-claimed">✓ claimed</span>
+            </div>
+            <div class="player-row">
+              <div class="player-avatar avatar-ink">?</div>
+              <div class="player-info"><div class="player-name">Player 4</div><div class="player-status">Unclaimed</div></div>
+              <span class="score-badge badge-claim">Claim</span>
+            </div>
+            <div class="spacer-md"></div>
+            <div style="padding: 0 12px;">
+              <div class="hint">Waiting for host to start the first game…</div>
+            </div>
+          </div>
+          <div class="tab-bar">
+            <div class="tab-item active"><div class="tab-icon">🏠</div><div class="tab-label">Lobby</div></div>
+            <div class="tab-item"><div class="tab-icon">📊</div><div class="tab-label">Scores</div></div>
+            <div class="tab-item"><div class="tab-icon">📋</div><div class="tab-label">Archive</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="phone-wrapper">
+    <div class="phone-label">Lobby · Host View</div>
+    <div class="phone-frame">
+      <div class="phone-screen theme-dark" id="phone-lobby-host">
+        <div class="status-bar"><span class="status-time">9:41</span><div class="status-icons">▲▲▲ ◉ ▐▐</div></div>
+        <div class="screen-content">
+          <div class="app-bar">
+            <div class="app-bar-title">Game Night <small>Lobby</small></div>
+            <button class="icon-btn" style="background: rgba(234,179,8,0.15); color: var(--gold-400);">⭐</button>
+          </div>
+          <div class="scrollable">
+            <div class="room-code-hero">
+              <div class="room-code-label">Room Code</div>
+              <div class="room-code-digits">
+                <div class="digit-block">7</div>
+                <div class="digit-block">4</div>
+                <div class="digit-block">2</div>
+                <div class="digit-block">1</div>
+              </div>
+            </div>
+            <div class="section-header"><div class="section-header-title">Players — 4 slots</div></div>
+            <div class="player-row">
+              <div class="player-avatar avatar-felt">M</div>
+              <div class="player-info"><div class="player-name">Maureen</div><div class="player-status">👑 Host · you</div></div>
+              <span class="score-badge badge-host">host</span>
+            </div>
+            <div class="player-row">
+              <div class="player-avatar avatar-gold">J</div>
+              <div class="player-info"><div class="player-name">Jim</div><div class="player-status">Claimed</div></div>
+              <span class="score-badge badge-claimed">✓ claimed</span>
+            </div>
+            <div class="player-row">
+              <div class="player-avatar avatar-ruby">S</div>
+              <div class="player-info"><div class="player-name">Sandra</div></div>
+              <span class="score-badge badge-claim">+ Claim</span>
+            </div>
+            <div class="player-row">
+              <div class="player-avatar avatar-ink">D</div>
+              <div class="player-info"><div class="player-name">Dave</div></div>
+              <span class="score-badge badge-claim">+ Claim</span>
+            </div>
+            <div class="spacer-md"></div>
+            <div style="padding: 0 12px;">
+              <button class="btn-primary btn-felt">▶ Start First Game</button>
+            </div>
+          </div>
+          <div class="tab-bar">
+            <div class="tab-item active"><div class="tab-icon">🏠</div><div class="tab-label">Lobby</div></div>
+            <div class="tab-item"><div class="tab-icon">📊</div><div class="tab-label">Scores</div></div>
+            <div class="tab-item"><div class="tab-icon">📋</div><div class="tab-label">Archive</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ③ GAME SETUP -->
+<div class="screen-view" id="screen-setup">
+  <div class="phone-wrapper">
+    <div class="phone-label">Game Setup · Host Only</div>
+    <div class="phone-frame">
+      <div class="phone-screen theme-dark" id="phone-setup">
+        <div class="status-bar"><span class="status-time">9:41</span><div class="status-icons">▲▲▲ ◉ ▐▐</div></div>
+        <div class="screen-content">
+          <div class="app-bar">
+            <div class="app-bar-title">New Game <small>Choose type</small></div>
+            <button class="icon-btn">✕</button>
+          </div>
+          <div class="scrollable">
+            <div class="spacer-sm"></div>
+            <div class="section-header"><div class="section-header-title">Select game type</div></div>
+            <div class="spacer-sm"></div>
+
+            <div class="game-type-card selected" id="gtc-rummy">
+              <div class="game-icon">🃏</div>
+              <div class="game-type-info">
+                <div class="game-type-name">Rummy</div>
+                <div class="game-type-desc">Hand scoring · lower is better</div>
+              </div>
+              <div class="select-indicator">✓</div>
+            </div>
+
+            <div class="game-type-card" id="gtc-whist">
+              <div class="game-icon">♠</div>
+              <div class="game-type-info">
+                <div class="game-type-name">Whist</div>
+                <div class="game-type-desc">Trick scoring · higher is better</div>
+              </div>
+              <div class="select-indicator"></div>
+            </div>
+
+            <div class="game-type-card" id="gtc-open">
+              <div class="game-icon">🎲</div>
+              <div class="game-type-info">
+                <div class="game-type-name">Open Scorer</div>
+                <div class="game-type-desc">Any game · you decide the rules</div>
+              </div>
+              <div class="select-indicator"></div>
+            </div>
+
+            <div class="spacer-md"></div>
+            <div class="section-header"><div class="section-header-title">Players in this game</div></div>
+            <div class="spacer-sm"></div>
+
+            <div class="player-row">
+              <div class="player-avatar avatar-felt">M</div>
+              <div class="player-info"><div class="player-name">Maureen</div></div>
+              <span style="font-size: 1.2rem; color: var(--felt-500);">✓</span>
+            </div>
+            <div class="player-row">
+              <div class="player-avatar avatar-gold">J</div>
+              <div class="player-info"><div class="player-name">Jim</div></div>
+              <span style="font-size: 1.2rem; color: var(--felt-500);">✓</span>
+            </div>
+            <div class="player-row">
+              <div class="player-avatar avatar-ruby">S</div>
+              <div class="player-info"><div class="player-name">Sandra</div></div>
+              <span style="font-size: 1.2rem; color: var(--felt-500);">✓</span>
+            </div>
+            <div class="player-row">
+              <div class="player-avatar avatar-ink">D</div>
+              <div class="player-info"><div class="player-name">Dave</div></div>
+              <span style="font-size: 1.1rem; color: var(--ink-600);">○</span>
+            </div>
+
+            <div class="spacer-md"></div>
+            <div style="padding: 0 12px 20px;">
+              <button class="btn-primary btn-felt">🃏 Start Rummy</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ④ SCOREBOARD -->
+<div class="screen-view" id="screen-scoreboard">
+  <div class="phone-wrapper">
+    <div class="phone-label">Scoreboard · Viewer</div>
+    <div class="phone-frame">
+      <div class="phone-screen theme-dark" id="phone-scoreboard">
+        <div class="status-bar"><span class="status-time">9:41</span><div class="status-icons">▲▲▲ ◉ ▐▐</div></div>
+        <div class="screen-content">
+          <div class="app-bar">
+            <div class="app-bar-title">Rummy <small>Game Night · 7421</small></div>
+            <button class="icon-btn">⋯</button>
+          </div>
+          <div class="scrollable">
+            <div class="winner-banner">
+              <div class="trophy">🏆</div>
+              <div class="winner-banner-text">
+                <div class="winner-banner-label">Currently Winning</div>
+                <div class="winner-banner-name">Sandra · 54 pts</div>
+              </div>
+            </div>
+            <div class="spacer-sm"></div>
+            <div class="section-header"><div class="section-header-title">Standings · Round 4 of 6</div></div>
+            <div class="score-table">
+              <div class="score-table-head">
+                <span>Player</span><span>R1</span><span>R2</span><span>R3</span>
+              </div>
+              <div class="score-table-row">
+                <div class="player-cell">
+                  <span class="rank-badge gold-text">🥇</span>
+                  <div class="mini-avatar avatar-ruby" style="font-size:0.6rem;font-weight:700;">S</div>
+                  <span style="font-size:0.82rem;color:var(--ink-200);">Sandra</span>
+                </div>
+                <span>18</span><span>19</span><span>17</span>
+              </div>
+              <div class="score-table-row">
+                <div class="player-cell">
+                  <span class="rank-badge" style="color:var(--ink-400)">🥈</span>
+                  <div class="mini-avatar avatar-felt" style="font-size:0.6rem;font-weight:700;">M</div>
+                  <span style="font-size:0.82rem;color:var(--ink-200);">Maureen</span>
+                </div>
+                <span>22</span><span>21</span><span>20</span>
+              </div>
+              <div class="score-table-row">
+                <div class="player-cell">
+                  <span class="rank-badge" style="color:var(--ink-400)">🥉</span>
+                  <div class="mini-avatar avatar-gold" style="font-size:0.6rem;font-weight:700;">J</div>
+                  <span style="font-size:0.82rem;color:var(--ink-200);">Jim</span>
+                </div>
+                <span>25</span><span>23</span><span>24</span>
+              </div>
+            </div>
+            <div class="spacer-sm"></div>
+            <div class="section-header"><div class="section-header-title">Round 4 — Waiting for host</div></div>
+            <div class="spacer-sm"></div>
+            <div class="empty-state">
+              <div class="empty-icon">🎴</div>
+              <div class="empty-text">Host is entering scores for Round 4…</div>
+            </div>
+          </div>
+          <div class="tab-bar">
+            <div class="tab-item"><div class="tab-icon">🏠</div><div class="tab-label">Lobby</div></div>
+            <div class="tab-item active"><div class="tab-icon">📊</div><div class="tab-label">Scores</div></div>
+            <div class="tab-item"><div class="tab-icon">📋</div><div class="tab-label">Archive</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="phone-wrapper">
+    <div class="phone-label">Scoreboard · Host / Score Entry</div>
+    <div class="phone-frame">
+      <div class="phone-screen theme-dark" id="phone-scoreboard-host">
+        <div class="status-bar"><span class="status-time">9:41</span><div class="status-icons">▲▲▲ ◉ ▐▐</div></div>
+        <div class="screen-content">
+          <div class="app-bar">
+            <div class="app-bar-title">Rummy <small>Game Night · 7421</small></div>
+            <button class="icon-btn" style="background: rgba(234,179,8,0.15); color: var(--gold-400);">⭐</button>
+          </div>
+          <div class="scrollable">
+            <div class="winner-banner">
+              <div class="trophy">🏆</div>
+              <div class="winner-banner-text">
+                <div class="winner-banner-label">Currently Winning</div>
+                <div class="winner-banner-name">Sandra · 54 pts</div>
+              </div>
+            </div>
+            <div class="spacer-sm"></div>
+            <div class="round-entry">
+              <div class="round-entry-title">📝 Enter Round 4 Scores</div>
+              <div class="score-input-row">
+                <span class="score-input-name">Sandra</span>
+                <div class="score-stepper">
+                  <button class="stepper-btn">−</button>
+                  <div class="stepper-val">15</div>
+                  <button class="stepper-btn">+</button>
+                </div>
+              </div>
+              <div class="score-input-row">
+                <span class="score-input-name">Maureen</span>
+                <div class="score-stepper">
+                  <button class="stepper-btn">−</button>
+                  <div class="stepper-val">22</div>
+                  <button class="stepper-btn">+</button>
+                </div>
+              </div>
+              <div class="score-input-row">
+                <span class="score-input-name">Jim</span>
+                <div class="score-stepper">
+                  <button class="stepper-btn">−</button>
+                  <div class="stepper-val">28</div>
+                  <button class="stepper-btn">+</button>
+                </div>
+              </div>
+              <div class="spacer-sm"></div>
+              <button class="btn-primary btn-felt" style="font-size:0.82rem;">✓ Save Round 4</button>
+            </div>
+            <div class="score-table">
+              <div class="score-table-head">
+                <span>Player</span><span>R1</span><span>R2</span><span>R3</span>
+              </div>
+              <div class="score-table-row">
+                <div class="player-cell">
+                  <span class="rank-badge gold-text">🥇</span>
+                  <div class="mini-avatar avatar-ruby" style="font-size:0.6rem;font-weight:700;">S</div>
+                  <span style="font-size:0.82rem;color:var(--ink-200);">Sandra</span>
+                </div>
+                <span>18</span><span>19</span><span>17</span>
+              </div>
+              <div class="score-table-row">
+                <div class="player-cell">
+                  <span class="rank-badge" style="color:var(--ink-400)">🥈</span>
+                  <div class="mini-avatar avatar-felt" style="font-size:0.6rem;font-weight:700;">M</div>
+                  <span style="font-size:0.82rem;color:var(--ink-200);">Maureen</span>
+                </div>
+                <span>22</span><span>21</span><span>20</span>
+              </div>
+              <div class="score-table-row">
+                <div class="player-cell">
+                  <span class="rank-badge" style="color:var(--ink-400)">🥉</span>
+                  <div class="mini-avatar avatar-gold" style="font-size:0.6rem;font-weight:700;">J</div>
+                  <span style="font-size:0.82rem;color:var(--ink-200);">Jim</span>
+                </div>
+                <span>25</span><span>23</span><span>24</span>
+              </div>
+            </div>
+            <div class="spacer-sm"></div>
+            <div style="padding: 0 12px 8px; display: flex; gap: 8px;">
+              <button class="btn-outline" style="font-size:0.78rem;">+ New Game</button>
+              <button class="btn-outline" style="font-size:0.78rem; border-color: var(--ruby-600); color: var(--ruby-400);">■ End Night</button>
+            </div>
+          </div>
+          <div class="tab-bar">
+            <div class="tab-item"><div class="tab-icon">🏠</div><div class="tab-label">Lobby</div></div>
+            <div class="tab-item active"><div class="tab-icon">📊</div><div class="tab-label">Scores</div></div>
+            <div class="tab-item"><div class="tab-icon">📋</div><div class="tab-label">Archive</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ⑤ ARCHIVE -->
+<div class="screen-view" id="screen-archive">
+  <div class="phone-wrapper">
+    <div class="phone-label">Archive · Past Sessions</div>
+    <div class="phone-frame">
+      <div class="phone-screen theme-dark" id="phone-archive">
+        <div class="status-bar"><span class="status-time">9:41</span><div class="status-icons">▲▲▲ ◉ ▐▐</div></div>
+        <div class="screen-content">
+          <div class="app-bar">
+            <div class="app-bar-title">Archive <small>Past game nights</small></div>
+            <button class="icon-btn">🔍</button>
+          </div>
+          <div class="scrollable">
+            <div class="section-header" style="padding-top:12px;"><div class="section-header-title">March 2026</div></div>
+            <div class="spacer-sm"></div>
+
+            <div class="archive-item">
+              <div>
+                <div class="archive-code">7421</div>
+                <div class="archive-meta">Sat Mar 7 · 4 players · 3 games</div>
+                <div class="archive-games">
+                  <span class="game-pip">Rummy</span>
+                  <span class="game-pip">Rummy</span>
+                  <span class="game-pip">Whist</span>
+                </div>
+              </div>
+              <div class="archive-winner">
+                <span class="winner-label">🏆 Winner</span>
+                <span class="winner-name">Sandra</span>
+              </div>
+            </div>
+
+            <div class="archive-item">
+              <div>
+                <div class="archive-code">3892</div>
+                <div class="archive-meta">Fri Feb 28 · 3 players · 2 games</div>
+                <div class="archive-games">
+                  <span class="game-pip">Whist</span>
+                  <span class="game-pip">Open</span>
+                </div>
+              </div>
+              <div class="archive-winner">
+                <span class="winner-label">🏆 Winner</span>
+                <span class="winner-name">Jim</span>
+              </div>
+            </div>
+
+            <div class="section-header" style="padding-top:8px;"><div class="section-header-title">February 2026</div></div>
+            <div class="spacer-sm"></div>
+
+            <div class="archive-item">
+              <div>
+                <div class="archive-code">5514</div>
+                <div class="archive-meta">Sat Feb 15 · 4 players · 4 games</div>
+                <div class="archive-games">
+                  <span class="game-pip">Rummy</span>
+                  <span class="game-pip">Rummy</span>
+                  <span class="game-pip">Rummy</span>
+                  <span class="game-pip">Whist</span>
+                </div>
+              </div>
+              <div class="archive-winner">
+                <span class="winner-label">🏆 Winner</span>
+                <span class="winner-name">Maureen</span>
+              </div>
+            </div>
+
+            <div class="archive-item">
+              <div>
+                <div class="archive-code">1107</div>
+                <div class="archive-meta">Sat Feb 1 · 4 players · 1 game</div>
+                <div class="archive-games">
+                  <span class="game-pip">Open</span>
+                </div>
+              </div>
+              <div class="archive-winner">
+                <span class="winner-label">🏆 Winner</span>
+                <span class="winner-name">Dave</span>
+              </div>
+            </div>
+
+            <div class="hint" style="margin-top: 8px;">4 sessions · 10 games played</div>
+          </div>
+          <div class="tab-bar">
+            <div class="tab-item"><div class="tab-icon">🏠</div><div class="tab-label">Lobby</div></div>
+            <div class="tab-item"><div class="tab-icon">📊</div><div class="tab-label">Scores</div></div>
+            <div class="tab-item active"><div class="tab-icon">📋</div><div class="tab-label">Archive</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ ANNOTATIONS ═══════════════════ -->
+<div class="annotations" id="annotations-home">
+  <h3>① Home Screen — Design Notes</h3>
+  <ul class="annotation-list">
+    <li><strong>Two states:</strong> Visitor (join only) and Host (create + join). The admin "Host access" link is intentionally subtle — small, muted text below the join form.</li>
+    <li><strong>Room code input:</strong> Fraunces display font at large size with wide letter-spacing. 4 digits only, centered. Feels tactile, like a safe combination.</li>
+    <li><strong>Card suits in hero:</strong> ♠ ♥ ♦ ♣ as a decorative motif — repeats throughout the app for thematic consistency.</li>
+    <li><strong>Theme toggle:</strong> Top-right of the app bar. Persists across sessions via localStorage.</li>
+    <li><strong>Safe zone:</strong> Content sits well above the 375px width — no overflow issues on iPhone SE.</li>
+  </ul>
+</div>
+
+<div class="annotations" id="annotations-lobby" style="display:none;">
+  <h3>② Lobby Screen — Design Notes</h3>
+  <ul class="annotation-list">
+    <li><strong>Room code hero:</strong> Large digit blocks in felt-600 (light) / felt-800 (dark) — prominent and easy to share verbally or visually.</li>
+    <li><strong>Player rows:</strong> Avatar initial + name + status badge. Three badge states: <em>host</em> (felt-600 solid), <em>claimed</em> (gold tint), <em>claim</em> (felt tint, tappable).</li>
+    <li><strong>Host star indicator:</strong> The top-right icon-btn gets a gold tint when the current user is the host — a persistent but non-intrusive signal.</li>
+    <li><strong>Tab bar:</strong> 3 tabs: Lobby / Scores / Archive. Felt-600 active state. Scores tab becomes active once a game is running.</li>
+    <li><strong>CTA for host:</strong> "Start First Game" button only visible in host view — not shown to viewers.</li>
+  </ul>
+</div>
+
+<div class="annotations" id="annotations-setup" style="display:none;">
+  <h3>③ Game Setup Screen — Design Notes</h3>
+  <ul class="annotation-list">
+    <li><strong>Game type cards:</strong> Selected state uses felt-600 border + subtle felt-50/felt-950 background tint. Rounded check circle fills on selection.</li>
+    <li><strong>Player toggle:</strong> Tap rows to include/exclude players from this game. Checkmark (felt-500) vs empty circle (ink-600).</li>
+    <li><strong>CTA label updates:</strong> "Start Rummy" / "Start Whist" / "Start Open Scorer" — the button reflects the selected type.</li>
+    <li><strong>Host-only route:</strong> This screen is unreachable for non-hosts (Firestore rules enforce this server-side too).</li>
+  </ul>
+</div>
+
+<div class="annotations" id="annotations-scoreboard" style="display:none;">
+  <h3>④ Scoreboard Screen — Design Notes</h3>
+  <ul class="annotation-list">
+    <li><strong>Winner banner:</strong> Gold gradient strip at top — "Currently Winning" updates in real-time via Firestore. Trophy emoji + leading player + total.</li>
+    <li><strong>Score table:</strong> Per-round columns (R1, R2, R3…) with Fraunces numerals. Medal emoji for rank 1/2/3. Compact — fits 4 players on a 375px screen.</li>
+    <li><strong>Round entry (host only):</strong> Stepper widget (−/value/+) — thumb-friendly, large tap target. Each player gets their own row. "Save Round" writes to Firestore.</li>
+    <li><strong>Claimed player entry:</strong> A claimed player sees their own stepper row enabled; other players' rows are read-only.</li>
+    <li><strong>End Night / New Game:</strong> Ruby-bordered "End Night" uses a destructive color — intentionally alarming. "New Game" routes to Game Setup.</li>
+  </ul>
+</div>
+
+<div class="annotations" id="annotations-archive" style="display:none;">
+  <h3>⑤ Archive Screen — Design Notes</h3>
+  <ul class="annotation-list">
+    <li><strong>Grouped by month:</strong> Section headers act as temporal dividers — Fraunces display treatment for month labels.</li>
+    <li><strong>Archive card:</strong> Room code (large, felt-700/400) + date/players/game count + game type pills + winner callout aligned right.</li>
+    <li><strong>Game type pills:</strong> Small felt-tinted badges — easy to scan which games were played each night.</li>
+    <li><strong>Winner display:</strong> Gold-tinted label + player name — celebrates the evening's champion persistently.</li>
+    <li><strong>Summary count:</strong> Footer hint shows total sessions + games played — satisfying for the nostalgic tone.</li>
+  </ul>
+</div>
+
+<script>
+let currentScreen = 'home';
+let isDark = true;
+
+const screenMap = {
+  home: ['phone-home', 'phone-home-host'],
+  lobby: ['phone-lobby', 'phone-lobby-host'],
+  setup: ['phone-setup'],
+  scoreboard: ['phone-scoreboard', 'phone-scoreboard-host'],
+  archive: ['phone-archive'],
+};
+
+function showScreen(name) {
+  document.querySelectorAll('.screen-view').forEach(el => el.classList.remove('active'));
+  document.getElementById('screen-' + name).classList.add('active');
+  document.querySelectorAll('.screen-nav button').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.screen-nav button').forEach(b => {
+    if (b.textContent.toLowerCase().includes(name)) b.classList.add('active');
+  });
+  // annotations
+  document.querySelectorAll('.annotations').forEach(el => el.style.display = 'none');
+  const ann = document.getElementById('annotations-' + name);
+  if (ann) ann.style.display = 'block';
+
+  currentScreen = name;
+  applyTheme();
+}
+
+function applyTheme() {
+  const phones = document.querySelectorAll('.phone-screen');
+  phones.forEach(p => {
+    p.classList.remove('theme-light', 'theme-dark');
+    p.classList.add(isDark ? 'theme-dark' : 'theme-light');
+  });
+  // Re-style dark avatar backgrounds for light mode
+}
+
+function toggleTheme() {
+  isDark = !isDark;
+  const toggle = document.getElementById('themeToggle');
+  toggle.classList.toggle('light', !isDark);
+  applyTheme();
+}
+
+// Nav button text matching fix
+document.querySelectorAll('.screen-nav button').forEach((b, i) => {
+  const screens = ['home', 'lobby', 'setup', 'scoreboard', 'archive'];
+  b.addEventListener('click', () => showScreen(screens[i]));
+});
+
+// Game type card selection
+document.querySelectorAll('.game-type-card').forEach(card => {
+  card.addEventListener('click', () => {
+    document.querySelectorAll('.game-type-card').forEach(c => c.classList.remove('selected'));
+    document.querySelectorAll('.game-type-card .select-indicator').forEach(s => s.textContent = '');
+    card.classList.add('selected');
+    card.querySelector('.select-indicator').textContent = '✓';
+    const names = { 'gtc-rummy': 'Rummy', 'gtc-whist': 'Whist', 'gtc-open': 'Open Scorer' };
+    const btn = document.querySelector('#screen-setup .btn-felt');
+    if (btn) btn.textContent = '🃏 Start ' + (names[card.id] || 'Game');
+  });
+});
+
+// Stepper
+document.querySelectorAll('.stepper-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const val = btn.parentElement.querySelector('.stepper-val');
+    let n = parseInt(val.textContent) || 0;
+    n = btn.textContent.trim() === '+' ? n + 1 : Math.max(0, n - 1);
+    val.textContent = n;
+  });
+});
+
+// Init
+applyTheme();
+</script>
+</body>
+</html>

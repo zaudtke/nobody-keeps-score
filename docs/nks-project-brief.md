@@ -5,9 +5,11 @@
 
 ## Change Log
 
-| Date | Change |
-|---|---|
-| 2026-03-07 | Initial brief created |
+| Date | Version | Change |
+|---|---|---|
+| 2026-03-07 | 1.0 | Initial brief created |
+| 2026-03-08 | 2.0 | Pivot to host-only v1 · Google Auth replaces anonymous + admin code · Firestore allowlist · room code and lobby deferred · games list updated · screens list updated · data structure updated |
+| 2026-03-08 | 2.1 | Firestore data structure expanded to reflect all four game specs · per-game round document shapes defined · game config shape defined · currentRound standardised to 1-based across all game types |
 
 ---
 
@@ -23,31 +25,50 @@
 | **Type** | Progressive Web App (installable, offline-capable) |
 | **Audience** | Personal use — friends and family card nights |
 
-### Supported game types
-- Rummy (with specific scoring rules)
-- Whist (with specific scoring rules)
-- Open generic scorer (any game)
+### Supported game types (v1)
+- Dirty Clubs
+- Canasta
+- 5 Crowns
+- Open Scoring (generic — any game)
+
+> **Deferred to future releases:** Rummy (original), Whist
 
 ---
 
-## 2. Key Decisions
+## 2. v1 Scope — Host Only
+
+Version 1 is intentionally scoped to a **single host** managing the entire game night. There are no viewers, no room codes, and no lobby. This simplifies the POC significantly and allows the core scoring experience to be built and validated first.
+
+| Feature | v1 | Future |
+|---|---|---|
+| Host manages game night | ✅ | ✅ |
+| Google Auth for host | ✅ | ✅ |
+| Room code / lobby | ❌ | ✅ |
+| Player claiming (join flow) | ❌ | ✅ |
+| Viewer access | ❌ | ✅ |
+| Archive UI | ❌ | ✅ |
+| Session history on Home | ❌ | ✅ |
+
+---
+
+## 3. Key Decisions
 
 | Decision | Choice | Rationale |
 |---|---|---|
 | Framework | Angular 21 | Standalone components, signals, modern patterns |
 | Styling | Tailwind CSS v4 | CSS-first `@theme` config — no `tailwind.config.js` |
-| Database | Firestore | Real-time shared scoring at the table |
+| Database | Firestore | Real-time shared scoring; future multiplayer foundation |
 | Dev database | Firestore Emulator | Safe rule testing; ephemeral; never touches live data |
-| Authentication | Anonymous only | No login friction; host + player roles via UID |
-| Room joining | 4-digit numeric code | Simple, fast to share verbally |
-| Host access | Admin code (hashed) | Subtle link on home screen; SHA-256 hash in env |
-| Admin code storage | SHA-256 hash only | Plaintext never in bundle; Web Crypto API at runtime |
-| Admin persistence | 30-day localStorage expiry | Silently restored on return; lapses quietly |
-| Multiple hosts | Yes — anyone with admin code | No single-host restriction |
-| Score entry | Host or claimed player | Host always can; players opt-in by claiming slot |
-| Session scope | Full night under one code | Multiple games, one session, one code |
-| Session history | Archive completed sessions | Active = live, archived = past nights |
-| Theme | Light + Dark, switchable | Respects OS preference, remembers user choice |
+| Authentication | Google Sign-In (Firebase Auth) | Single known host; no anonymous access in v1 |
+| Authorisation | Firestore allowlist (`authorisedUsers` collection) | Host UIDs added manually in Firebase Console; no in-app user management needed |
+| User management | Manual via Firebase Console | Single host setup; no self-registration |
+| Admin code / hashed passphrase | ❌ Removed | Replaced by Google Auth + allowlist |
+| Room code | ❌ Deferred | Not needed for host-only v1 |
+| Lobby / player claiming | ❌ Deferred | Not needed for host-only v1 |
+| Score entry | Host only (v1) | No claimed player slots in v1 |
+| Session scope | Full night under one game session | Multiple games within one session |
+| Session history | Stored in Firestore; no UI in v1 | Archive screen deferred |
+| Theme | Light + Dark, switchable | Respects OS preference; remembers user choice |
 | Code quality | ESLint + Prettier + Husky | Flat config; format on save; pre-commit hooks |
 | GitHub repo visibility | Public | Open source; `environment.ts` git ignored |
 | Branch protection | Yes — PRs required | Nothing merges to main without a PR |
@@ -55,9 +76,9 @@
 
 ---
 
-## 3. Colour Palette
+## 4. Colour Palette
 
-All tokens are defined in `nks-app/src/styles.css` inside the Tailwind `@theme` block. Always use tokens — never raw hex values.
+All tokens defined in `nks-app/src/styles.css` inside the Tailwind `@theme` block. Always use tokens — never raw hex values.
 
 ### Felt Green — primary
 The dominant colour. Nav, buttons, scores, active states.
@@ -67,7 +88,7 @@ The dominant colour. Nav, buttons, scores, active states.
 | `felt-50` | Lightest tint — hover backgrounds |
 | `felt-100` | Light surfaces |
 | `felt-300` | Borders, dividers |
-| `felt-600` | Primary buttons, active nav |
+| `felt-600` | Primary buttons, active nav, app bar (light) |
 | `felt-800` | Dark pressed states |
 | `felt-900` | Darkest — dark mode surfaces |
 
@@ -77,18 +98,18 @@ Surfaces, cards, input backgrounds.
 | Token | Usage |
 |---|---|
 | `cream-50` | Page background (light mode) |
-| `cream-100` | Card surfaces |
-| `cream-200` | Input backgrounds |
+| `cream-100` | Card surfaces, app bar text |
+| `cream-200` | Input backgrounds, borders |
 | `cream-400` | Muted text on cream |
 
 ### Royal Ruby — accents
-Alerts, ♥ ♦ suits, destructive actions, warnings.
+Alerts, ♥ ♦ suits, destructive actions, warnings, unauthorised state glow.
 
 | Token | Usage |
 |---|---|
 | `ruby-400` | Suit icons, highlights |
 | `ruby-600` | Alerts, destructive buttons |
-| `ruby-800` | Dark accent |
+| `ruby-800` | Unauthorised screen background glow |
 
 ### Ink — dark neutral
 Text, dark mode backgrounds, cool shadows.
@@ -101,13 +122,13 @@ Text, dark mode backgrounds, cool shadows.
 | `ink-950` | Dark mode background |
 
 ### Gold — winners
-Trophy icons, leaderboard highlights, winning states.
+Trophy icons, leaderboard highlights, winning states, host avatar.
 
 | Token | Usage |
 |---|---|
-| `gold-400` | Trophy icons |
+| `gold-400` | Trophy icons, host avatar (dark) |
 | `gold-500` | Winner highlights |
-| `gold-700` | Dark gold text |
+| `gold-700` | Dark gold text, host avatar (light) |
 
 ### Typography
 - **Display / headings:** Fraunces (Google Fonts)
@@ -115,7 +136,7 @@ Trophy icons, leaderboard highlights, winning states.
 
 ---
 
-## 4. Firebase Setup — Console vs CLI
+## 5. Firebase Setup — Console vs CLI
 
 ### Must be done in the Firebase Console (website)
 
@@ -124,7 +145,8 @@ Trophy icons, leaderboard highlights, winning states.
 | Create the Firebase project | [console.firebase.google.com](https://console.firebase.google.com) |
 | Register web app — gets you `firebaseConfig` | Console → Project Settings |
 | Enable Firestore and choose region | Console → Build → Firestore |
-| Enable Anonymous Authentication | Console → Build → Authentication |
+| Enable Google Authentication | Console → Build → Authentication → Sign-in method |
+| Add authorised host(s) to `authorisedUsers` collection | Console → Firestore → `authorisedUsers/{uid}` |
 
 ### Handled by the CLI from that point on
 
@@ -142,63 +164,168 @@ Trophy icons, leaderboard highlights, winning states.
 1. Console  → Create project
 2. Console  → Register web app → copy firebaseConfig → paste into environment.ts
 3. Console  → Enable Firestore (pick region)
-4. Console  → Enable Anonymous Auth
-5. Terminal → firebase init emulators
-6. Terminal → firebase emulators:start  (all dev work from here on)
-7. Terminal → firebase deploy --only firestore:rules  (when ready for production)
+4. Console  → Enable Google Authentication
+5. Console  → Sign in once with your Google account to get your UID
+             (Firebase Console → Auth → Users tab will show it after first sign-in)
+6. Console  → Firestore → Create authorisedUsers/{your-uid} document
+             Fields: email, displayName, addedAt
+7. Terminal → firebase init emulators
+8. Terminal → firebase emulators:start  (all dev work from here on)
+9. Terminal → firebase deploy --only firestore:rules  (when ready for production)
 ```
 
 > **Region tip for Toronto:** choose `northamerica-northeast1` (Montreal) or `us-east1` (South Carolina). You cannot change the region after creation.
 
 ---
 
-## 5. Firestore Data Structure
+## 6. Firestore Data Structure
 
 ```
-sessions/{roomCode}
-  ├── hostId: string               anonymous UID of the host
+authorisedUsers/{uid}
+  ├── email: string
+  ├── displayName: string
+  └── addedAt: timestamp
+
+sessions/{sessionId}
+  ├── hostId: string                   Firebase Auth UID of the host
   ├── createdAt: timestamp
   ├── status: 'active' | 'archived'
   ├── players/{playerId}
-  │     ├── name: string
-  │     └── claimedBy: string | null   UID of player who claimed this slot
+  │     └── name: string               Host-entered name (no claiming in v1)
   └── games/{gameId}
-        ├── gameType: 'rummy' | 'whist' | 'open'
+        ├── gameType: 'dirty-clubs' | 'canasta' | '5-crowns' | 'open'
         ├── status: 'active' | 'complete'
         ├── startedAt: timestamp
+        ├── currentRound: number        1-based across all game types · always means "current round/hand number"
+        │                               Components convert to 0-based index when needed (e.g. ROUNDS[currentRound - 1] in 5 Crowns)
+        ├── config                      Shape varies by gameType — see below · null/omitted for 5 Crowns, Canasta, Dirty Clubs
         └── rounds/{roundId}
-              ├── roundNumber: number
-              └── scores: { [playerId]: number }
+              └── (shape varies by gameType — see below)
+```
+
+> **Note:** The `players/{playerId}/claimedBy` field from v1 planning is removed — no player claiming in v1. Player names are entered by the host at game setup.
+
+### Game configs (`games/{gameId}/config`)
+
+```
+// 5 Crowns — all round structure is static (baked into ROUNDS[] constant)
+config: null
+
+// Canasta — no game-level config required
+config: null
+
+// Dirty Clubs — no game-level config required
+config: null
+
+// Open Scorer
+config: {
+  winDirection: 'high' | 'low'
+  gameName: string                 // displayed in app bar · defaults to 'Open Game' if blank
+}
+```
+
+### Round document shapes (`games/{gameId}/rounds/{roundId}`)
+
+**5 Crowns**
+```
+roundId (auto)
+  ├── roundNumber: number            1-based (1–11)
+  ├── roundIndex: number             0-based (0–10) · index into ROUNDS[] constant for label/cards/wild
+  └── scores: { [playerId]: number } round score entered by player (≥ 0; negative permitted as edge case)
+```
+
+> `roundIndex` is stored alongside `roundNumber` for convenient `ROUNDS[]` lookups without requiring components to subtract 1 at every call site. `getRoundDef()` uses `roundIndex` directly.
+
+**Canasta**
+```
+roundId (auto)
+  ├── roundNumber: number            1-based · no upper limit
+  └── scores: {
+        [playerId]: {
+          base: number               ≥ 0 · default 0
+          score: number              may be negative
+          newTotal: number           prev + base + score · stored for fast scoreboard reads
+        }
+      }
+```
+
+> `newTotal` is stored (not purely derived) so the scoreboard renders without walking the full round history on every load. Still re-derivable from round history as a consistency check.
+
+**Dirty Clubs**
+```
+roundId (auto)
+  ├── handNumber: number             1-based · increments each hand
+  ├── moonWin: boolean               true if Shoot the Moon succeeded this hand
+  └── scores: {
+        [playerId]: {
+          outcome: 'dnp' | 'tricks' | 'bump' | 'double_bump' | 'moon'
+          tricksValue: number | null  tricks taken · null unless outcome === 'tricks'
+          scoreDelta: number          change applied this hand (may be negative · floor 0 applied)
+          newScore: number            running score total after this hand
+          bumpsAdded: number          0, 1, or 2
+          newBumpCount: number        running bump total after this hand
+        }
+      }
+```
+
+> `newScore` and `newBumpCount` are stored for fast scoreboard reads. Re-deriving them requires replaying the floor logic at each step — storing is safer and avoids that complexity on every read.
+
+**Open Scorer**
+```
+roundId (auto)
+  ├── roundNumber: number            1-based · no upper limit
+  └── scores: { [playerId]: number } turn score entered (positive or negative)
 ```
 
 ---
 
-## 6. Permission Model
+## 7. Permission Model (v1 — Host Only)
 
-| Action | Host | Claimed Player | Viewer |
-|---|---|---|---|
-| View all scores | ✅ | ✅ | ✅ |
-| Enter any player's score | ✅ | ❌ | ❌ |
-| Enter own score | ✅ | ✅ | ❌ |
-| Start new game | ✅ | ❌ | ❌ |
-| Archive session | ✅ | ❌ | ❌ |
-| Claim a player slot | n/a | ✅ done | ✅ |
+| Action | Host |
+|---|---|
+| View all scores | ✅ |
+| Enter any player's score | ✅ |
+| Start new game | ✅ |
+| End session | ✅ |
+| Add/remove players | ✅ |
+
+All other access is blocked. Firestore security rules enforce that only authenticated, allowlisted UIDs can read or write session data.
 
 ---
 
-## 7. App Screens
+## 8. Authentication & Authorisation Model
+
+| Concern | Approach |
+|---|---|
+| Auth provider | Google Sign-In via Firebase Auth |
+| Authorisation | Firestore `authorisedUsers` collection — document per approved UID |
+| Unauthorised users | Signed out immediately; routed to `/unauthorized` |
+| Adding new hosts | Manual — add document to `authorisedUsers` in Firebase Console |
+| Removing access | Delete document from `authorisedUsers` in Firebase Console |
+| Session persistence | Firebase Auth handles token refresh automatically |
+
+---
+
+## 9. App Screens (v1)
 
 | Screen | Route | Access |
 |---|---|---|
-| Home | `/` | Everyone — create (admin) or join (anyone) |
-| Lobby | `/session/:code` | Everyone — player list + claim slots |
-| Game Setup | `/session/:code/setup` | Host only — pick game type |
-| Scoreboard | `/session/:code/game/:id` | Everyone — live scores + round entry |
-| Archive | `/archive` | Everyone — past completed sessions |
+| Home — unauthenticated | `/` | Everyone — shows app description + Google sign-in |
+| Home — authenticated | `/` | Authorised host — shows Start Game Night CTA |
+| Unauthorised | `/unauthorized` | Redirected here after failed allowlist check |
+| Game Setup | `/game-setup` | Host only — pick game type + enter player names |
+| Scoreboard | `/game/:id` | Host only — live scores + round entry |
+
+**Deferred to future releases:**
+
+| Screen | Route | Notes |
+|---|---|---|
+| Lobby | `/session/:code` | Requires room code + player claiming |
+| Archive | `/archive` | Session history UI |
 
 ---
 
-## 8. Angular Project Structure
+## 10. Angular Project Structure
 
 ```
 nobody-keeps-score/               ← git repo root
@@ -207,42 +334,44 @@ nobody-keeps-score/               ← git repo root
   │   │   ├── app/
   │   │   │   ├── core/
   │   │   │   │   ├── models/     session, player, game, round
-  │   │   │   │   └── services/   auth, session, theme, admin
+  │   │   │   │   ├── services/   auth, session, theme
+  │   │   │   │   └── guards/     auth.guard.ts
   │   │   │   ├── features/
   │   │   │   │   ├── home/
-  │   │   │   │   ├── lobby/
+  │   │   │   │   ├── unauthorised/
   │   │   │   │   ├── game-setup/
-  │   │   │   │   ├── scoreboard/
-  │   │   │   │   │   ├── games/       rummy | whist | open
-  │   │   │   │   │   └── components/  score-entry | leaderboard
-  │   │   │   │   └── archive/
-  │   │   │   └── shared/         room-code-display | theme-toggle
+  │   │   │   │   └── scoreboard/
+  │   │   │   │       ├── games/       dirty-clubs | canasta | 5-crowns | open
+  │   │   │   │       └── components/  score-entry | leaderboard
+  │   │   │   └── shared/         theme-toggle
   │   │   ├── environments/
   │   │   │   ├── environment.template.ts   ← committed — safe placeholder
-  │   │   │   ├── environment.ts            ← git ignored — real keys + hash
-  │   │   │   └── environment.prod.ts       ← git ignored — real keys + hash
+  │   │   │   ├── environment.ts            ← git ignored — real Firebase config
+  │   │   │   └── environment.prod.ts       ← git ignored — real Firebase config
   │   │   ├── styles.css          ← Tailwind @theme palette lives here
   │   │   └── index.html          ← Google Fonts (Fraunces + DM Sans)
   │   ├── CLAUDE.md               ← Claude Code project memory
   │   ├── .github/
-  │   │   └── copilot-instructions.md  ← VS Code AI + Copilot Angular rules
-  │   ├── firebase.json           ← emulator ports + UI config
-  │   ├── .firebaserc             ← Firebase project ID
-  │   ├── .husky/                 ← pre-commit + pre-push hooks
-  │   ├── .vscode/                ← format on save + ESLint + MCP settings
-  │   └── src/manifest.webmanifest  ← PWA config
+  │   │   └── copilot-instructions.md
+  │   ├── firebase.json
+  │   ├── .firebaserc
+  │   ├── .husky/
+  │   ├── .vscode/
+  │   └── src/manifest.webmanifest
   ├── docs/
-  │   ├── nks-project-brief.md         ← this file
-  │   ├── nks-setup-guide.md           ← step-by-step build guide
-  │   └── angular-best-practices.md    ← Angular's official LLM prompt file
+  │   ├── nks-project-brief.md
+  │   ├── nks-home-spec.md
+  │   ├── nks-dirty-clubs-spec.md
+  │   └── angular-best-practices.md
   ├── design/
-  │   └── card-game-palette.html       ← interactive colour explorer
-  └── README.md                        ← top-level GitHub readme
+  │   ├── nks-home-mockup-v3.html
+  │   └── card-game-palette.html
+  └── README.md
 ```
 
 ---
 
-## 9. Quick Setup Command Reference
+## 11. Quick Setup Command Reference
 
 ```bash
 # ── Create folder structure ───────────────────────────
@@ -261,8 +390,6 @@ gh --version || brew install gh
 ng version || npm install -g @angular/cli@latest
 
 # ── Create Angular project ────────────────────────────
-# --skip-git prevents a nested .git inside nks-app/
-# --ai-config=claude generates CLAUDE.md automatically
 ng new nks-app --routing=true --style=css --ssr=false --ai-config=claude --skip-git
 cd nks-app
 
@@ -295,22 +422,13 @@ curl -o .github/copilot-instructions.md https://angular.dev/assets/context/guide
 curl -o ../docs/angular-best-practices.md https://angular.dev/assets/context/best-practices.md
 
 # ── GitHub repo ───────────────────────────────────────
-cd ..   # back to nobody-keeps-score/
+cd ..
 git init
 echo "# Nobody's Keeping Score\n*Not that anyone's counting*" > README.md
 git add .
 git status   # verify environment.ts is NOT listed
 git commit -m "chore: initial project setup"
 gh repo create nobody-keeps-score --public --source=. --remote=origin --push
-
-# ── Branch protection ─────────────────────────────────
-gh api repos/{owner}/nobody-keeps-score/branches/main/protection \
-  --method PUT \
-  --field required_status_checks=null \
-  --field enforce_admins=false \
-  --field "required_pull_request_reviews[required_approving_review_count]=0" \
-  --field "required_pull_request_reviews[dismiss_stale_reviews]=false" \
-  --field restrictions=null
 
 # ── Start dev environment (two terminals) ─────────────
 cd nks-app
@@ -320,38 +438,7 @@ ng serve                     # terminal 2
 
 ---
 
-## 10. Admin Access
-
-### Two-code system
-
-| Code | Purpose | Stored as |
-|---|---|---|
-| 4-digit room code | Join a session | Plaintext in Firestore |
-| Admin code | Create a session (host) | SHA-256 hash in `environment.ts` only |
-
-### How it works
-- Admin code is hashed once in the browser console using Web Crypto API
-- The hash is stored in `environment.ts` (git ignored) — plaintext never enters the bundle
-- On entry, the typed code is hashed at runtime and compared to the stored hash
-- On match, unlocked state is written to localStorage with a 30-day expiry timestamp
-- On return visits within 30 days, admin access is silently restored
-- The entry point is a subtle "Host access" link below the join field — not prominent enough to invite curiosity
-
-### Generating the hash (one-time setup)
-```javascript
-// Run once in browser console — store the output in environment.ts as adminCode
-const encoder = new TextEncoder();
-const data = encoder.encode('your-chosen-passphrase');
-const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-const hashArray = Array.from(new Uint8Array(hashBuffer));
-console.log(hashArray.map(b => b.toString(16).padStart(2, '0')).join(''));
-```
-
-> **Security note:** This is social-layer protection, not cryptographic security. For a personal game night PWA the realistic threat model is effectively zero — this simply keeps casual visitors out of the host flow.
-
----
-
-## 11. GitHub Repository & Workflow
+## 12. GitHub Repository & Workflow
 
 | Setting | Value |
 |---|---|
@@ -361,36 +448,24 @@ console.log(hashArray.map(b => b.toString(16).padStart(2, '0')).join(''));
 | Branch protection | PRs required to merge to main |
 | Branching strategy | main + feature branches |
 
-### Day-to-day feature branch workflow
-
-```bash
-git checkout -b feature/home-screen   # start work
-git add . && git commit -m "feat: ..."  # Husky runs here
-git push -u origin feature/home-screen
-gh pr create --title "feat: home screen" --base main
-gh pr merge --squash --delete-branch
-git checkout main && git pull
-```
-
-### Planned feature branches
+### Planned feature branches (v1)
 
 | Branch | Purpose |
 |---|---|
-| `feature/home-screen` | Create night + join by room code |
-| `feature/lobby` | Player list + claim flow |
-| `feature/game-setup` | Game type picker |
-| `feature/scoreboard-core` | Shared scoreboard shell + leaderboard |
-| `feature/scoring-rummy` | Rummy-specific score entry rules |
-| `feature/scoring-whist` | Whist-specific score entry rules |
+| `feature/home-screen` | Unauthenticated + authenticated Home + /unauthorized |
+| `feature/auth-service` | Google Sign-In + Firestore allowlist check + AuthGuard |
+| `feature/game-setup` | Game type picker + player name entry |
+| `feature/scoreboard-core` | Shared scoreboard shell |
+| `feature/scoring-dirty-clubs` | Dirty Clubs scoring rules + entry UI |
+| `feature/scoring-canasta` | Canasta scoring rules + entry UI |
+| `feature/scoring-5-crowns` | 5 Crowns scoring rules + entry UI |
 | `feature/scoring-open` | Generic open round scorer |
-| `feature/archive` | Past sessions view |
 | `feature/theme-toggle` | Light/dark switch component |
-| `feature/admin-service` | Admin code + host access |
 | `feature/pwa-icons` | App icons + manifest polish |
 
 ---
 
-## 12. AI Context Files & Claude Code Setup
+## 13. AI Context Files & Claude Code Setup
 
 | File | Location | Purpose |
 |---|---|---|
@@ -398,11 +473,7 @@ git checkout main && git pull
 | `copilot-instructions.md` | `nks-app/.github/` | VS Code AI + GitHub Copilot Angular rules |
 | `angular-best-practices.md` | `docs/` | Angular's official LLM prompt file |
 
-### CLAUDE.md
-Generated automatically by `--ai-config=claude` on `ng new`, then extended with NKS-specific context. Contains colour tokens, Firestore structure, permission model, admin access pattern, and all coding conventions.
-
 ### Angular CLI MCP Server
-Add to `nks-app/.vscode/settings.json` to enable Claude Code ↔ Angular CLI integration:
 
 ```json
 {
@@ -417,8 +488,6 @@ Add to `nks-app/.vscode/settings.json` to enable Claude Code ↔ Angular CLI int
   }
 }
 ```
-
-> See [angular.dev/ai/mcp](https://angular.dev/ai/mcp) for the latest MCP setup instructions — this feature is experimental in Angular 21.
 
 ---
 

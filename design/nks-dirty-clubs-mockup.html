@@ -1,0 +1,1262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NKS — Dirty Clubs Mockup</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,700;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-body: 'DM Sans', sans-serif;
+
+  --felt-50:#f0faf3;--felt-100:#d9f2e1;--felt-200:#b3e5c5;
+  --felt-300:#7dd0a0;--felt-400:#48b87a;--felt-500:#279e5e;
+  --felt-600:#1a7f4b;--felt-700:#16643c;--felt-800:#144f30;
+  --felt-900:#103f26;--felt-950:#082518;
+
+  --cream-50:#fdfcf8;--cream-100:#f8f4ec;--cream-200:#f0e8d4;
+  --cream-300:#e4d5b4;--cream-400:#d4ba8a;--cream-500:#c09a62;
+  --cream-600:#a67d48;--cream-700:#896337;--cream-800:#6e4e2d;
+  --cream-900:#573d24;--cream-950:#311f10;
+
+  --ruby-50:#fff1f2;--ruby-100:#ffe0e2;--ruby-200:#ffc7ca;
+  --ruby-300:#ffa0a5;--ruby-400:#ff6470;--ruby-500:#f83b48;
+  --ruby-600:#e51d2b;--ruby-700:#c01422;--ruby-800:#9f1420;
+  --ruby-900:#84151f;--ruby-950:#48060c;
+
+  --ink-50:#f6f6f7;--ink-100:#e2e3e6;--ink-200:#c5c7ce;
+  --ink-300:#9fa3af;--ink-400:#797f8e;--ink-500:#5e6474;
+  --ink-600:#4c515f;--ink-700:#3e4250;--ink-800:#353843;
+  --ink-900:#22242d;--ink-950:#14151c;
+
+  --gold-50:#fefce8;--gold-100:#fef9c3;--gold-200:#fef08a;
+  --gold-300:#fde047;--gold-400:#facc15;--gold-500:#eab308;
+  --gold-600:#ca8a04;--gold-700:#a16207;--gold-800:#854d0e;
+  --gold-900:#713f12;--gold-950:#3f2006;
+}
+
+body {
+  font-family: var(--font-body);
+  background: #12121a;
+  color: var(--ink-100);
+  min-height: 100vh;
+  padding: 2rem 1rem 4rem;
+}
+
+/* ── Page header ── */
+.page-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.3rem, 4vw, 2rem);
+  font-weight: 700;
+  color: var(--cream-100);
+  text-align: center;
+  margin-bottom: 0.2rem;
+}
+.page-title em { color: var(--gold-400); font-style: italic; }
+.page-sub { text-align: center; color: var(--ink-500); font-size: 0.82rem; margin-bottom: 2rem; font-weight: 300; }
+
+/* ── Screen nav ── */
+.screen-nav {
+  display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap; margin-bottom: 1.5rem;
+}
+.screen-nav button {
+  font-family: var(--font-body); font-size: 0.78rem; font-weight: 500;
+  padding: 0.4rem 0.85rem; border-radius: 999px;
+  border: 1.5px solid var(--ink-700); background: transparent; color: var(--ink-300); cursor: pointer;
+  transition: all 0.15s;
+}
+.screen-nav button:hover { border-color: var(--felt-500); color: var(--felt-300); }
+.screen-nav button.active { background: var(--felt-600); border-color: var(--felt-600); color: white; }
+
+/* ── Theme row ── */
+.theme-row {
+  display: flex; align-items: center; justify-content: center;
+  gap: 0.75rem; margin-bottom: 1.5rem; font-size: 0.8rem; color: var(--ink-400);
+}
+.toggle-pill {
+  width: 44px; height: 24px; background: var(--ink-700); border-radius: 999px;
+  position: relative; cursor: pointer; transition: background 0.2s; border: none;
+}
+.toggle-pill.light { background: var(--felt-500); }
+.toggle-pill::after {
+  content: ''; position: absolute; top: 3px; left: 3px;
+  width: 18px; height: 18px; background: white; border-radius: 50%; transition: transform 0.2s;
+}
+.toggle-pill.light::after { transform: translateX(20px); }
+
+/* ── Phone stage ── */
+.phone-stage {
+  display: flex; justify-content: center; align-items: flex-start;
+  gap: 2rem; flex-wrap: wrap;
+}
+.phone-wrapper { display: flex; flex-direction: column; align-items: center; gap: 0.6rem; }
+.phone-label { font-size: 0.72rem; color: var(--ink-500); letter-spacing: 0.06em; text-transform: uppercase; font-weight: 500; }
+
+/* iPhone SE frame — 320×568 (85% of 375×667) */
+.phone-frame {
+  width: 320px; height: 568px;
+  background: #0a0a10; border-radius: 44px;
+  border: 6px solid #252535;
+  box-shadow: 0 0 0 1px #353548, 0 24px 80px rgba(0,0,0,0.8), inset 0 0 0 1px #08080e;
+  position: relative; overflow: hidden; flex-shrink: 0;
+}
+.phone-frame::before {
+  content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+  width: 110px; height: 20px; background: #0a0a10;
+  border-radius: 0 0 12px 12px; z-index: 200;
+}
+.phone-frame::after {
+  content: ''; position: absolute; bottom: 7px; left: 50%; transform: translateX(-50%);
+  width: 70px; height: 4px; background: rgba(255,255,255,0.15); border-radius: 999px; z-index: 200;
+}
+.phone-screen {
+  width: 100%; height: 100%; overflow: hidden; position: relative;
+  display: flex; flex-direction: column;
+}
+
+/* ── Status bar ── */
+.status-bar {
+  height: 28px; display: flex; align-items: flex-end; justify-content: space-between;
+  padding: 0 14px 4px; font-size: 0.65rem; font-weight: 600; flex-shrink: 0; z-index: 10;
+}
+.status-icons { display: flex; align-items: center; gap: 3px; font-size: 0.58rem; }
+
+/* ── App bar ── */
+.app-bar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 8px 14px; flex-shrink: 0;
+}
+.app-bar-title {
+  font-family: var(--font-display); font-weight: 700; font-size: 0.95rem; line-height: 1.1;
+}
+.app-bar-title small {
+  display: block; font-family: var(--font-body); font-size: 0.58rem;
+  font-weight: 300; letter-spacing: 0.04em; opacity: 0.65;
+}
+.icon-btn {
+  width: 30px; height: 30px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.85rem; border: none; cursor: pointer; flex-shrink: 0;
+}
+
+/* ── Scrollable ── */
+.scrollable { flex: 1; overflow-y: auto; scrollbar-width: none; padding-bottom: 56px; }
+.scrollable::-webkit-scrollbar { display: none; }
+
+/* ── Tab bar ── */
+.tab-bar {
+  position: absolute; bottom: 0; left: 0; right: 0; height: 52px;
+  display: flex; border-top: 1px solid; flex-shrink: 0; z-index: 50;
+}
+.tab-item {
+  flex: 1; display: flex; flex-direction: column; align-items: center;
+  justify-content: center; gap: 2px; cursor: pointer;
+}
+.tab-icon { font-size: 1rem; line-height: 1; }
+.tab-label { font-size: 0.56rem; font-weight: 600; letter-spacing: 0.02em; }
+
+/* ════════════════════════════════════
+   THEME — DARK
+════════════════════════════════════ */
+.theme-dark .status-bar { background: var(--ink-950); color: var(--ink-300); }
+.theme-dark .app-bar { background: var(--ink-900); }
+.theme-dark .app-bar-title { color: var(--cream-100); }
+.theme-dark .icon-btn { background: rgba(255,255,255,0.07); color: var(--ink-200); }
+.theme-dark .scrollable { background: var(--ink-950); }
+.theme-dark .tab-bar { background: var(--ink-900); border-color: rgba(255,255,255,0.07); }
+.theme-dark .tab-item .tab-icon,
+.theme-dark .tab-item .tab-label { color: var(--ink-500); }
+.theme-dark .tab-item.active .tab-icon,
+.theme-dark .tab-item.active .tab-label { color: var(--felt-400); }
+
+/* ════════════════════════════════════
+   THEME — LIGHT
+════════════════════════════════════ */
+.theme-light .status-bar { background: var(--felt-600); color: var(--cream-100); }
+.theme-light .app-bar { background: var(--felt-600); }
+.theme-light .app-bar-title { color: white; }
+.theme-light .icon-btn { background: rgba(255,255,255,0.18); color: white; }
+.theme-light .scrollable { background: var(--cream-50); }
+.theme-light .tab-bar { background: white; border-color: var(--cream-200); }
+.theme-light .tab-item .tab-icon,
+.theme-light .tab-item .tab-label { color: var(--ink-400); }
+.theme-light .tab-item.active .tab-icon,
+.theme-light .tab-item.active .tab-label { color: var(--felt-600); }
+
+/* ════════════════════════════════════
+   GAME HEADER STRIP
+════════════════════════════════════ */
+.game-strip {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 6px 14px 8px; flex-shrink: 0;
+}
+.theme-dark .game-strip { background: var(--felt-950); border-bottom: 1px solid var(--felt-900); }
+.theme-light .game-strip { background: var(--felt-700); border-bottom: 1px solid var(--felt-800); }
+
+.game-strip-name {
+  font-family: var(--font-display); font-size: 0.78rem; font-weight: 700; letter-spacing: 0.02em;
+  color: var(--felt-300);
+}
+.game-strip-hand {
+  font-size: 0.65rem; font-weight: 500; color: var(--felt-500);
+}
+.game-strip-suits {
+  font-size: 0.78rem; letter-spacing: 0.08em; opacity: 0.5; color: var(--felt-400);
+}
+
+/* ════════════════════════════════════
+   PLAYER ROW — SCOREBOARD
+════════════════════════════════════ */
+.player-score-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 14px; border-bottom: 1px solid; cursor: pointer;
+  transition: background 0.12s; position: relative;
+}
+.theme-dark .player-score-row { border-color: rgba(255,255,255,0.05); }
+.theme-dark .player-score-row:active { background: rgba(255,255,255,0.04); }
+.theme-light .player-score-row { border-color: var(--cream-200); background: white; }
+.theme-light .player-score-row:active { background: var(--felt-50); }
+
+/* Forced play warning */
+.player-score-row.forced {
+  background: linear-gradient(90deg, rgba(248,59,72,0.08) 0%, transparent 60%);
+}
+.theme-light .player-score-row.forced {
+  background: linear-gradient(90deg, rgba(248,59,72,0.06) 0%, transparent 60%);
+}
+
+.player-avatar {
+  width: 34px; height: 34px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 0.82rem; flex-shrink: 0; position: relative;
+}
+
+/* On-the-board dot */
+.player-avatar.on-board::after {
+  content: ''; position: absolute; bottom: 0; right: 0;
+  width: 9px; height: 9px; border-radius: 50%;
+  background: var(--felt-400); border: 1.5px solid var(--ink-950);
+}
+.theme-light .player-avatar.on-board::after { border-color: white; }
+
+.av-green { background: var(--felt-900); color: var(--felt-300); }
+.av-ruby { background: rgba(159,20,32,0.2); color: var(--ruby-400); }
+.av-gold { background: rgba(133,77,14,0.22); color: var(--gold-400); }
+.av-ink { background: var(--ink-700); color: var(--ink-200); }
+.av-cream { background: rgba(100,80,40,0.25); color: var(--cream-400); }
+.av-blue { background: rgba(30,60,140,0.25); color: #7eb3ff; }
+
+.theme-light .av-green { background: var(--felt-100); color: var(--felt-700); }
+.theme-light .av-ruby { background: var(--ruby-100); color: var(--ruby-700); }
+.theme-light .av-gold { background: var(--gold-100); color: var(--gold-700); }
+.theme-light .av-ink { background: var(--ink-200); color: var(--ink-700); }
+
+.player-info { flex: 1; min-width: 0; }
+.player-name {
+  font-size: 0.88rem; font-weight: 600;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  display: flex; align-items: center; gap: 5px;
+}
+.theme-dark .player-name { color: var(--ink-100); }
+.theme-light .player-name { color: var(--ink-900); }
+
+/* Forced badge */
+.forced-badge {
+  font-size: 0.56rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;
+  background: var(--ruby-600); color: white;
+  padding: 1px 5px; border-radius: 4px; flex-shrink: 0;
+}
+
+.player-sub { font-size: 0.65rem; margin-top: 1px; display: flex; align-items: center; gap: 5px; }
+.theme-dark .player-sub { color: var(--ink-500); }
+.theme-light .player-sub { color: var(--ink-400); }
+
+/* Bump pips */
+.bump-pips { display: flex; gap: 2px; align-items: center; }
+.bump-pip {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--ruby-600); opacity: 0.9;
+}
+.bump-pip.ghost { background: transparent; border: 1px solid var(--ink-700); opacity: 0.4; }
+.bump-label { font-size: 0.62rem; color: var(--ruby-500); font-weight: 600; }
+
+/* Score display */
+.score-display {
+  display: flex; flex-direction: column; align-items: flex-end; flex-shrink: 0;
+}
+.score-num {
+  font-family: var(--font-display); font-size: 1.6rem; font-weight: 700;
+  line-height: 1; letter-spacing: -0.02em;
+}
+.theme-dark .score-num { color: var(--felt-400); }
+.theme-light .score-num { color: var(--felt-700); }
+.score-num.danger { color: var(--ruby-400) !important; }
+.score-num.winning { color: var(--gold-400) !important; }
+.score-of { font-size: 0.56rem; text-align: right; margin-top: 1px; }
+.theme-dark .score-of { color: var(--ink-600); }
+.theme-light .score-of { color: var(--ink-400); }
+
+/* Tap hint arrow */
+.tap-arrow {
+  font-size: 0.6rem; opacity: 0.25; flex-shrink: 0;
+}
+.theme-dark .tap-arrow { color: var(--ink-300); }
+.theme-light .tap-arrow { color: var(--ink-500); }
+
+/* ════════════════════════════════════
+   SECTION LABEL
+════════════════════════════════════ */
+.section-label {
+  font-size: 0.62rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+  padding: 8px 14px 4px;
+}
+.theme-dark .section-label { color: var(--ink-600); }
+.theme-light .section-label { color: var(--ink-400); }
+
+/* ════════════════════════════════════
+   HAND RESULT LEGEND
+════════════════════════════════════ */
+.legend {
+  display: flex; flex-wrap: wrap; gap: 4px; padding: 6px 14px 8px;
+}
+.legend-item {
+  font-size: 0.6rem; font-weight: 500; padding: 2px 7px; border-radius: 999px;
+}
+.theme-dark .legend-item { background: rgba(255,255,255,0.05); color: var(--ink-400); }
+.theme-light .legend-item { background: var(--cream-100); color: var(--ink-500); }
+
+/* ════════════════════════════════════
+   BOTTOM SHEET — SCORE ENTRY
+════════════════════════════════════ */
+.sheet-overlay {
+  position: absolute; inset: 0; z-index: 100;
+  background: rgba(0,0,0,0.5);
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.25s;
+}
+.sheet-overlay.open { opacity: 1; pointer-events: all; }
+
+.bottom-sheet {
+  position: absolute; bottom: 0; left: 0; right: 0; z-index: 110;
+  border-radius: 18px 18px 0 0;
+  transform: translateY(100%);
+  transition: transform 0.28s cubic-bezier(0.34, 1.1, 0.64, 1);
+  overflow: hidden;
+}
+.theme-dark .bottom-sheet { background: var(--ink-900); border-top: 1px solid rgba(255,255,255,0.08); }
+.theme-light .bottom-sheet { background: white; border-top: 1px solid var(--cream-200); box-shadow: 0 -8px 32px rgba(0,0,0,0.12); }
+
+.bottom-sheet.open { transform: translateY(0); }
+
+/* Sheet handle */
+.sheet-handle {
+  width: 36px; height: 4px; border-radius: 999px;
+  margin: 10px auto 0;
+}
+.theme-dark .sheet-handle { background: var(--ink-700); }
+.theme-light .sheet-handle { background: var(--cream-300); }
+
+/* Sheet header */
+.sheet-header {
+  padding: 8px 14px 10px;
+  display: flex; align-items: center; justify-content: space-between;
+  border-bottom: 1px solid;
+}
+.theme-dark .sheet-header { border-color: rgba(255,255,255,0.06); }
+.theme-light .sheet-header { border-color: var(--cream-200); }
+
+.sheet-player-name {
+  font-family: var(--font-display); font-weight: 700; font-size: 1rem;
+}
+.theme-dark .sheet-player-name { color: var(--cream-100); }
+.theme-light .sheet-player-name { color: var(--ink-900); }
+
+.sheet-player-stats { font-size: 0.68rem; margin-top: 1px; }
+.theme-dark .sheet-player-stats { color: var(--ink-400); }
+.theme-light .sheet-player-stats { color: var(--ink-500); }
+.sheet-player-stats .stat-score { color: var(--felt-400); font-weight: 700; font-family: var(--font-display); font-size: 0.82rem; }
+.sheet-player-stats .stat-bumps { color: var(--ruby-400); font-weight: 700; }
+
+.sheet-close {
+  width: 26px; height: 26px; border-radius: 50%; border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; font-size: 0.75rem;
+}
+.theme-dark .sheet-close { background: var(--ink-700); color: var(--ink-300); }
+.theme-light .sheet-close { background: var(--cream-200); color: var(--ink-600); }
+
+/* ── Numpad ── */
+.numpad { padding: 10px 12px 14px; }
+
+/* DNP full-width */
+.np-dnp {
+  width: 100%; padding: 9px; border-radius: 9px; border: 1.5px solid;
+  font-family: var(--font-body); font-size: 0.8rem; font-weight: 500;
+  cursor: pointer; margin-bottom: 8px; letter-spacing: 0.02em;
+  transition: all 0.12s;
+}
+.theme-dark .np-dnp { border-color: var(--ink-700); background: transparent; color: var(--ink-500); }
+.theme-dark .np-dnp:hover { background: var(--ink-800); color: var(--ink-300); }
+.theme-dark .np-dnp.selected { background: var(--ink-700); color: var(--ink-200); border-color: var(--ink-500); }
+.theme-light .np-dnp { border-color: var(--cream-300); background: transparent; color: var(--ink-400); }
+.theme-light .np-dnp.selected { background: var(--cream-200); color: var(--ink-700); }
+
+/* Bump row */
+.np-bump-row { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 6px; }
+
+.np-bump, .np-double {
+  padding: 10px 6px; border-radius: 9px; border: none; cursor: pointer;
+  font-family: var(--font-body); font-size: 0.75rem; font-weight: 600;
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+  transition: all 0.12s;
+}
+.np-bump-big { font-size: 1rem; }
+.np-bump-sub { font-size: 0.58rem; font-weight: 400; opacity: 0.75; }
+
+.theme-dark .np-bump { background: rgba(159,20,32,0.18); color: var(--ruby-400); }
+.theme-dark .np-bump:hover { background: rgba(159,20,32,0.3); }
+.theme-dark .np-bump.selected { background: var(--ruby-700); color: white; }
+.theme-dark .np-double { background: rgba(159,20,32,0.1); color: var(--ruby-500); }
+.theme-dark .np-double:hover { background: rgba(159,20,32,0.22); }
+.theme-dark .np-double.selected { background: var(--ruby-800); color: white; }
+
+.theme-light .np-bump { background: var(--ruby-100); color: var(--ruby-700); }
+.theme-light .np-bump.selected { background: var(--ruby-600); color: white; }
+.theme-light .np-double { background: var(--ruby-50); color: var(--ruby-600); border: 1px solid var(--ruby-200); }
+.theme-light .np-double.selected { background: var(--ruby-700); color: white; }
+
+/* Number grid */
+.np-num-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 6px; }
+
+.np-num {
+  padding: 11px 0; border-radius: 9px; border: none; cursor: pointer;
+  font-family: var(--font-display); font-size: 1.2rem; font-weight: 700;
+  transition: all 0.12s;
+}
+.theme-dark .np-num { background: var(--ink-800); color: var(--felt-300); }
+.theme-dark .np-num:hover { background: var(--ink-700); }
+.theme-dark .np-num.selected { background: var(--felt-700); color: white; }
+.theme-dark .np-num:disabled { opacity: 0.2; cursor: default; }
+.theme-light .np-num { background: var(--cream-100); color: var(--felt-700); }
+.theme-light .np-num:hover { background: var(--cream-200); }
+.theme-light .np-num.selected { background: var(--felt-600); color: white; }
+.theme-light .np-num:disabled { opacity: 0.25; cursor: default; }
+
+/* Moon button */
+.np-moon {
+  width: 100%; padding: 11px; border-radius: 9px; border: none; cursor: pointer;
+  font-family: var(--font-body); font-size: 0.85rem; font-weight: 700;
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  transition: all 0.15s; margin-bottom: 8px;
+  letter-spacing: 0.02em;
+}
+.theme-dark .np-moon { background: linear-gradient(135deg, #1a1040 0%, #0d2010 100%); color: var(--gold-400); border: 1.5px solid rgba(250,204,21,0.25); }
+.theme-dark .np-moon:hover:not(:disabled) { border-color: rgba(250,204,21,0.5); background: linear-gradient(135deg, #221550 0%, #112818 100%); }
+.theme-dark .np-moon.selected { background: linear-gradient(135deg, #2d1a6e 0%, #103f26 100%); border-color: var(--gold-400); color: var(--gold-300); }
+.theme-dark .np-moon:disabled { opacity: 0.25; cursor: not-allowed; }
+.theme-light .np-moon { background: linear-gradient(135deg, #f0e8ff 0%, #e8f4e8 100%); color: #5b3fa0; border: 1.5px solid #c4a8f0; }
+.theme-light .np-moon.selected { background: linear-gradient(135deg, #7c3aed 0%, #1a7f4b 100%); color: white; border-color: transparent; }
+.theme-light .np-moon:disabled { opacity: 0.3; cursor: not-allowed; }
+
+.moon-disabled-hint { font-size: 0.58rem; opacity: 0.55; font-weight: 400; }
+
+/* Confirm button */
+.np-confirm {
+  width: 100%; padding: 12px; border-radius: 10px; border: none; cursor: pointer;
+  font-family: var(--font-body); font-size: 0.9rem; font-weight: 700;
+  background: var(--felt-600); color: white; transition: opacity 0.15s;
+}
+.np-confirm:disabled { opacity: 0.3; cursor: not-allowed; }
+.np-confirm.ready { opacity: 1; }
+
+/* ════════════════════════════════════
+   PAYOUT SCREEN
+════════════════════════════════════ */
+.payout-screen {
+  position: absolute; inset: 0; z-index: 150;
+  display: flex; flex-direction: column;
+  transform: translateY(100%);
+  transition: transform 0.35s cubic-bezier(0.34, 1.05, 0.64, 1);
+}
+.payout-screen.open { transform: translateY(0); }
+.theme-dark .payout-screen { background: var(--ink-950); }
+.theme-light .payout-screen { background: var(--cream-50); }
+
+.payout-hero {
+  padding: 18px 16px 14px; text-align: center;
+  background: linear-gradient(160deg, var(--felt-950) 0%, var(--ink-950) 100%);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.theme-light .payout-hero {
+  background: linear-gradient(160deg, var(--felt-800) 0%, var(--felt-600) 100%);
+  border-color: var(--felt-700);
+}
+.payout-moon-banner {
+  font-size: 0.65rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--gold-400); margin-bottom: 6px; display: flex; align-items: center; justify-content: center; gap: 6px;
+}
+.payout-trophy { font-size: 2.4rem; line-height: 1; margin-bottom: 4px; }
+.payout-winner-label { font-size: 0.65rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--gold-500); margin-bottom: 2px; }
+.payout-winner-name {
+  font-family: var(--font-display); font-size: 1.5rem; font-weight: 700; color: var(--cream-100); line-height: 1.1;
+}
+.payout-winner-score { font-size: 0.72rem; color: var(--felt-400); margin-top: 3px; }
+
+.payout-list { flex: 1; overflow-y: auto; scrollbar-width: none; padding: 8px 0; }
+.payout-list::-webkit-scrollbar { display: none; }
+
+.payout-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 14px; border-bottom: 1px solid;
+}
+.theme-dark .payout-row { border-color: rgba(255,255,255,0.05); }
+.theme-light .payout-row { border-color: var(--cream-200); background: white; }
+.theme-light .payout-row:first-child { border-top: none; }
+
+.payout-avatar {
+  width: 32px; height: 32px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 0.78rem; flex-shrink: 0;
+}
+.payout-player-info { flex: 1; min-width: 0; }
+.payout-player-name {
+  font-size: 0.85rem; font-weight: 600;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.theme-dark .payout-player-name { color: var(--ink-100); }
+.theme-light .payout-player-name { color: var(--ink-900); }
+
+.payout-breakdown { font-size: 0.62rem; margin-top: 2px; }
+.theme-dark .payout-breakdown { color: var(--ink-500); }
+.theme-light .payout-breakdown { color: var(--ink-400); }
+.payout-breakdown .bump-owe { color: var(--ruby-500); font-weight: 600; }
+
+.payout-amount {
+  font-family: var(--font-display); font-size: 1.1rem; font-weight: 700;
+  flex-shrink: 0;
+}
+.payout-amount.owes { color: var(--ruby-400); }
+.payout-amount.wins { color: var(--gold-400); }
+
+.payout-section-label {
+  font-size: 0.6rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+  padding: 8px 14px 4px;
+}
+.theme-dark .payout-section-label { color: var(--ink-600); }
+.theme-light .payout-section-label { color: var(--ink-400); }
+
+.payout-total-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 14px;
+  border-top: 1.5px solid;
+  margin-top: 2px;
+}
+.theme-dark .payout-total-row { border-color: rgba(255,255,255,0.1); }
+.theme-light .payout-total-row { border-color: var(--cream-300); background: var(--cream-100); }
+.payout-total-label { font-size: 0.75rem; font-weight: 600; }
+.theme-dark .payout-total-label { color: var(--ink-300); }
+.theme-light .payout-total-label { color: var(--ink-700); }
+.payout-total-amount {
+  font-family: var(--font-display); font-size: 1.3rem; font-weight: 700; color: var(--gold-400);
+}
+
+.payout-actions { padding: 10px 14px 16px; display: flex; gap: 8px; flex-shrink: 0; }
+.btn-primary {
+  flex: 1; padding: 11px; border-radius: 10px; border: none;
+  font-family: var(--font-body); font-size: 0.85rem; font-weight: 700; cursor: pointer;
+}
+.btn-felt { background: var(--felt-600); color: white; }
+.btn-outline {
+  flex: 1; padding: 10px; border-radius: 10px;
+  font-family: var(--font-body); font-size: 0.85rem; font-weight: 500; cursor: pointer;
+  background: transparent; border: 1.5px solid;
+}
+.theme-dark .btn-outline { border-color: var(--ink-600); color: var(--ink-300); }
+.theme-light .btn-outline { border-color: var(--cream-300); color: var(--ink-600); }
+
+/* ════════════════════════════════════
+   ANNOTATIONS
+════════════════════════════════════ */
+.annotations {
+  max-width: 720px; margin: 2.5rem auto 0;
+  background: rgba(255,255,255,0.025);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 16px; padding: 1.4rem;
+}
+.annotations h3 {
+  font-family: var(--font-display); font-size: 0.95rem; color: var(--cream-200);
+  margin-bottom: 0.9rem; padding-bottom: 0.6rem; border-bottom: 1px solid rgba(255,255,255,0.07);
+}
+.ann-list { list-style: none; }
+.ann-list li {
+  font-size: 0.78rem; color: var(--ink-300); padding: 5px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  line-height: 1.55; display: flex; gap: 8px;
+}
+.ann-list li::before { content: '→'; color: var(--felt-500); flex-shrink: 0; }
+.ann-list li strong { color: var(--cream-300); }
+
+/* Screen views */
+.screen-view { display: none; }
+.screen-view.active { display: flex; flex-direction: column; gap: 0; }
+.phones-row { display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; }
+
+/* Progress bar to 15 */
+.score-progress-track {
+  height: 3px; border-radius: 999px; margin: 3px 0 0;
+  overflow: hidden; width: 80px;
+}
+.theme-dark .score-progress-track { background: var(--ink-800); }
+.theme-light .score-progress-track { background: var(--cream-200); }
+.score-progress-fill {
+  height: 100%; border-radius: 999px; background: var(--felt-500);
+  transition: width 0.3s;
+}
+.score-progress-fill.danger { background: var(--ruby-500); }
+
+/* Hand count indicator in strip */
+.hand-badge {
+  background: rgba(255,255,255,0.08); border-radius: 6px;
+  padding: 2px 7px; font-size: 0.62rem; font-weight: 600; color: var(--felt-400);
+}
+</style>
+</head>
+<body>
+
+<h1 class="page-title">Dirty Clubs <em>♣</em></h1>
+<p class="page-sub">Scoreboard & Score Entry · iPhone SE (375 × 667)</p>
+
+<div class="screen-nav">
+  <button class="active" onclick="showScreen('scoreboard')">Scoreboard</button>
+  <button onclick="showScreen('entry')">Score Entry</button>
+  <button onclick="showScreen('payout')">Game Over / Payout</button>
+</div>
+
+<div class="theme-row">
+  <span>Dark</span>
+  <button class="toggle-pill" id="themeToggle" onclick="toggleTheme()"></button>
+  <span>Light</span>
+</div>
+
+<!-- ════════════════════════════════════
+     SCREEN 1 — LIVE SCOREBOARD
+════════════════════════════════════ -->
+<div class="screen-view active" id="screen-scoreboard">
+  <div class="phones-row">
+
+    <!-- Viewer / non-host -->
+    <div class="phone-wrapper">
+      <div class="phone-label">Live Scoreboard · Viewer</div>
+      <div class="phone-frame">
+        <div class="phone-screen theme-dark" id="phone-sb-viewer">
+          <div class="status-bar"><span>9:41</span><div class="status-icons">▲▲▲ ◉ ▐▐</div></div>
+          <div class="app-bar">
+            <div class="app-bar-title">Dirty Clubs <small>Game Night · 7421</small></div>
+            <button class="icon-btn">☾</button>
+          </div>
+          <div class="game-strip">
+            <span class="game-strip-name">♣ Dirty Clubs</span>
+            <span class="hand-badge">Hand 6</span>
+            <span class="game-strip-suits">♠ ♥ ♦ ♣</span>
+          </div>
+          <div class="scrollable">
+
+            <!-- Players -->
+            <div class="section-label">Standings</div>
+
+            <!-- Player 1 — leading, on board -->
+            <div class="player-score-row">
+              <div class="player-avatar av-ruby on-board">S</div>
+              <div class="player-info">
+                <div class="player-name">Sandra</div>
+                <div class="player-sub">
+                  <span class="bump-label">bumps:</span>
+                  <div class="bump-pips">
+                    <div class="bump-pip"></div>
+                    <div class="bump-pip ghost"></div>
+                    <div class="bump-pip ghost"></div>
+                  </div>
+                </div>
+                <div class="score-progress-track"><div class="score-progress-fill" style="width:73%"></div></div>
+              </div>
+              <div class="score-display">
+                <div class="score-num winning">11</div>
+                <div class="score-of">of 15</div>
+              </div>
+            </div>
+
+            <!-- Player 2 — forced play at 13 -->
+            <div class="player-score-row forced">
+              <div class="player-avatar av-green on-board">M</div>
+              <div class="player-info">
+                <div class="player-name">Maureen <span class="forced-badge">Must Play</span></div>
+                <div class="player-sub">
+                  <span class="bump-label">bumps:</span>
+                  <div class="bump-pips">
+                    <div class="bump-pip"></div>
+                    <div class="bump-pip"></div>
+                    <div class="bump-pip ghost"></div>
+                  </div>
+                </div>
+                <div class="score-progress-track"><div class="score-progress-fill danger" style="width:87%"></div></div>
+              </div>
+              <div class="score-display">
+                <div class="score-num danger">13</div>
+                <div class="score-of">of 15</div>
+              </div>
+            </div>
+
+            <!-- Player 3 — on board, 2 bumps -->
+            <div class="player-score-row">
+              <div class="player-avatar av-gold on-board">J</div>
+              <div class="player-info">
+                <div class="player-name">Jim</div>
+                <div class="player-sub">
+                  <span class="bump-label">bumps:</span>
+                  <div class="bump-pips">
+                    <div class="bump-pip"></div>
+                    <div class="bump-pip"></div>
+                    <div class="bump-pip ghost"></div>
+                  </div>
+                </div>
+                <div class="score-progress-track"><div class="score-progress-fill" style="width:47%"></div></div>
+              </div>
+              <div class="score-display">
+                <div class="score-num">7</div>
+                <div class="score-of">of 15</div>
+              </div>
+            </div>
+
+            <!-- Player 4 — NOT on board yet (score 0, no bumps) -->
+            <div class="player-score-row">
+              <div class="player-avatar av-ink">D</div>
+              <div class="player-info">
+                <div class="player-name">Dave</div>
+                <div class="player-sub" style="font-style: italic; opacity: 0.5;">not on board yet</div>
+                <div class="score-progress-track"><div class="score-progress-fill" style="width:0%"></div></div>
+              </div>
+              <div class="score-display">
+                <div class="score-num" style="opacity:0.3">0</div>
+                <div class="score-of">of 15</div>
+              </div>
+            </div>
+
+            <div class="section-label" style="margin-top:4px;">Legend</div>
+            <div class="legend">
+              <span class="legend-item">🟢 On board</span>
+              <span class="legend-item">🔴 Must Play at 13–14</span>
+              <span class="legend-item">● Bump</span>
+              <span class="legend-item">🌙 Moon eligible</span>
+            </div>
+
+          </div>
+          <div class="tab-bar">
+            <div class="tab-item"><div class="tab-icon">🏠</div><div class="tab-label">Lobby</div></div>
+            <div class="tab-item active"><div class="tab-icon">📊</div><div class="tab-label">Scores</div></div>
+            <div class="tab-item"><div class="tab-icon">📋</div><div class="tab-label">Archive</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Host view — same but rows are tappable -->
+    <div class="phone-wrapper">
+      <div class="phone-label">Live Scoreboard · Host (tap to enter)</div>
+      <div class="phone-frame">
+        <div class="phone-screen theme-dark" id="phone-sb-host">
+          <div class="status-bar"><span>9:41</span><div class="status-icons">▲▲▲ ◉ ▐▐</div></div>
+          <div class="app-bar">
+            <div class="app-bar-title">Dirty Clubs <small>Game Night · 7421</small></div>
+            <button class="icon-btn" style="background:rgba(234,179,8,0.15);color:var(--gold-400);">⭐</button>
+          </div>
+          <div class="game-strip">
+            <span class="game-strip-name">♣ Dirty Clubs</span>
+            <span class="hand-badge">Hand 6</span>
+            <span class="game-strip-suits">♠ ♥ ♦ ♣</span>
+          </div>
+          <div class="scrollable" style="padding-bottom:56px;">
+            <div class="section-label">Tap a player to enter their score</div>
+
+            <div class="player-score-row" onclick="openSheet('Sandra', 11, 1, true)" style="cursor:pointer;">
+              <div class="player-avatar av-ruby on-board">S</div>
+              <div class="player-info">
+                <div class="player-name">Sandra</div>
+                <div class="player-sub"><span class="bump-label">bumps:</span><div class="bump-pips"><div class="bump-pip"></div><div class="bump-pip ghost"></div><div class="bump-pip ghost"></div></div></div>
+                <div class="score-progress-track"><div class="score-progress-fill" style="width:73%"></div></div>
+              </div>
+              <div class="score-display"><div class="score-num winning">11</div><div class="score-of">of 15</div></div>
+              <span class="tap-arrow">›</span>
+            </div>
+
+            <div class="player-score-row forced" onclick="openSheet('Maureen', 13, 2, true)" style="cursor:pointer;">
+              <div class="player-avatar av-green on-board">M</div>
+              <div class="player-info">
+                <div class="player-name">Maureen <span class="forced-badge">Must Play</span></div>
+                <div class="player-sub"><span class="bump-label">bumps:</span><div class="bump-pips"><div class="bump-pip"></div><div class="bump-pip"></div><div class="bump-pip ghost"></div></div></div>
+                <div class="score-progress-track"><div class="score-progress-fill danger" style="width:87%"></div></div>
+              </div>
+              <div class="score-display"><div class="score-num danger">13</div><div class="score-of">of 15</div></div>
+              <span class="tap-arrow">›</span>
+            </div>
+
+            <div class="player-score-row" onclick="openSheet('Jim', 7, 2, true)" style="cursor:pointer;">
+              <div class="player-avatar av-gold on-board">J</div>
+              <div class="player-info">
+                <div class="player-name">Jim</div>
+                <div class="player-sub"><span class="bump-label">bumps:</span><div class="bump-pips"><div class="bump-pip"></div><div class="bump-pip"></div><div class="bump-pip ghost"></div></div></div>
+                <div class="score-progress-track"><div class="score-progress-fill" style="width:47%"></div></div>
+              </div>
+              <div class="score-display"><div class="score-num">7</div><div class="score-of">of 15</div></div>
+              <span class="tap-arrow">›</span>
+            </div>
+
+            <div class="player-score-row" onclick="openSheet('Dave', 0, 0, false)" style="cursor:pointer;">
+              <div class="player-avatar av-ink">D</div>
+              <div class="player-info">
+                <div class="player-name">Dave</div>
+                <div class="player-sub" style="font-style:italic;opacity:0.5;">not on board yet</div>
+                <div class="score-progress-track"><div class="score-progress-fill" style="width:0%"></div></div>
+              </div>
+              <div class="score-display"><div class="score-num" style="opacity:0.3">0</div><div class="score-of">of 15</div></div>
+              <span class="tap-arrow">›</span>
+            </div>
+
+          </div>
+
+          <!-- Bottom sheet overlay -->
+          <div class="sheet-overlay" id="sheet-overlay" onclick="closeSheet()"></div>
+
+          <!-- Bottom sheet -->
+          <div class="bottom-sheet" id="bottom-sheet">
+            <div class="sheet-handle"></div>
+            <div class="sheet-header">
+              <div>
+                <div class="sheet-player-name" id="sheet-name">Sandra</div>
+                <div class="sheet-player-stats">
+                  Score: <span class="stat-score" id="sheet-score">11</span>
+                  &nbsp;·&nbsp; Bumps: <span class="stat-bumps" id="sheet-bumps">1</span>
+                </div>
+              </div>
+              <button class="sheet-close" onclick="closeSheet()">✕</button>
+            </div>
+            <div class="numpad">
+              <button class="np-dnp" id="btn-dnp" onclick="selectPad('dnp')">Did Not Play — no change</button>
+              <div class="np-bump-row">
+                <button class="np-bump" id="btn-bump" onclick="selectPad('bump')">
+                  <span class="np-bump-big">💥</span>
+                  <span class="np-bump-big" style="font-size:0.85rem;">Bump</span>
+                  <span class="np-bump-sub">−5 pts · +1 bump</span>
+                </button>
+                <button class="np-double" id="btn-double" onclick="selectPad('double')">
+                  <span class="np-bump-big">💥💥</span>
+                  <span class="np-bump-big" style="font-size:0.85rem;">Double</span>
+                  <span class="np-bump-sub">−5 pts · +2 bumps</span>
+                </button>
+              </div>
+              <div class="np-num-grid">
+                <button class="np-num" onclick="selectPad('1')">1</button>
+                <button class="np-num" onclick="selectPad('2')">2</button>
+                <button class="np-num" onclick="selectPad('3')">3</button>
+                <button class="np-num" onclick="selectPad('4')">4</button>
+                <button class="np-num" onclick="selectPad('5')">5</button>
+                <div></div>
+              </div>
+              <button class="np-moon" id="btn-moon" onclick="selectPad('moon')">
+                🌙 Shoot the Moon
+                <span class="moon-disabled-hint" id="moon-hint"></span>
+              </button>
+              <button class="np-confirm" id="btn-confirm" disabled onclick="confirmEntry()">
+                Confirm
+              </button>
+            </div>
+          </div>
+
+          <div class="tab-bar">
+            <div class="tab-item"><div class="tab-icon">🏠</div><div class="tab-label">Lobby</div></div>
+            <div class="tab-item active"><div class="tab-icon">📊</div><div class="tab-label">Scores</div></div>
+            <div class="tab-item"><div class="tab-icon">📋</div><div class="tab-label">Archive</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ════════════════════════════════════
+     SCREEN 2 — SCORE ENTRY (isolated)
+════════════════════════════════════ -->
+<div class="screen-view" id="screen-entry">
+  <div class="phones-row">
+
+    <!-- Moon disabled (not on board) -->
+    <div class="phone-wrapper">
+      <div class="phone-label">Entry Sheet · Not On Board (Moon disabled)</div>
+      <div class="phone-frame">
+        <div class="phone-screen theme-dark" id="phone-entry-noboard">
+          <div class="status-bar"><span>9:41</span><div class="status-icons">▲▲▲ ◉ ▐▐</div></div>
+          <div class="app-bar">
+            <div class="app-bar-title">Dirty Clubs <small>Hand 6</small></div>
+            <button class="icon-btn" style="background:rgba(234,179,8,0.15);color:var(--gold-400);">⭐</button>
+          </div>
+          <div style="flex:1; position:relative; overflow:hidden;">
+            <!-- Dimmed scoreboard behind -->
+            <div style="opacity:0.35; padding-top:4px;">
+              <div class="player-score-row"><div class="player-avatar av-ruby on-board">S</div><div class="player-info"><div class="player-name">Sandra</div></div><div class="score-display"><div class="score-num winning">11</div></div></div>
+              <div class="player-score-row forced"><div class="player-avatar av-green on-board">M</div><div class="player-info"><div class="player-name">Maureen</div></div><div class="score-display"><div class="score-num danger">13</div></div></div>
+              <div class="player-score-row"><div class="player-avatar av-gold on-board">J</div><div class="player-info"><div class="player-name">Jim</div></div><div class="score-display"><div class="score-num">7</div></div></div>
+            </div>
+            <!-- Sheet — open state -->
+            <div class="sheet-overlay open" style="pointer-events:none;"></div>
+            <div class="bottom-sheet open">
+              <div class="sheet-handle"></div>
+              <div class="sheet-header">
+                <div>
+                  <div class="sheet-player-name">Dave</div>
+                  <div class="sheet-player-stats">Score: <span class="stat-score">0</span> &nbsp;·&nbsp; Bumps: <span class="stat-bumps">0</span></div>
+                </div>
+                <button class="sheet-close">✕</button>
+              </div>
+              <div class="numpad">
+                <button class="np-dnp">Did Not Play — no change</button>
+                <div class="np-bump-row">
+                  <button class="np-bump"><span class="np-bump-big">💥</span><span class="np-bump-big" style="font-size:0.85rem;">Bump</span><span class="np-bump-sub">−5 pts · +1 bump</span></button>
+                  <button class="np-double"><span class="np-bump-big">💥💥</span><span class="np-bump-big" style="font-size:0.85rem;">Double</span><span class="np-bump-sub">−5 pts · +2 bumps</span></button>
+                </div>
+                <div class="np-num-grid">
+                  <button class="np-num">1</button><button class="np-num">2</button><button class="np-num">3</button>
+                  <button class="np-num">4</button><button class="np-num">5</button><div></div>
+                </div>
+                <button class="np-moon" disabled>🌙 Shoot the Moon <span class="moon-disabled-hint">— not on board yet</span></button>
+                <button class="np-confirm" disabled>Confirm</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Moon enabled + selected (on board) -->
+    <div class="phone-wrapper">
+      <div class="phone-label">Entry Sheet · On Board · Moon Selected</div>
+      <div class="phone-frame">
+        <div class="phone-screen theme-dark" id="phone-entry-moon">
+          <div class="status-bar"><span>9:41</span><div class="status-icons">▲▲▲ ◉ ▐▐</div></div>
+          <div class="app-bar">
+            <div class="app-bar-title">Dirty Clubs <small>Hand 6</small></div>
+            <button class="icon-btn" style="background:rgba(234,179,8,0.15);color:var(--gold-400);">⭐</button>
+          </div>
+          <div style="flex:1; position:relative; overflow:hidden;">
+            <div style="opacity:0.35; padding-top:4px;">
+              <div class="player-score-row"><div class="player-avatar av-ruby on-board">S</div><div class="player-info"><div class="player-name">Sandra</div></div><div class="score-display"><div class="score-num winning">11</div></div></div>
+              <div class="player-score-row forced"><div class="player-avatar av-green on-board">M</div><div class="player-info"><div class="player-name">Maureen</div></div><div class="score-display"><div class="score-num danger">13</div></div></div>
+              <div class="player-score-row"><div class="player-avatar av-gold on-board">J</div><div class="player-info"><div class="player-name">Jim</div></div><div class="score-display"><div class="score-num">7</div></div></div>
+            </div>
+            <div class="sheet-overlay open" style="pointer-events:none; background:rgba(0,0,0,0.65);"></div>
+            <div class="bottom-sheet open">
+              <div class="sheet-handle"></div>
+              <div class="sheet-header">
+                <div>
+                  <div class="sheet-player-name">Jim</div>
+                  <div class="sheet-player-stats">Score: <span class="stat-score">7</span> &nbsp;·&nbsp; Bumps: <span class="stat-bumps">2</span></div>
+                </div>
+                <button class="sheet-close">✕</button>
+              </div>
+              <div class="numpad">
+                <button class="np-dnp">Did Not Play — no change</button>
+                <div class="np-bump-row">
+                  <button class="np-bump"><span class="np-bump-big">💥</span><span class="np-bump-big" style="font-size:0.85rem;">Bump</span><span class="np-bump-sub">−5 pts · +1 bump</span></button>
+                  <button class="np-double"><span class="np-bump-big">💥💥</span><span class="np-bump-big" style="font-size:0.85rem;">Double</span><span class="np-bump-sub">−5 pts · +2 bumps</span></button>
+                </div>
+                <div class="np-num-grid">
+                  <button class="np-num">1</button><button class="np-num">2</button><button class="np-num">3</button>
+                  <button class="np-num">4</button><button class="np-num">5</button><div></div>
+                </div>
+                <button class="np-moon selected">🌙 Shoot the Moon</button>
+                <button class="np-confirm ready" style="background:linear-gradient(135deg,#7c3aed,#1a7f4b);font-size:0.82rem;">
+                  🌙 Confirm Moon — Game ends after this hand
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ════════════════════════════════════
+     SCREEN 3 — GAME OVER / PAYOUT
+════════════════════════════════════ -->
+<div class="screen-view" id="screen-payout">
+  <div class="phones-row">
+
+    <!-- Normal win -->
+    <div class="phone-wrapper">
+      <div class="phone-label">Game Over · Normal Win</div>
+      <div class="phone-frame">
+        <div class="phone-screen theme-dark" id="phone-payout-normal">
+          <div class="status-bar"><span>9:41</span><div class="status-icons">▲▲▲ ◉ ▐▐</div></div>
+          <div style="flex:1; overflow:hidden; display:flex; flex-direction:column;">
+            <div class="payout-screen open">
+              <div class="payout-hero">
+                <div class="payout-trophy">🏆</div>
+                <div class="payout-winner-label">Winner</div>
+                <div class="payout-winner-name">Sandra</div>
+                <div class="payout-winner-score">Finished with 15 pts · 1 bump</div>
+              </div>
+              <div class="payout-section-label">Each player owes Sandra</div>
+              <div class="payout-list">
+                <div class="payout-row">
+                  <div class="payout-avatar av-green">M</div>
+                  <div class="payout-player-info">
+                    <div class="payout-player-name">Maureen</div>
+                    <div class="payout-breakdown">$0.25 game <span class="bump-owe">+ $0.20 (2 bumps)</span></div>
+                  </div>
+                  <div class="payout-amount owes">$0.45</div>
+                </div>
+                <div class="payout-row">
+                  <div class="payout-avatar av-gold">J</div>
+                  <div class="payout-player-info">
+                    <div class="payout-player-name">Jim</div>
+                    <div class="payout-breakdown">$0.25 game <span class="bump-owe">+ $0.20 (2 bumps)</span></div>
+                  </div>
+                  <div class="payout-amount owes">$0.45</div>
+                </div>
+                <div class="payout-row">
+                  <div class="payout-avatar av-ink">D</div>
+                  <div class="payout-player-info">
+                    <div class="payout-player-name">Dave</div>
+                    <div class="payout-breakdown">$0.25 game · no bumps</div>
+                  </div>
+                  <div class="payout-amount owes">$0.25</div>
+                </div>
+                <div class="payout-total-row">
+                  <span class="payout-total-label">Sandra collects</span>
+                  <span class="payout-total-amount">$1.15</span>
+                </div>
+              </div>
+              <div class="payout-actions">
+                <button class="btn-primary btn-felt">▶ Next Game</button>
+                <button class="btn-outline">End Night</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Moon win -->
+    <div class="phone-wrapper">
+      <div class="phone-label">Game Over · Shoot the Moon Win</div>
+      <div class="phone-frame">
+        <div class="phone-screen theme-dark" id="phone-payout-moon">
+          <div class="status-bar"><span>9:41</span><div class="status-icons">▲▲▲ ◉ ▐▐</div></div>
+          <div style="flex:1; overflow:hidden; display:flex; flex-direction:column;">
+            <div class="payout-screen open">
+              <div class="payout-hero" style="background:linear-gradient(160deg,#1a0a40 0%,#082518 100%);">
+                <div class="payout-moon-banner">🌙 Shoot the Moon!</div>
+                <div class="payout-trophy">🌕</div>
+                <div class="payout-winner-label">Winner</div>
+                <div class="payout-winner-name">Jim</div>
+                <div class="payout-winner-score">All 5 tricks taken · game over</div>
+              </div>
+              <div class="payout-section-label">Each player owes Jim</div>
+              <div class="payout-list">
+                <div class="payout-row">
+                  <div class="payout-avatar av-ruby">S</div>
+                  <div class="payout-player-info">
+                    <div class="payout-player-name">Sandra</div>
+                    <div class="payout-breakdown">$0.25 game <span class="bump-owe">+ $0.10 (1 bump)</span></div>
+                  </div>
+                  <div class="payout-amount owes">$0.35</div>
+                </div>
+                <div class="payout-row">
+                  <div class="payout-avatar av-green">M</div>
+                  <div class="payout-player-info">
+                    <div class="payout-player-name">Maureen</div>
+                    <div class="payout-breakdown">$0.25 game <span class="bump-owe">+ $0.20 (2 bumps)</span></div>
+                  </div>
+                  <div class="payout-amount owes">$0.45</div>
+                </div>
+                <div class="payout-row">
+                  <div class="payout-avatar av-ink">D</div>
+                  <div class="payout-player-info">
+                    <div class="payout-player-name">Dave</div>
+                    <div class="payout-breakdown">$0.25 game · no bumps</div>
+                  </div>
+                  <div class="payout-amount owes">$0.25</div>
+                </div>
+                <div class="payout-total-row">
+                  <span class="payout-total-label">Jim collects</span>
+                  <span class="payout-total-amount">$1.05</span>
+                </div>
+              </div>
+              <div class="payout-actions">
+                <button class="btn-primary btn-felt">▶ Next Game</button>
+                <button class="btn-outline">End Night</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ════════════════════════════════════
+     ANNOTATIONS
+════════════════════════════════════ -->
+<div class="annotations" id="ann-scoreboard">
+  <h3>Scoreboard — Design Notes</h3>
+  <ul class="ann-list">
+    <li><strong>Score progress bar:</strong> Thin track below each player shows progress to 15. Turns ruby-red when at 13–14 to reinforce the danger zone visually.</li>
+    <li><strong>Bump pips:</strong> Small filled dots (one per bump). Empty ghost circles keep the row height consistent regardless of bump count — no layout shift.</li>
+    <li><strong>On board indicator:</strong> Small green dot on the avatar corner. Subtle — only matters for Moon eligibility, players at the table will know — but useful reference.</li>
+    <li><strong>Forced play badge:</strong> "Must Play" in ruby red appears inline in the name row at 13 or 14. The row also gets a faint ruby left-blush to draw the eye. Hard to miss.</li>
+    <li><strong>Tap arrows (host only):</strong> Faint › chevron on the right signals tappability without cluttering the viewer's screen.</li>
+    <li><strong>Not on board state:</strong> Score shows at low opacity, "not on board yet" sub-label in italic. Clean distinction from a player with actual points.</li>
+  </ul>
+</div>
+
+<div class="annotations" id="ann-entry" style="display:none;">
+  <h3>Score Entry Sheet — Design Notes</h3>
+  <ul class="ann-list">
+    <li><strong>Sheet slides up from bottom:</strong> Native iOS pattern. Scoreboard remains partially visible above — everyone at the table can still see standings while host enters.</li>
+    <li><strong>Player context at top:</strong> Name, current score, and bump count shown in the sheet header — host doesn't have to remember or look back up.</li>
+    <li><strong>8-button custom pad:</strong> DNP (full width, muted) · Bump / Double Bump (ruby tones) · 1–5 (felt green numerals) · Shoot the Moon (full width, special gradient).</li>
+    <li><strong>Moon disabled state:</strong> Greyed out with "— not on board yet" hint inline. No separate toast or modal — the information is right there on the button.</li>
+    <li><strong>Moon selected state:</strong> The confirm button transforms — purple-to-green gradient, text becomes "🌙 Confirm Moon — Game ends after this hand". High-stakes action deserves a distinct confirmation.</li>
+    <li><strong>Confirm button:</strong> Disabled until a selection is made. Prevents accidental empty submits.</li>
+  </ul>
+</div>
+
+<div class="annotations" id="ann-payout" style="display:none;">
+  <h3>Payout Screen — Design Notes</h3>
+  <ul class="ann-list">
+    <li><strong>Slides up over the scoreboard:</strong> Full-screen takeover so the result gets proper attention. "Next Game" sends it back down.</li>
+    <li><strong>Moon win variant:</strong> Different hero treatment — deep purple-to-green gradient, moon emoji, "Shoot the Moon!" banner. Feels like a special moment.</li>
+    <li><strong>Breakdown per player:</strong> Base $0.25 + bump penalties shown separately so there's no dispute at the table. Bump amount in ruby to draw the eye.</li>
+    <li><strong>Total callout:</strong> Gold Fraunces numeral — "Sandra collects $1.15". The winner reads this and everyone pays them directly.</li>
+    <li><strong>Actions:</strong> "Next Game" (primary, felt green) routes to Game Setup. "End Night" (secondary) archives the session.</li>
+  </ul>
+</div>
+
+<script>
+let isDark = true;
+let currentPad = null;
+let currentOnBoard = true;
+
+const screens = ['scoreboard', 'entry', 'payout'];
+const annIds = { scoreboard: 'ann-scoreboard', entry: 'ann-entry', payout: 'ann-payout' };
+
+function showScreen(name) {
+  document.querySelectorAll('.screen-view').forEach(el => el.classList.remove('active'));
+  document.getElementById('screen-' + name).classList.add('active');
+  document.querySelectorAll('.screen-nav button').forEach((b, i) => {
+    b.classList.toggle('active', screens[i] === name);
+  });
+  document.querySelectorAll('.annotations').forEach(el => el.style.display = 'none');
+  const ann = document.getElementById(annIds[name]);
+  if (ann) ann.style.display = 'block';
+  applyTheme();
+}
+
+function applyTheme() {
+  document.querySelectorAll('.phone-screen').forEach(p => {
+    p.classList.remove('theme-light', 'theme-dark');
+    p.classList.add(isDark ? 'theme-dark' : 'theme-light');
+  });
+  // fix avatar light mode
+  document.querySelectorAll('.theme-light .av-ruby').forEach(el => {
+    el.style.background = 'var(--ruby-100)'; el.style.color = 'var(--ruby-700)';
+  });
+  document.querySelectorAll('.theme-light .av-gold').forEach(el => {
+    el.style.background = 'var(--gold-100)'; el.style.color = 'var(--gold-700)';
+  });
+  document.querySelectorAll('.theme-light .av-ink').forEach(el => {
+    el.style.background = 'var(--ink-200)'; el.style.color = 'var(--ink-700)';
+  });
+}
+
+function toggleTheme() {
+  isDark = !isDark;
+  document.getElementById('themeToggle').classList.toggle('light', !isDark);
+  applyTheme();
+}
+
+// Sheet interaction
+function openSheet(name, score, bumps, onBoard) {
+  currentPad = null;
+  currentOnBoard = onBoard;
+  document.getElementById('sheet-name').textContent = name;
+  document.getElementById('sheet-score').textContent = score;
+  document.getElementById('sheet-bumps').textContent = bumps;
+
+  const moonBtn = document.getElementById('btn-moon');
+  const moonHint = document.getElementById('moon-hint');
+  if (onBoard) {
+    moonBtn.disabled = false;
+    moonHint.textContent = '';
+  } else {
+    moonBtn.disabled = true;
+    moonHint.textContent = '— not on board yet';
+  }
+
+  // Clear selections
+  document.querySelectorAll('#phone-sb-host .np-dnp, #phone-sb-host .np-bump, #phone-sb-host .np-double, #phone-sb-host .np-num, #phone-sb-host .np-moon')
+    .forEach(b => b.classList.remove('selected'));
+  document.getElementById('btn-confirm').disabled = true;
+
+  document.getElementById('sheet-overlay').classList.add('open');
+  document.getElementById('bottom-sheet').classList.add('open');
+}
+
+function closeSheet() {
+  document.getElementById('sheet-overlay').classList.remove('open');
+  document.getElementById('bottom-sheet').classList.remove('open');
+  currentPad = null;
+}
+
+function selectPad(val) {
+  currentPad = val;
+  document.querySelectorAll('#phone-sb-host .np-dnp, #phone-sb-host .np-bump, #phone-sb-host .np-double, #phone-sb-host .np-num, #phone-sb-host .np-moon')
+    .forEach(b => b.classList.remove('selected'));
+
+  const map = { dnp: 'btn-dnp', bump: 'btn-bump', double: 'btn-double', moon: 'btn-moon' };
+  if (map[val]) {
+    document.getElementById(map[val]).classList.add('selected');
+  } else {
+    // number
+    document.querySelectorAll('#phone-sb-host .np-num').forEach(b => {
+      if (b.textContent.trim() === val) b.classList.add('selected');
+    });
+  }
+
+  const confirm = document.getElementById('btn-confirm');
+  confirm.disabled = false;
+  confirm.classList.add('ready');
+  if (val === 'moon') {
+    confirm.textContent = '🌙 Confirm Moon — Game ends after this hand';
+    confirm.style.background = 'linear-gradient(135deg,#7c3aed,#1a7f4b)';
+    confirm.style.fontSize = '0.72rem';
+  } else {
+    confirm.textContent = 'Confirm';
+    confirm.style.background = '';
+    confirm.style.fontSize = '';
+  }
+}
+
+function confirmEntry() {
+  closeSheet();
+}
+
+// Init
+showScreen('scoreboard');
+</script>
+</body>
+</html>

@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NKS — Open Scorer Mockup</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,700;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-body: 'DM Sans', sans-serif;
+
+  --felt-50:#f0faf3;--felt-100:#d9f2e1;--felt-200:#b3e5c5;
+  --felt-300:#7dd0a0;--felt-400:#48b87a;--felt-500:#279e5e;
+  --felt-600:#1a7f4b;--felt-700:#16643c;--felt-800:#144f30;
+  --felt-900:#103f26;--felt-950:#082518;
+
+  --cream-50:#fdfcf8;--cream-100:#f8f4ec;--cream-200:#f0e8d4;
+  --cream-300:#e4d5b4;--cream-400:#d4ba8a;--cream-500:#c09a62;
+  --cream-600:#a67d48;--cream-700:#896337;--cream-800:#6e4e2d;
+  --cream-900:#573d24;--cream-950:#311f10;
+
+  --ruby-50:#fff1f2;--ruby-100:#ffe0e2;--ruby-200:#ffc7ca;
+  --ruby-300:#ffa0a5;--ruby-400:#ff6470;--ruby-500:#f83b48;
+  --ruby-600:#e51d2b;--ruby-700:#c01422;--ruby-800:#9f1420;
+  --ruby-900:#84151f;--ruby-950:#48060c;
+
+  --ink-50:#f6f6f7;--ink-100:#e2e3e6;--ink-200:#c5c7ce;
+  --ink-300:#9fa3af;--ink-400:#797f8e;--ink-500:#5e6474;
+  --ink-600:#4c515f;--ink-700:#3e4250;--ink-800:#353843;
+  --ink-900:#22242d;--ink-950:#14151c;
+
+  --gold-50:#fefce8;--gold-100:#fef9c3;--gold-200:#fef08a;
+  --gold-300:#fde047;--gold-400:#facc15;--gold-500:#eab308;
+  --gold-600:#ca8a04;--gold-700:#a16207;--gold-800:#854d0e;
+  --gold-900:#713f12;--gold-950:#3f2006;
+
+  --amber-100:#fef3c7;--amber-200:#fde68a;--amber-400:#fbbf24;
+  --amber-500:#f59e0b;--amber-600:#d97706;--amber-700:#b45309;
+  --amber-800:#92400e;--amber-900:#78350f;
+}
+
+body {
+  font-family: var(--font-body);
+  background: #12121a;
+  color: var(--ink-100);
+  min-height: 100vh;
+  padding: 2rem 1rem 4rem;
+}
+
+.page-title {
+  font-family: var(--font-display); font-size: clamp(1.3rem, 4vw, 2rem);
+  font-weight: 700; color: var(--cream-100); text-align: center; margin-bottom: 0.2rem;
+}
+.page-title em { color: var(--gold-400); font-style: italic; }
+.page-sub { text-align: center; color: var(--ink-500); font-size: 0.82rem; margin-bottom: 2rem; font-weight: 300; }
+
+.screen-nav {
+  display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap; margin-bottom: 1.5rem;
+}
+.screen-nav button {
+  font-family: var(--font-body); font-size: 0.78rem; font-weight: 500;
+  padding: 0.4rem 0.85rem; border-radius: 999px;
+  border: 1.5px solid var(--ink-700); background: transparent; color: var(--ink-300); cursor: pointer;
+  transition: all 0.15s;
+}
+.screen-nav button:hover { border-color: var(--felt-500); color: var(--felt-300); }
+.screen-nav button.active { background: var(--felt-600); border-color: var(--felt-600); color: white; }
+
+/* Win direction switcher */
+.dir-row {
+  display: flex; align-items: center; justify-content: center; gap: 1rem; margin-bottom: 0.75rem;
+  font-size: 0.78rem; color: var(--ink-400);
+}
+.dir-btn {
+  font-family: var(--font-body); font-size: 0.78rem; font-weight: 600;
+  padding: 0.35rem 0.9rem; border-radius: 999px; cursor: pointer; transition: all 0.15s;
+  border: 1.5px solid;
+}
+.dir-btn.high { border-color: var(--felt-600); color: var(--felt-400); background: transparent; }
+.dir-btn.high.active { background: var(--felt-700); color: white; border-color: var(--felt-600); }
+.dir-btn.low { border-color: var(--amber-700); color: var(--amber-400); background: transparent; }
+.dir-btn.low.active { background: var(--amber-800); color: white; border-color: var(--amber-700); }
+
+.theme-row {
+  display: flex; align-items: center; justify-content: center;
+  gap: 0.75rem; margin-bottom: 1.5rem; font-size: 0.8rem; color: var(--ink-400);
+}
+.toggle-pill {
+  width: 44px; height: 24px; background: var(--ink-700); border-radius: 999px;
+  position: relative; cursor: pointer; transition: background 0.2s; border: none;
+}
+.toggle-pill.light { background: var(--felt-500); }
+.toggle-pill::after {
+  content: ''; position: absolute; top: 3px; left: 3px;
+  width: 18px; height: 18px; background: white; border-radius: 50%; transition: transform 0.2s;
+}
+.toggle-pill.light::after { transform: translateX(20px); }
+
+.phone-stage { display: flex; justify-content: center; align-items: flex-start; gap: 2rem; flex-wrap: wrap; }
+.phone-wrapper { display: flex; flex-direction: column; align-items: center; gap: 0.6rem; }
+.phone-label { font-size: 0.72rem; color: var(--ink-500); letter-spacing: 0.06em; text-transform: uppercase; font-weight: 500; }
+
+.phone-frame {
+  width: 320px; height: 568px; background: #0a0a10; border-radius: 44px;
+  border: 6px solid #252535;
+  box-shadow: 0 0 0 1px #353548, 0 24px 80px rgba(0,0,0,0.8), inset 0 0 0 1px #08080e;
+  position: relative; overflow: hidden; flex-shrink: 0;
+}
+.phone-frame::before {
+  content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+  width: 110px; height: 20px; background: #0a0a10; border-radius: 0 0 12px 12px; z-index: 200;
+}
+.phone-frame::after {
+  content: ''; position: absolute; bottom: 7px; left: 50%; transform: translateX(-50%);
+  width: 70px; height: 4px; background: rgba(255,255,255,0.15); border-radius: 999px; z-index: 200;
+}
+.phone-screen {
+  width: 100%; height: 100%; overflow: hidden; position: relative; display: flex; flex-direction: column;
+}
+
+.status-bar {
+  height: 28px; display: flex; align-items: flex-end; justify-content: space-between;
+  padding: 0 14px 4px; font-size: 0.65rem; font-weight: 600; flex-shrink: 0; z-index: 10;
+}
+.status-icons { display: flex; align-items: center; gap: 3px; font-size: 0.58rem; }
+
+.app-bar { display: flex; align-items: center; justify-content: space-between; padding: 8px 14px; flex-shrink: 0; }
+.app-bar-title { font-family: var(--font-display); font-weight: 700; font-size: 0.95rem; line-height: 1.1; }
+.app-bar-title small { display: block; font-family: var(--font-body); font-size: 0.58rem; font-weight: 300; letter-spacing: 0.04em; opacity: 0.65; }
+.icon-btn { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; border: none; cursor: pointer; flex-shrink: 0; }
+
+.scrollable { flex: 1; overflow-y: auto; scrollbar-width: none; padding-bottom: 56px; }
+.scrollable::-webkit-scrollbar { display: none; }
+
+.tab-bar { position: absolute; bottom: 0; left: 0; right: 0; height: 52px; display: flex; border-top: 1px solid; flex-shrink: 0; z-index: 50; }
+.tab-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; cursor: pointer; }
+.tab-icon { font-size: 1rem; line-height: 1; }
+.tab-label { font-size: 0.56rem; font-weight: 600; letter-spacing: 0.02em; }
+
+/* ════ THEMES ════ */
+.theme-dark .status-bar { background: var(--ink-950); color: var(--ink-300); }
+.theme-dark .app-bar { background: var(--ink-900); }
+.theme-dark .app-bar-title { color: var(--cream-100); }
+.theme-dark .icon-btn { background: rgba(255,255,255,0.07); color: var(--ink-200); }
+.theme-dark .scrollable { background: var(--ink-950); }
+.theme-dark .tab-bar { background: var(--ink-900); border-color: rgba(255,255,255,0.07); }
+.theme-dark .tab-item .tab-icon, .theme-dark .tab-item .tab-label { color: var(--ink-500); }
+.theme-dark .tab-item.active .tab-icon, .theme-dark .tab-item.active .tab-label { color: var(--felt-400); }
+
+.theme-light .status-bar { background: var(--felt-600); color: var(--cream-100); }
+.theme-light .app-bar { background: var(--felt-600); }
+.theme-light .app-bar-title { color: white; }
+.theme-light .icon-btn { background: rgba(255,255,255,0.18); color: white; }
+.theme-light .scrollable { background: var(--cream-50); }
+.theme-light .tab-bar { background: white; border-color: var(--cream-200); }
+.theme-light .tab-item .tab-icon, .theme-light .tab-item .tab-label { color: var(--ink-400); }
+.theme-light .tab-item.active .tab-icon, .theme-light .tab-item.active .tab-label { color: var(--felt-600); }
+
+/* ════ GAME STRIP ════ */
+.game-strip {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 6px 12px 7px; flex-shrink: 0;
+}
+.theme-dark .game-strip { background: var(--felt-950); border-bottom: 1px solid var(--felt-900); }
+.theme-light .game-strip { background: var(--felt-700); border-bottom: 1px solid var(--felt-800); }
+
+.game-strip-left { display: flex; align-items: center; gap: 7px; }
+.game-strip-name { font-family: var(--font-display); font-size: 0.78rem; font-weight: 700; color: var(--felt-300); }
+
+/* Win direction chip */
+.win-dir-chip {
+  font-size: 0.6rem; font-weight: 700; letter-spacing: 0.05em;
+  padding: 3px 8px; border-radius: 6px; white-space: nowrap; flex-shrink: 0;
+}
+.win-dir-chip.high {
+  background: rgba(39,158,94,0.18); color: var(--felt-400);
+  border: 1px solid rgba(39,158,94,0.28);
+}
+.win-dir-chip.low {
+  background: rgba(217,119,6,0.18); color: var(--amber-400);
+  border: 1px solid rgba(217,119,6,0.28);
+}
+.theme-light .win-dir-chip.high { background: var(--felt-100); color: var(--felt-700); border-color: var(--felt-200); }
+.theme-light .win-dir-chip.low { background: var(--amber-100); color: var(--amber-700); border-color: var(--amber-200); }
+
+/* End game button */
+.end-game-btn {
+  font-family: var(--font-body); font-size: 0.65rem; font-weight: 700;
+  padding: 5px 9px; border-radius: 7px; border: none; cursor: pointer;
+  letter-spacing: 0.02em; white-space: nowrap; transition: all 0.15s;
+}
+.theme-dark .end-game-btn { background: rgba(255,255,255,0.07); color: var(--ink-400); }
+.theme-dark .end-game-btn:hover { background: rgba(255,255,255,0.12); color: var(--ink-200); }
+.theme-light .end-game-btn { background: rgba(255,255,255,0.2); color: rgba(255,255,255,0.8); }
+.theme-light .end-game-btn:hover { background: rgba(255,255,255,0.3); color: white; }
+
+/* Complete round button */
+.complete-round-btn {
+  font-family: var(--font-body); font-size: 0.68rem; font-weight: 700;
+  padding: 5px 10px; border-radius: 8px; border: none; cursor: pointer;
+  letter-spacing: 0.02em; white-space: nowrap; transition: all 0.15s;
+}
+.complete-round-btn.ready { background: var(--felt-600); color: white; cursor: pointer; }
+.complete-round-btn.ready:hover { background: var(--felt-500); }
+.complete-round-btn.disabled { background: rgba(255,255,255,0.07); color: var(--ink-600); cursor: default; }
+.theme-light .complete-round-btn.disabled { background: rgba(0,0,0,0.08); color: var(--ink-400); }
+
+/* Scored check */
+.scored-check { font-size: 0.58rem; font-weight: 700; color: var(--felt-400); display: flex; align-items: center; gap: 3px; }
+
+/* ════ SECTION LABEL ════ */
+.section-label { font-size: 0.62rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; padding: 8px 14px 4px; }
+.theme-dark .section-label { color: var(--ink-600); }
+.theme-light .section-label { color: var(--ink-400); }
+
+/* ════ PLAYER ROW ════ */
+.player-score-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 14px; border-bottom: 1px solid; cursor: pointer;
+  transition: background 0.12s; position: relative;
+}
+.theme-dark .player-score-row { border-color: rgba(255,255,255,0.05); }
+.theme-dark .player-score-row:active { background: rgba(255,255,255,0.04); }
+.theme-light .player-score-row { border-color: var(--cream-200); background: white; }
+.theme-light .player-score-row:active { background: var(--felt-50); }
+
+/* Leading — gold blush */
+.player-score-row.leading { background: linear-gradient(90deg, rgba(250,204,21,0.07) 0%, transparent 60%); }
+
+.player-avatar {
+  width: 34px; height: 34px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 0.82rem; flex-shrink: 0;
+}
+.av-green { background: var(--felt-900); color: var(--felt-300); }
+.av-ruby  { background: rgba(159,20,32,0.2); color: var(--ruby-400); }
+.av-gold  { background: rgba(133,77,14,0.22); color: var(--gold-400); }
+.av-ink   { background: var(--ink-700); color: var(--ink-200); }
+.av-cream { background: rgba(100,80,40,0.25); color: var(--cream-400); }
+.av-blue  { background: rgba(30,60,140,0.25); color: #7eb3ff; }
+
+.theme-light .av-green { background: var(--felt-100); color: var(--felt-700); }
+.theme-light .av-ruby  { background: var(--ruby-100); color: var(--ruby-700); }
+.theme-light .av-gold  { background: var(--gold-100); color: var(--gold-700); }
+.theme-light .av-ink   { background: var(--ink-200); color: var(--ink-700); }
+
+.player-info { flex: 1; min-width: 0; }
+.player-name {
+  font-size: 0.88rem; font-weight: 600;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  display: flex; align-items: center; gap: 5px;
+}
+.theme-dark .player-name { color: var(--ink-100); }
+.theme-light .player-name { color: var(--ink-900); }
+.player-sub { font-size: 0.62rem; margin-top: 2px; display: flex; align-items: center; gap: 4px; }
+.theme-dark .player-sub { color: var(--ink-500); }
+.theme-light .player-sub { color: var(--ink-400); }
+
+/* Leading badge */
+.leading-badge {
+  font-size: 0.52rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;
+  background: linear-gradient(135deg, var(--gold-600), var(--gold-400));
+  color: var(--ink-950); padding: 1px 5px; border-radius: 4px; flex-shrink: 0;
+}
+
+/* Score display */
+.score-display { display: flex; flex-direction: column; align-items: flex-end; flex-shrink: 0; }
+.score-num {
+  font-family: var(--font-display); font-size: 1.5rem; font-weight: 700;
+  line-height: 1; letter-spacing: -0.02em;
+}
+.theme-dark .score-num { color: var(--felt-400); }
+.theme-light .score-num { color: var(--felt-700); }
+.score-num.negative { color: var(--ruby-400) !important; }
+.score-sub { font-size: 0.52rem; text-align: right; margin-top: 1px; }
+.theme-dark .score-sub { color: var(--ink-600); }
+.theme-light .score-sub { color: var(--ink-400); }
+.tap-arrow { font-size: 0.6rem; opacity: 0.25; flex-shrink: 0; }
+.theme-dark .tap-arrow { color: var(--ink-300); }
+.theme-light .tap-arrow { color: var(--ink-500); }
+
+/* ════ BOTTOM SHEET ════ */
+.sheet-overlay {
+  position: absolute; inset: 0; z-index: 100;
+  background: rgba(0,0,0,0.5); opacity: 0; pointer-events: none; transition: opacity 0.25s;
+}
+.sheet-overlay.open { opacity: 1; pointer-events: all; }
+
+.bottom-sheet {
+  position: absolute; bottom: 0; left: 0; right: 0; z-index: 110;
+  border-radius: 18px 18px 0 0; transform: translateY(100%);
+  transition: transform 0.28s cubic-bezier(0.34, 1.1, 0.64, 1); overflow: hidden;
+}
+.theme-dark .bottom-sheet { background: var(--ink-900); border-top: 1px solid rgba(255,255,255,0.08); }
+.theme-light .bottom-sheet { background: white; border-top: 1px solid var(--cream-200); box-shadow: 0 -8px 32px rgba(0,0,0,0.12); }
+.bottom-sheet.open { transform: translateY(0); }
+
+.sheet-handle { width: 36px; height: 4px; border-radius: 999px; margin: 10px auto 0; }
+.theme-dark .sheet-handle { background: var(--ink-700); }
+.theme-light .sheet-handle { background: var(--cream-300); }
+
+.sheet-header {
+  padding: 8px 14px 10px; display: flex; align-items: center; justify-content: space-between;
+  border-bottom: 1px solid;
+}
+.theme-dark .sheet-header { border-color: rgba(255,255,255,0.06); }
+.theme-light .sheet-header { border-color: var(--cream-200); }
+.sheet-player-name { font-family: var(--font-display); font-weight: 700; font-size: 1rem; }
+.theme-dark .sheet-player-name { color: var(--cream-100); }
+.theme-light .sheet-player-name { color: var(--ink-900); }
+.sheet-meta { font-size: 0.65rem; margin-top: 1px; display: flex; align-items: center; gap: 6px; }
+.theme-dark .sheet-meta { color: var(--ink-400); }
+.theme-light .sheet-meta { color: var(--ink-500); }
+.sheet-meta .meta-score { color: var(--felt-400); font-weight: 700; font-family: var(--font-display); font-size: 0.82rem; }
+.sheet-close { width: 26px; height: 26px; border-radius: 50%; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; }
+.theme-dark .sheet-close { background: var(--ink-700); color: var(--ink-300); }
+.theme-light .sheet-close { background: var(--cream-200); color: var(--ink-600); }
+
+/* Math bar */
+.math-bar { display: flex; align-items: center; justify-content: center; gap: 5px; padding: 10px 14px 8px; }
+.math-val { font-family: var(--font-display); font-size: 0.95rem; font-weight: 700; }
+.math-op { font-size: 0.75rem; font-weight: 400; }
+.theme-dark .math-op { color: var(--ink-600); }
+.theme-light .math-op { color: var(--ink-400); }
+.math-prev { }
+.theme-dark .math-prev { color: var(--ink-500); }
+.theme-light .math-prev { color: var(--ink-400); }
+.math-turn-val { color: var(--felt-400); }
+.math-turn-val.neg-val { color: var(--ruby-400); }
+.math-eq { font-size: 0.75rem; }
+.theme-dark .math-eq { color: var(--ink-600); }
+.theme-light .math-eq { color: var(--ink-400); }
+.math-result { font-family: var(--font-display); font-size: 1.25rem; font-weight: 700; color: var(--felt-400); transition: color 0.15s; }
+.math-result.neg-result { color: var(--ruby-400); }
+.math-result.unknown { opacity: 0.3; }
+.theme-dark .math-result.unknown { color: var(--ink-400); }
+.theme-light .math-result.unknown { color: var(--ink-400); }
+
+.math-bar-divider { height: 1px; margin: 0 14px; }
+.theme-dark .math-bar-divider { background: rgba(255,255,255,0.06); }
+.theme-light .math-bar-divider { background: var(--cream-200); }
+
+/* Entry */
+.entry-area { padding: 10px 14px 6px; }
+.entry-row-single { display: flex; align-items: stretch; border-radius: 10px; overflow: hidden; border: 1.5px solid; }
+.theme-dark .entry-row-single { border-color: var(--felt-700); }
+.theme-light .entry-row-single { border-color: var(--felt-300); }
+.entry-label-col { padding: 10px 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; min-width: 56px; flex-shrink: 0; border-right: 1px solid; }
+.theme-dark .entry-label-col { background: rgba(39,158,94,0.12); border-color: var(--felt-700); }
+.theme-light .entry-label-col { background: var(--felt-50); border-color: var(--felt-200); }
+.entry-label-text { font-size: 0.58rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; color: var(--felt-400); }
+.entry-label-sub { font-size: 0.5rem; }
+.theme-dark .entry-label-sub { color: var(--ink-600); }
+.theme-light .entry-label-sub { color: var(--ink-400); }
+.entry-input { flex: 1; padding: 10px 12px; border: none; outline: none; text-align: right; font-family: var(--font-display); font-size: 1.6rem; font-weight: 700; background: transparent; }
+.theme-dark .entry-input { color: var(--felt-300); }
+.theme-light .entry-input { color: var(--felt-700); }
+.entry-input-hint { text-align: right; font-size: 0.58rem; margin: 4px 0 0; padding: 0 2px; }
+.theme-dark .entry-input-hint { color: var(--ink-700); }
+.theme-light .entry-input-hint { color: var(--ink-400); }
+.confirm-btn { width: 100%; padding: 13px; border-radius: 10px; border: none; cursor: pointer; font-family: var(--font-body); font-size: 0.88rem; font-weight: 700; letter-spacing: 0.02em; transition: all 0.15s; margin-top: 10px; }
+.confirm-btn:enabled { background: var(--felt-600); color: white; }
+.confirm-btn:enabled:hover { background: var(--felt-500); }
+.confirm-btn:disabled { cursor: not-allowed; opacity: 0.35; }
+.theme-dark .confirm-btn:disabled { background: var(--ink-700); color: var(--ink-400); }
+.theme-light .confirm-btn:disabled { background: var(--cream-200); color: var(--ink-400); }
+
+/* ════ GAME OVER ════ */
+.gameover-screen {
+  position: absolute; inset: 0; z-index: 150; display: flex; flex-direction: column;
+  transform: translateY(100%); transition: transform 0.35s cubic-bezier(0.34, 1.05, 0.64, 1);
+}
+.gameover-screen.open { transform: translateY(0); }
+.theme-dark .gameover-screen { background: var(--ink-950); }
+.theme-light .gameover-screen { background: var(--cream-50); }
+
+.gameover-hero {
+  padding: 18px 16px 14px; text-align: center;
+  background: linear-gradient(160deg, var(--felt-950) 0%, var(--ink-950) 100%);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.theme-light .gameover-hero { background: linear-gradient(160deg, var(--felt-800) 0%, var(--felt-600) 100%); }
+.gameover-trophy { font-size: 2.4rem; line-height: 1; margin-bottom: 4px; }
+.gameover-label { font-size: 0.62rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold-500); margin-bottom: 4px; }
+.gameover-winner { font-family: var(--font-display); font-size: 1.5rem; font-weight: 700; color: var(--cream-100); line-height: 1.1; }
+.gameover-score { font-size: 0.75rem; color: var(--felt-400); margin-top: 4px; }
+.gameover-note { font-size: 0.62rem; color: var(--ink-500); margin-top: 5px; font-style: italic; }
+
+.gameover-list { flex: 1; overflow-y: auto; scrollbar-width: none; padding: 8px 0; }
+.gameover-list::-webkit-scrollbar { display: none; }
+.gameover-row { display: flex; align-items: center; gap: 10px; padding: 9px 14px; border-bottom: 1px solid; }
+.theme-dark .gameover-row { border-color: rgba(255,255,255,0.05); }
+.theme-light .gameover-row { border-color: var(--cream-200); background: white; }
+.gameover-place { font-family: var(--font-display); font-size: 1rem; font-weight: 700; width: 22px; text-align: center; flex-shrink: 0; }
+.theme-dark .gameover-place { color: var(--ink-600); }
+.theme-light .gameover-place { color: var(--ink-400); }
+.gameover-place.first  { color: var(--gold-400) !important; }
+.gameover-place.second { color: var(--ink-300); }
+.gameover-place.third  { color: var(--amber-700); }
+.gameover-info { flex: 1; min-width: 0; }
+.gameover-name { font-size: 0.88rem; font-weight: 600; }
+.theme-dark .gameover-name { color: var(--ink-100); }
+.theme-light .gameover-name { color: var(--ink-900); }
+.gameover-detail { font-size: 0.62rem; margin-top: 2px; }
+.theme-dark .gameover-detail { color: var(--ink-500); }
+.theme-light .gameover-detail { color: var(--ink-400); }
+.gameover-final { font-family: var(--font-display); font-size: 1.3rem; font-weight: 700; flex-shrink: 0; }
+.theme-dark .gameover-final { color: var(--felt-400); }
+.theme-light .gameover-final { color: var(--felt-700); }
+.gameover-final.negative { color: var(--ruby-400) !important; }
+.gameover-final.winner-score { color: var(--gold-400) !important; }
+.gameover-actions { padding: 10px 14px 16px; display: flex; gap: 8px; flex-shrink: 0; border-top: 1px solid; }
+.theme-dark .gameover-actions { border-color: rgba(255,255,255,0.07); background: var(--ink-950); }
+.theme-light .gameover-actions { border-color: var(--cream-200); background: var(--cream-50); }
+.action-btn { flex: 1; padding: 11px; border-radius: 10px; border: none; cursor: pointer; font-family: var(--font-body); font-size: 0.82rem; font-weight: 700; letter-spacing: 0.01em; }
+.action-primary { background: var(--felt-600); color: white; }
+.theme-dark .action-secondary { background: var(--ink-800); color: var(--ink-300); }
+.theme-light .action-secondary { background: var(--cream-200); color: var(--ink-600); }
+
+/* ════ ANNOTATIONS ════ */
+.annotations {
+  max-width: 580px; margin: 2rem auto 0;
+  background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 12px; padding: 1.2rem 1.4rem; display: none;
+}
+.annotations h3 { font-family: var(--font-display); font-size: 1rem; font-weight: 700; color: var(--cream-200); margin-bottom: 0.6rem; }
+.ann-list { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
+.ann-list li { font-size: 0.8rem; color: var(--ink-400); padding-left: 1rem; position: relative; line-height: 1.5; }
+.ann-list li::before { content: '→'; position: absolute; left: 0; color: var(--felt-600); }
+.ann-list li strong { color: var(--ink-200); font-weight: 600; }
+</style>
+</head>
+<body>
+
+<h1 class="page-title">NKS — <em>Open Scorer</em></h1>
+<p class="page-sub">Nobody's Keeping Score · UI Mockup · iPhone SE · 320×568</p>
+
+<div class="screen-nav">
+  <button class="active" onclick="showScreen('scoreboard')">Scoreboard · High</button>
+  <button onclick="showScreen('scoreboard-low')">Scoreboard · Low</button>
+  <button onclick="showScreen('entry')">Score Entry</button>
+  <button onclick="showScreen('gameover')">Game Over</button>
+</div>
+
+<div class="theme-row">
+  <span>Dark</span>
+  <button class="toggle-pill" id="themeToggle" onclick="toggleTheme()"></button>
+  <span>Light</span>
+</div>
+
+<div class="phone-stage">
+<div class="phone-wrapper">
+  <div class="phone-label">iPhone SE</div>
+  <div class="phone-frame">
+
+    <!-- ══════ SCREEN: SCOREBOARD HIGH ══════ -->
+    <div class="phone-screen theme-dark" id="screen-scoreboard">
+      <div class="status-bar">
+        <span>9:41</span>
+        <div class="status-icons"><span>●●●</span><span>WiFi</span><span>🔋</span></div>
+      </div>
+      <div class="app-bar">
+        <div class="app-bar-title">Open Scorer<small>Scrabble Night · Room 4821</small></div>
+        <button class="icon-btn">⚙</button>
+      </div>
+
+      <div class="game-strip">
+        <div class="game-strip-left">
+          <div>
+            <div class="game-strip-name">Scrabble Night</div>
+            <div class="game-strip-entries">Round 3</div>
+          </div>
+          <div class="win-dir-chip high">↑ High wins</div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;">
+          <button class="complete-round-btn disabled">2 remaining</button>
+          <button class="end-game-btn" onclick="showScreen('gameover')">End Game</button>
+        </div>
+      </div>
+
+      <div class="scrollable">
+        <div class="section-label">Standings · highest score leads</div>
+
+        <!-- Leader -->
+        <div class="player-score-row leading" onclick="openSheet('Sandra', 312)">
+          <div class="player-avatar av-gold">S</div>
+          <div class="player-info">
+            <div class="player-name">Sandra <span class="leading-badge">Leading</span></div>
+            <div class="player-sub"><span class="scored-check">✓</span> scored</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;">
+            <div class="score-display"><div class="score-num">312</div><div class="score-sub">total</div></div>
+            <span class="tap-arrow">›</span>
+          </div>
+        </div>
+
+        <div class="player-score-row" onclick="openSheet('Marcus', 287)">
+          <div class="player-avatar av-green">M</div>
+          <div class="player-info">
+            <div class="player-name">Marcus</div>
+            <div class="player-sub"><span class="scored-check">✓</span> scored</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;">
+            <div class="score-display"><div class="score-num">287</div><div class="score-sub">total</div></div>
+            <span class="tap-arrow">›</span>
+          </div>
+        </div>
+
+        <div class="player-score-row" onclick="openSheet('Patty', 241)">
+          <div class="player-avatar av-ruby">P</div>
+          <div class="player-info">
+            <div class="player-name">Patty</div>
+            <div class="player-sub">awaiting round score</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;">
+            <div class="score-display"><div class="score-num">241</div><div class="score-sub">total</div></div>
+            <span class="tap-arrow">›</span>
+          </div>
+        </div>
+
+        <div class="player-score-row" onclick="openSheet('Jim', 198)">
+          <div class="player-avatar av-blue">J</div>
+          <div class="player-info">
+            <div class="player-name">Jim</div>
+            <div class="player-sub">awaiting round score</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;">
+            <div class="score-display"><div class="score-num">198</div><div class="score-sub">total</div></div>
+            <span class="tap-arrow">›</span>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="tab-bar">
+        <div class="tab-item active"><div class="tab-icon">♠</div><div class="tab-label">Scores</div></div>
+        <div class="tab-item"><div class="tab-icon">🌙</div><div class="tab-label">Night</div></div>
+      </div>
+
+      <!-- Sheet -->
+      <div class="sheet-overlay" id="sb-overlay" onclick="closeSheet()"></div>
+      <div class="bottom-sheet" id="sb-sheet">
+        <div class="sheet-handle"></div>
+        <div class="sheet-header">
+          <div>
+            <div class="sheet-player-name" id="sb-name">Sandra</div>
+            <div class="sheet-meta">Total: <span class="meta-score" id="sb-total">312</span></div>
+          </div>
+          <button class="sheet-close" onclick="closeSheet()">✕</button>
+        </div>
+        <div class="math-bar">
+          <span class="math-val math-prev" id="sb-math-prev">312</span>
+          <span class="math-op">+</span>
+          <span class="math-val math-turn-val" id="sb-math-turn">—</span>
+          <span class="math-eq">=</span>
+          <span class="math-result unknown" id="sb-math-result">?</span>
+        </div>
+        <div class="math-bar-divider"></div>
+        <div class="entry-area">
+          <div class="entry-row-single">
+            <div class="entry-label-col">
+              <div class="entry-label-text">Turn</div>
+              <div class="entry-label-sub">Score</div>
+            </div>
+            <input class="entry-input" id="sb-score-in" type="number" placeholder="0"
+              oninput="updateSbMath()" onfocus="this.select()">
+          </div>
+          <div class="entry-input-hint">Negative values permitted for penalties</div>
+          <button class="confirm-btn" id="sb-confirm" disabled onclick="closeSheet()">Confirm Score</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════ SCREEN: SCOREBOARD LOW ══════ -->
+    <div class="phone-screen theme-dark" id="screen-scoreboard-low">
+      <div class="status-bar">
+        <span>9:41</span>
+        <div class="status-icons"><span>●●●</span><span>WiFi</span><span>🔋</span></div>
+      </div>
+      <div class="app-bar">
+        <div class="app-bar-title">Open Scorer<small>Golf Scoring · Room 4821</small></div>
+        <button class="icon-btn">⚙</button>
+      </div>
+
+      <div class="game-strip">
+        <div class="game-strip-left">
+          <div>
+            <div class="game-strip-name">Golf Scoring</div>
+            <div class="game-strip-entries">Round 2</div>
+          </div>
+          <div class="win-dir-chip low">↓ Low wins</div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;">
+          <button class="complete-round-btn ready">Complete Round →</button>
+          <button class="end-game-btn" onclick="showScreen('gameover')">End Game</button>
+        </div>
+      </div>
+
+      <div class="scrollable">
+        <div class="section-label">Standings · lowest score leads</div>
+
+        <!-- Leader (low) -->
+        <div class="player-score-row leading">
+          <div class="player-avatar av-blue">J</div>
+          <div class="player-info">
+            <div class="player-name">Jim <span class="leading-badge">Leading</span></div>
+            <div class="player-sub"><span class="scored-check">✓</span> scored</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;">
+            <div class="score-display"><div class="score-num">142</div><div class="score-sub">total</div></div>
+            <span class="tap-arrow">›</span>
+          </div>
+        </div>
+
+        <div class="player-score-row">
+          <div class="player-avatar av-gold">S</div>
+          <div class="player-info">
+            <div class="player-name">Sandra</div>
+            <div class="player-sub"><span class="scored-check">✓</span> scored</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;">
+            <div class="score-display"><div class="score-num">167</div><div class="score-sub">total</div></div>
+            <span class="tap-arrow">›</span>
+          </div>
+        </div>
+
+        <div class="player-score-row">
+          <div class="player-avatar av-green">M</div>
+          <div class="player-info">
+            <div class="player-name">Marcus</div>
+            <div class="player-sub"><span class="scored-check">✓</span> scored</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;">
+            <div class="score-display"><div class="score-num">189</div><div class="score-sub">total</div></div>
+            <span class="tap-arrow">›</span>
+          </div>
+        </div>
+
+        <div class="player-score-row">
+          <div class="player-avatar av-ruby">P</div>
+          <div class="player-info">
+            <div class="player-name">Patty</div>
+            <div class="player-sub"><span class="scored-check">✓</span> scored</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;">
+            <div class="score-display"><div class="score-num">214</div><div class="score-sub">total</div></div>
+            <span class="tap-arrow">›</span>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="tab-bar">
+        <div class="tab-item active"><div class="tab-icon">♠</div><div class="tab-label">Scores</div></div>
+        <div class="tab-item"><div class="tab-icon">🌙</div><div class="tab-label">Night</div></div>
+      </div>
+    </div>
+
+    <!-- ══════ SCREEN: ENTRY ══════ -->
+    <div class="phone-screen theme-dark" id="screen-entry">
+      <div class="status-bar">
+        <span>9:41</span>
+        <div class="status-icons"><span>●●●</span><span>WiFi</span><span>🔋</span></div>
+      </div>
+      <div class="app-bar">
+        <div class="app-bar-title">Open Scorer<small>Scrabble Night · Room 4821</small></div>
+        <button class="icon-btn">⚙</button>
+      </div>
+      <div class="game-strip">
+        <div class="game-strip-left">
+          <div>
+            <div class="game-strip-name">Scrabble Night</div>
+            <div class="game-strip-entries">Round 3</div>
+          </div>
+          <div class="win-dir-chip high">↑ High wins</div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;">
+          <button class="complete-round-btn disabled">2 remaining</button>
+          <button class="end-game-btn" onclick="showScreen('gameover')">End Game</button>
+        </div>
+      </div>
+
+      <!-- dim scoreboard visible above sheet -->
+      <div style="opacity:0.32;pointer-events:none;flex-shrink:0;">
+        <div class="section-label">Standings</div>
+        <div class="player-score-row leading">
+          <div class="player-avatar av-gold">S</div>
+          <div class="player-info"><div class="player-name">Sandra <span class="leading-badge">Leading</span></div></div>
+          <div class="score-display"><div class="score-num">312</div></div>
+        </div>
+        <div class="player-score-row">
+          <div class="player-avatar av-green">M</div>
+          <div class="player-info"><div class="player-name">Marcus</div></div>
+          <div class="score-display"><div class="score-num">287</div></div>
+        </div>
+      </div>
+
+      <!-- Sheet open — Marcus, negative turn in progress -->
+      <div class="sheet-overlay open" style="pointer-events:none;"></div>
+      <div class="bottom-sheet open">
+        <div class="sheet-handle"></div>
+        <div class="sheet-header">
+          <div>
+            <div class="sheet-player-name">Marcus</div>
+            <div class="sheet-meta">Total: <span class="meta-score">287</span></div>
+          </div>
+          <button class="sheet-close">✕</button>
+        </div>
+        <!-- Negative turn example -->
+        <div class="math-bar">
+          <span class="math-val math-prev">287</span>
+          <span class="math-op">+</span>
+          <span class="math-val math-turn-val neg-val">−15</span>
+          <span class="math-eq">=</span>
+          <span class="math-result">272</span>
+        </div>
+        <div class="math-bar-divider"></div>
+        <div class="entry-area">
+          <div class="entry-row-single" style="border-color:var(--ruby-700);">
+            <div class="entry-label-col" style="background:rgba(159,20,32,0.1);border-color:var(--ruby-800);">
+              <div class="entry-label-text" style="color:var(--ruby-400);">Turn</div>
+              <div class="entry-label-sub">Score</div>
+            </div>
+            <input class="entry-input" type="number" value="-15" style="color:var(--ruby-300);">
+          </div>
+          <div class="entry-input-hint" style="color:var(--ruby-700);">Negative — penalty or correction</div>
+          <button class="confirm-btn" style="background:var(--felt-600);color:white;cursor:pointer;">Confirm Score</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════ SCREEN: GAME OVER ══════ -->
+    <div class="phone-screen theme-dark" id="screen-gameover">
+      <div class="status-bar">
+        <span>9:41</span>
+        <div class="status-icons"><span>●●●</span><span>WiFi</span><span>🔋</span></div>
+      </div>
+      <div class="app-bar">
+        <div class="app-bar-title">Open Scorer<small>Scrabble Night · Room 4821</small></div>
+        <button class="icon-btn">⚙</button>
+      </div>
+
+      <div class="gameover-screen open" style="top:52px;">
+        <div class="gameover-hero">
+          <div class="gameover-trophy">🏆</div>
+          <div class="gameover-label">Game Over · Scrabble Night</div>
+          <div class="gameover-winner">Sandra wins!</div>
+          <div class="gameover-score">Final score: 389 · highest of the night</div>
+          <div class="gameover-note">Highest score wins · well played.</div>
+        </div>
+        <div class="gameover-list">
+          <div class="gameover-row">
+            <div class="gameover-place first">1</div>
+            <div class="player-avatar av-gold" style="width:30px;height:30px;font-size:0.75rem;flex-shrink:0;">S</div>
+            <div class="gameover-info">
+              <div class="gameover-name">Sandra</div>
+            </div>
+            <div class="gameover-final winner-score">389</div>
+          </div>
+          <div class="gameover-row">
+            <div class="gameover-place second">2</div>
+            <div class="player-avatar av-green" style="width:30px;height:30px;font-size:0.75rem;flex-shrink:0;">M</div>
+            <div class="gameover-info">
+              <div class="gameover-name">Marcus</div>
+            </div>
+            <div class="gameover-final">341</div>
+          </div>
+          <div class="gameover-row">
+            <div class="gameover-place third">3</div>
+            <div class="player-avatar av-ruby" style="width:30px;height:30px;font-size:0.75rem;flex-shrink:0;">P</div>
+            <div class="gameover-info">
+              <div class="gameover-name">Patty</div>
+            </div>
+            <div class="gameover-final">298</div>
+          </div>
+          <div class="gameover-row">
+            <div class="gameover-place">4</div>
+            <div class="player-avatar av-blue" style="width:30px;height:30px;font-size:0.75rem;flex-shrink:0;">J</div>
+            <div class="gameover-info">
+              <div class="gameover-name">Jim</div>
+            </div>
+            <div class="gameover-final">247</div>
+          </div>
+        </div>
+        <div class="gameover-actions">
+          <button class="action-btn action-secondary">End Night</button>
+          <button class="action-btn action-primary">New Game</button>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /phone-frame -->
+</div><!-- /phone-wrapper -->
+</div><!-- /phone-stage -->
+
+<!-- ════ ANNOTATIONS ════ -->
+<div class="annotations" id="ann-scoreboard" style="display:block;">
+  <h3>Scoreboard (High Score Wins) — Design Notes</h3>
+  <ul class="ann-list">
+    <li><strong>Round counter in the strip.</strong> "Round N" sits in the game strip alongside the win direction chip. A plain incrementing number — no max, no rules attached. Updates when the host taps Complete Round.</li>
+    <li><strong>Complete Round button — same pattern as 5 Crowns.</strong> Disabled ("N remaining") until every player has a confirmed score for the current round. Activates to "Complete Round →" in felt green once all scores are in. Host-only action.</li>
+    <li><strong>End Game always active.</strong> Sits below Complete Round in the strip. The host can end the game at any time regardless of whether the current round is fully scored.</li>
+    <li><strong>Win direction chip.</strong> "↑ High wins" in felt green or "↓ Low wins" in amber — always visible, set once at Game Setup.</li>
+    <li><strong>Per-player round status.</strong> Each row shows "✓ scored" or "awaiting round score" — identical treatment to 5 Crowns. The High screen shows a mid-round state (2 scored, 2 waiting). The Low screen shows all scored with Complete Round active.</li>
+    <li><strong>Sort order follows win direction.</strong> High wins = descending. Low wins = ascending. Section label adapts accordingly.</li>
+  </ul>
+</div>
+
+<div class="annotations" id="ann-scoreboard-low">
+  <h3>Scoreboard (Low Score Wins, All Scored) — Design Notes</h3>
+  <ul class="ann-list">
+    <li><strong>Complete Round active.</strong> All four players show ✓ scored, so the Complete Round button is green and tappable. This is the state the host sees just before advancing to the next round.</li>
+    <li><strong>Amber chip for Low wins.</strong> "↓ Low wins" in amber — visually distinct from the felt green High wins chip so the direction is immediately clear.</li>
+    <li><strong>Leader = lowest total.</strong> Jim leads with 142. Gold blush and "Leading" badge on the top row as always, regardless of direction.</li>
+  </ul>
+</div>
+
+<div class="annotations" id="ann-entry">
+  <h3>Score Entry Sheet — Design Notes</h3>
+  <ul class="ann-list">
+    <li><strong>Negative turns are first-class.</strong> The Open Scorer fully supports negative turn values for penalties and corrections. When the value goes negative, the input border turns ruby, the label chip turns ruby, the math bar turn value turns ruby, and the hint text updates to "Negative — penalty or correction".</li>
+    <li><strong>Simple header — no round chip.</strong> Just the player name and current total. The round context lives in the always-visible game strip above, so there's no need to repeat it in the sheet.</li>
+    <li><strong>Live math bar.</strong> prev + turn = new total updates on every keystroke. New total turns ruby if it goes negative.</li>
+    <li><strong>Confirm enables on any value.</strong> Positive, zero, and negative all activate the Confirm button once the field has content. After confirming, the player row shows ✓ scored and counts toward the Complete Round threshold.</li>
+  </ul>
+</div>
+
+<div class="annotations" id="ann-gameover">
+  <h3>Game Over Screen — Design Notes</h3>
+  <ul class="ann-list">
+    <li><strong>Win direction reflected in hero text.</strong> High wins: "highest of the night". Low wins: "lowest of the night". Note line adapts to match.</li>
+    <li><strong>Triggered by End Game, not round completion.</strong> The host can end mid-round if needed — the Game Over screen shows whatever totals exist at that moment.</li>
+    <li><strong>Negative final scores shown in ruby.</strong> Edge case, but handled gracefully.</li>
+    <li><strong>Actions consistent with all NKS games.</strong> "End Night" archives the session; "New Game" routes to Game Setup.</li>
+  </ul>
+</div>
+
+<script>
+let isDark = true;
+const screens = ['scoreboard','scoreboard-low','entry','gameover'];
+const annMap = {
+  'scoreboard': 'ann-scoreboard',
+  'scoreboard-low': 'ann-scoreboard-low',
+  'entry': 'ann-entry',
+  'gameover': 'ann-gameover'
+};
+
+function showScreen(name) {
+  screens.forEach(s => {
+    const el = document.getElementById('screen-' + s);
+    if (el) el.style.display = (s === name) ? 'flex' : 'none';
+  });
+  document.querySelectorAll('.screen-nav button').forEach((b, i) => {
+    b.classList.toggle('active', screens[i] === name);
+  });
+  document.querySelectorAll('.annotations').forEach(el => el.style.display = 'none');
+  const ann = document.getElementById(annMap[name]);
+  if (ann) ann.style.display = 'block';
+  applyTheme();
+}
+
+function applyTheme() {
+  document.querySelectorAll('.phone-screen').forEach(p => {
+    p.classList.remove('theme-light','theme-dark');
+    p.classList.add(isDark ? 'theme-dark' : 'theme-light');
+  });
+}
+
+function toggleTheme() {
+  isDark = !isDark;
+  document.getElementById('themeToggle').classList.toggle('light', !isDark);
+  applyTheme();
+}
+
+function openSheet(name, total) {
+  document.getElementById('sb-name').textContent = name;
+  document.getElementById('sb-total').textContent = total.toLocaleString();
+  document.getElementById('sb-math-prev').textContent = total.toLocaleString();
+  document.getElementById('sb-math-turn').textContent = '—';
+  document.getElementById('sb-math-result').textContent = '?';
+  document.getElementById('sb-math-result').className = 'math-result unknown';
+  document.getElementById('sb-score-in').value = '';
+  document.getElementById('sb-confirm').disabled = true;
+  document.getElementById('sb-overlay').classList.add('open');
+  document.getElementById('sb-sheet').classList.add('open');
+  document.getElementById('sb-sheet').dataset.prev = total;
+}
+
+function closeSheet() {
+  document.getElementById('sb-overlay').classList.remove('open');
+  document.getElementById('sb-sheet').classList.remove('open');
+}
+
+function updateSbMath() {
+  const prev = parseFloat(document.getElementById('sb-sheet').dataset.prev) || 0;
+  const val = document.getElementById('sb-score-in').value;
+  if (val === '') {
+    document.getElementById('sb-math-turn').textContent = '—';
+    document.getElementById('sb-math-turn').className = 'math-val math-turn-val';
+    document.getElementById('sb-math-result').textContent = '?';
+    document.getElementById('sb-math-result').className = 'math-result unknown';
+    document.getElementById('sb-confirm').disabled = true;
+    return;
+  }
+  const s = parseFloat(val);
+  const result = prev + s;
+  const turnEl = document.getElementById('sb-math-turn');
+  turnEl.textContent = s >= 0 ? '+' + s : s;
+  turnEl.className = 'math-val math-turn-val' + (s < 0 ? ' neg-val' : '');
+  const resEl = document.getElementById('sb-math-result');
+  resEl.textContent = result.toLocaleString();
+  resEl.className = 'math-result' + (result < 0 ? ' neg-result' : '');
+  document.getElementById('sb-confirm').disabled = false;
+}
+
+// init
+document.querySelectorAll('.phone-screen').forEach(el => el.style.display = 'none');
+showScreen('scoreboard');
+</script>
+</body>
+</html>
