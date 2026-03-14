@@ -1,31 +1,25 @@
 import { Injectable, inject } from '@angular/core';
 import {
   Firestore,
-  doc,
   collection,
-  setDoc,
-  getDoc,
-  updateDoc,
+  doc,
   docData,
+  setDoc,
+  updateDoc,
 } from '@angular/fire/firestore';
+import { Observable } from 'rxjs';
 import { AuthService } from './auth.service';
 import { Session } from '../models/session.model';
-import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class SessionService {
   private firestore = inject(Firestore);
   private auth = inject(AuthService);
 
-  generateCode(): string {
-    return Math.floor(1000 + Math.random() * 9000).toString();
-  }
-
   async createSession(playerNames: string[]): Promise<string> {
-    const code = this.generateCode();
-    const hostId = this.auth.uid!;
+    const hostId = this.auth.currentUser()!.uid;
+    const sessionRef = doc(collection(this.firestore, 'sessions'));
 
-    const sessionRef = doc(this.firestore, `sessions/${code}`);
     await setDoc(sessionRef, {
       hostId,
       createdAt: new Date(),
@@ -33,33 +27,20 @@ export class SessionService {
     });
 
     for (const name of playerNames) {
-      const playerRef = doc(collection(this.firestore, `sessions/${code}/players`));
-      await setDoc(playerRef, { name, claimedBy: null });
+      const playerRef = doc(collection(this.firestore, `sessions/${sessionRef.id}/players`));
+      await setDoc(playerRef, { name });
     }
 
-    return code;
+    return sessionRef.id;
   }
 
-  async joinSession(code: string): Promise<boolean> {
-    const sessionRef = doc(this.firestore, `sessions/${code}`);
-    const snap = await getDoc(sessionRef);
-    return snap.exists();
-  }
-
-  getSession$(code: string) {
-    return docData(doc(this.firestore, `sessions/${code}`), {
+  getSession$(sessionId: string): Observable<Session> {
+    return docData(doc(this.firestore, `sessions/${sessionId}`), {
       idField: 'id',
     }) as Observable<Session>;
   }
 
-  async claimPlayer(code: string, playerId: string): Promise<void> {
-    const uid = this.auth.uid!;
-    const playerRef = doc(this.firestore, `sessions/${code}/players/${playerId}`);
-    await updateDoc(playerRef, { claimedBy: uid });
-  }
-
-  async archiveSession(code: string): Promise<void> {
-    const sessionRef = doc(this.firestore, `sessions/${code}`);
-    await updateDoc(sessionRef, { status: 'archived' });
+  async archiveSession(sessionId: string): Promise<void> {
+    await updateDoc(doc(this.firestore, `sessions/${sessionId}`), { status: 'archived' });
   }
 }

@@ -1,5 +1,4 @@
 export interface Player {
   id: string;
-  name: string;
-  claimedBy: string | null;
+  name: string; // host-entered name; no player claiming in v1
 }
