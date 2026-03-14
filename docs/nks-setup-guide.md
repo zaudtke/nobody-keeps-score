@@ -296,7 +296,7 @@ Once the project exists, the CLI handles all day-to-day work:
 
 After the initial Console setup (~10 minutes) you should rarely need to return to the website during development.
 
-> 📍 **Region tip for Toronto:** Choose `northamerica-northeast1` (Montreal) for the closest Canadian option, or `us-east1` (South Carolina) for the nearest US region. **You cannot change the region after creation** — pick deliberately.
+> 📍 **Region tip for Knoxville, TN:** Choose `us-east1` (South Carolina) — it's the closest Firebase region. **You cannot change the region after creation** — pick deliberately.
 
 ---
 
@@ -314,7 +314,7 @@ After the initial Console setup (~10 minutes) you should rarely need to return t
 1. In Firebase Console → **Build → Firestore Database**
 2. Click **Create database**
 3. Choose **Start in test mode** (we'll lock it down with rules later)
-4. Pick your region — `northamerica-northeast1` (Montreal) recommended for Toronto
+4. Pick your region — `us-east1` (South Carolina) recommended for Knoxville, TN
 
 ### 5c — Enable Google Authentication
 
