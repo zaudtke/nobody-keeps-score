@@ -265,14 +265,15 @@ The following tasks can only be done in the browser. Do these once before writin
 | Create the Firebase project | Console |
 | Register your web app (gets you `firebaseConfig`) | Console |
 | Enable Firestore and choose region | Console |
-| Enable Anonymous Authentication | Console |
+| Enable Google Authentication | Console |
+| Add authorised host(s) to `authorisedUsers` collection | Console → Firestore → `authorisedUsers/{uid}` |
 
 **Firebase CLI (terminal) — everything from here on:**
 Once the project exists, the CLI handles all day-to-day work:
 
 | Task | Command |
 |---|---|
-| Link your local project to Firebase | `firebase init emulators` |
+| Link your local project to Firebase (Firestore rules + emulators) | `firebase init firestore,emulators` |
 | Run local dev database | `firebase emulators:start` |
 | Deploy security rules to live Firestore | `firebase deploy --only firestore:rules` |
 | Check which project is active | `firebase projects:list` |
@@ -283,10 +284,14 @@ Once the project exists, the CLI handles all day-to-day work:
 1. Console  → Create project
 2. Console  → Register web app → copy firebaseConfig → paste into environment.ts
 3. Console  → Enable Firestore (pick region)
-4. Console  → Enable Anonymous Auth
-5. Terminal → firebase init emulators  (links CLI to your new project)
-6. Terminal → firebase emulators:start (all dev work from here on)
-7. Terminal → firebase deploy --only firestore:rules (when ready for production)
+4. Console  → Enable Google Authentication
+5. Console  → Sign in once with your Google account to get your UID
+             (Firebase Console → Auth → Users tab shows it after first sign-in)
+6. Console  → Firestore → Create authorisedUsers/{your-uid} document
+             Fields: email (string), displayName (string), addedAt (timestamp)
+7. Terminal → firebase init firestore,emulators  (links CLI; creates firestore.rules + firestore.indexes.json)
+8. Terminal → firebase emulators:start (all dev work from here on)
+9. Terminal → firebase deploy --only firestore:rules (when ready for production)
 ```
 
 After the initial Console setup (~10 minutes) you should rarely need to return to the website during development.
@@ -311,11 +316,25 @@ After the initial Console setup (~10 minutes) you should rarely need to return t
 3. Choose **Start in test mode** (we'll lock it down with rules later)
 4. Pick your region — `northamerica-northeast1` (Montreal) recommended for Toronto
 
-### 5c — Enable Anonymous Authentication
+### 5c — Enable Google Authentication
 
 1. In Firebase Console → **Build → Authentication**
 2. Click **Get started**
-3. Under **Sign-in providers** → enable **Anonymous**
+3. Under **Sign-in providers** → enable **Google**
+4. Set the project support email, then click **Save**
+
+### 5c.1 — Get your UID and add yourself to the allowlist
+
+After enabling Google Auth:
+
+1. Sign in to the app once with your Google account (or use the Firebase Console's **Authentication → Users** tab to trigger a sign-in)
+2. Copy your UID from **Console → Build → Authentication → Users**
+3. In **Console → Build → Firestore Database**, create the document:
+   - Collection: `authorisedUsers`
+   - Document ID: your UID (exact, no spaces)
+   - Fields: `email` (string), `displayName` (string), `addedAt` (timestamp)
+
+Only UIDs present in `authorisedUsers` can use the app. To add more hosts later, repeat step 3 with their UID.
 
 ### 5d — Install Firebase SDK
 
@@ -342,19 +361,21 @@ npm install -g firebase-tools   # via npm
 firebase login
 ```
 
-### Initialise emulators in your project
+### Initialise Firestore rules and emulators in your project
 
 ```bash
-firebase init emulators
+firebase init firestore,emulators
 ```
 
 When prompted:
+- ✅ **Firestore Rules** file: accept default `firestore.rules`
+- ✅ **Firestore Indexes** file: accept default `firestore.indexes.json`
 - ✅ Select **Firestore** and **Authentication** emulators
 - ✅ Accept default ports: **8080** (Firestore), **9099** (Auth)
 - ✅ Enable the Emulator UI: **Yes** (runs at `http://localhost:4000`)
 - ✅ Download emulators now: **Yes**
 
-This creates `firebase.json` and `.firebaserc` in your project root.
+This creates `firebase.json`, `.firebaserc`, `firestore.rules`, and `firestore.indexes.json` in your project root. The emulator reads `firestore.rules` automatically — local and production rules stay in sync.
 
 ### Add `firebase.json` entries to `.gitignore`
 
@@ -374,13 +395,13 @@ ui-debug.log
 firebase emulators:start
 ```
 
-Visit `http://localhost:4000` to open the Emulator UI — you can browse Firestore documents, inspect Auth users, and use the **Rules Playground** to simulate reads/writes as different anonymous UIDs to verify your permission model.
+Visit `http://localhost:4000` to open the Emulator UI — you can browse Firestore documents, inspect Auth users, and use the **Rules Playground** to simulate reads/writes as different UIDs to verify your allowlist rules.
 
 > ℹ️ The emulator is **ephemeral by default** — all data is wiped when you stop it. To persist data between runs use `firebase emulators:start --export-on-exit=./emulator-data` and `--import=./emulator-data`.
 
 ### Create environment files
 
-> ⚠️ **Important:** `environment.ts` contains sensitive values (Firebase keys and the admin code hash) and **must be git ignored**. Commit only the template file below so the shape is documented without exposing real values.
+> ⚠️ **Important:** `environment.ts` contains sensitive Firebase API keys and **must be git ignored**. Commit only the template file below so the shape is documented without exposing real values.
 
 Add to **`.gitignore`**:
 ```
@@ -392,7 +413,6 @@ Commit this safe placeholder as **`src/environments/environment.template.ts`**:
 ```typescript
 export const environment = {
   production: false,
-  adminCode: 'REPLACE_WITH_SHA256_HASH_OF_YOUR_ADMIN_CODE',
   firebase: {
     apiKey: 'REPLACE_ME',
     authDomain: 'REPLACE_ME',
@@ -408,14 +428,13 @@ Your real **`src/environments/environment.ts`** (git ignored, never committed):
 ```typescript
 export const environment = {
   production: false,
-  adminCode: 'YOUR_SHA256_HASH_HERE',  // see note below on generating this
   firebase: {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_PROJECT.firebaseapp.com",
-    projectId: "YOUR_PROJECT_ID",
-    storageBucket: "YOUR_PROJECT.appspot.com",
-    messagingSenderId: "YOUR_SENDER_ID",
-    appId: "YOUR_APP_ID"
+    apiKey: 'YOUR_API_KEY',
+    authDomain: 'YOUR_PROJECT.firebaseapp.com',
+    projectId: 'YOUR_PROJECT_ID',
+    storageBucket: 'YOUR_PROJECT.appspot.com',
+    messagingSenderId: 'YOUR_SENDER_ID',
+    appId: 'YOUR_APP_ID'
   }
 };
 ```
@@ -424,25 +443,11 @@ export const environment = {
 ```typescript
 export const environment = {
   production: true,
-  adminCode: 'YOUR_SHA256_HASH_HERE',  // same hash as dev
   firebase: {
     // same values — or use a separate prod Firebase project
   }
 };
 ```
-
-#### Generating your admin code hash
-
-Pick a memorable passphrase (e.g. `feltgreen2025` or an inside joke). Run this once in your browser console or Node to get the SHA-256 hash to put in `environment.ts`:
-
-```javascript
-// Paste into browser console to generate your hash
-const code = 'your-chosen-admin-code';
-const hash = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(code));
-console.log(Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join(''));
-```
-
-Copy the output — that string goes into `adminCode` in your environment files. Store your actual passphrase somewhere safe (password manager, etc.) — it is never written to any file.
 
 ### Wire up Angular Fire in `app.config.ts`
 
@@ -484,27 +489,69 @@ export const appConfig: ApplicationConfig = {
 
 ## Step 7 — Core Services Scaffold
 
-### Anonymous Auth Service
+### Auth Service
 **`src/app/core/services/auth.service.ts`**:
 ```typescript
-import { Injectable, inject } from '@angular/core';
-import { Auth, signInAnonymously, user } from '@angular/fire/auth';
-import { from, Observable } from 'rxjs';
+import { Injectable, inject, signal } from '@angular/core';
+import {
+  Auth, GoogleAuthProvider, User,
+  onAuthStateChanged, signInWithPopup, signOut
+} from '@angular/fire/auth';
+import { Firestore, doc, getDoc } from '@angular/fire/firestore';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private auth = inject(Auth);
+  private firestore = inject(Firestore);
 
-  readonly currentUser$ = user(this.auth);
+  currentUser = signal<User | null>(null);
 
-  signInAnonymously() {
-    return from(signInAnonymously(this.auth));
+  constructor() {
+    onAuthStateChanged(this.auth, user => this.currentUser.set(user));
   }
 
-  get uid(): string | null {
-    return this.auth.currentUser?.uid ?? null;
+  async signInWithGoogle(): Promise<User | null> {
+    const result = await signInWithPopup(this.auth, new GoogleAuthProvider());
+    return result.user;
+  }
+
+  async checkAllowlist(uid: string): Promise<boolean> {
+    const snap = await getDoc(doc(this.firestore, `authorisedUsers/${uid}`));
+    return snap.exists();
+  }
+
+  async signOut(): Promise<void> {
+    await signOut(this.auth);
   }
 }
+```
+
+### Auth Guard
+**`src/app/core/guards/auth.guard.ts`**:
+```typescript
+import { inject } from '@angular/core';
+import { CanActivateFn, Router } from '@angular/router';
+import { AuthService } from '../services/auth.service';
+
+export const authGuard: CanActivateFn = async () => {
+  const auth = inject(AuthService);
+  const router = inject(Router);
+
+  const user = auth.currentUser();
+  if (!user) {
+    router.navigate(['/']);
+    return false;
+  }
+
+  const allowed = await auth.checkAllowlist(user.uid);
+  if (!allowed) {
+    await auth.signOut();
+    router.navigate(['/unauthorized']);
+    return false;
+  }
+
+  return true;
+};
 ```
 
 ### Session Service
@@ -514,69 +561,48 @@ import { Injectable, inject } from '@angular/core';
 import {
   Firestore,
   doc, collection,
-  setDoc, getDoc, updateDoc,
-  collectionData, docData
+  setDoc, updateDoc,
+  docData
 } from '@angular/fire/firestore';
 import { AuthService } from './auth.service';
 import { Session } from '../models/session.model';
+import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class SessionService {
   private firestore = inject(Firestore);
   private auth = inject(AuthService);
 
-  /** Generate a random 4-digit room code */
-  generateCode(): string {
-    return Math.floor(1000 + Math.random() * 9000).toString();
-  }
-
-  /** Create a new night session */
+  /** Create a new game night session */
   async createSession(playerNames: string[]): Promise<string> {
-    const code = this.generateCode();
-    const hostId = this.auth.uid!;
+    const hostId = this.auth.currentUser()!.uid;
+    const sessionRef = doc(collection(this.firestore, 'sessions'));
 
-    const sessionRef = doc(this.firestore, `sessions/${code}`);
     await setDoc(sessionRef, {
       hostId,
       createdAt: new Date(),
       status: 'active'
     });
 
-    // Add players
     for (const name of playerNames) {
-      const playerRef = doc(collection(this.firestore, `sessions/${code}/players`));
-      await setDoc(playerRef, { name, claimedBy: null });
+      const playerRef = doc(collection(this.firestore, `sessions/${sessionRef.id}/players`));
+      await setDoc(playerRef, { name });
     }
 
-    return code;
-  }
-
-  /** Join an existing session by code */
-  async joinSession(code: string): Promise<boolean> {
-    const sessionRef = doc(this.firestore, `sessions/${code}`);
-    const snap = await getDoc(sessionRef);
-    return snap.exists();
+    return sessionRef.id;
   }
 
   /** Live session stream */
-  getSession$(code: string) {
+  getSession$(sessionId: string): Observable<Session> {
     return docData(
-      doc(this.firestore, `sessions/${code}`),
+      doc(this.firestore, `sessions/${sessionId}`),
       { idField: 'id' }
     ) as Observable<Session>;
   }
 
-  /** Claim a player slot */
-  async claimPlayer(code: string, playerId: string): Promise<void> {
-    const uid = this.auth.uid!;
-    const playerRef = doc(this.firestore, `sessions/${code}/players/${playerId}`);
-    await updateDoc(playerRef, { claimedBy: uid });
-  }
-
   /** Archive a completed session */
-  async archiveSession(code: string): Promise<void> {
-    const sessionRef = doc(this.firestore, `sessions/${code}`);
-    await updateDoc(sessionRef, { status: 'archived' });
+  async archiveSession(sessionId: string): Promise<void> {
+    await updateDoc(doc(this.firestore, `sessions/${sessionId}`), { status: 'archived' });
   }
 }
 ```
@@ -599,20 +625,26 @@ export interface Session {
 ```typescript
 export interface Player {
   id: string;
-  name: string;
-  claimedBy: string | null;  // anonymous UID or null
+  name: string;  // host-entered name; no player claiming in v1
 }
 ```
 
 **`src/app/core/models/game.model.ts`**:
 ```typescript
-export type GameType = 'rummy' | 'whist' | 'open';
+export type GameType = 'dirty-clubs' | 'canasta' | '5-crowns' | 'open';
 
 export interface Game {
   id: string;
   gameType: GameType;
   status: 'active' | 'complete';
   startedAt: Date;
+  currentRound: number;  // 1-based
+  config: GameConfig | null;
+}
+
+export interface GameConfig {
+  winDirection: 'high' | 'low';  // open scorer only
+  gameName: string;               // open scorer only
 }
 ```
 
@@ -661,59 +693,45 @@ Call `themeService.init()` in your root `AppComponent` `ngOnInit`.
 
 ## Step 10 — Firestore Security Rules
 
-In Firebase Console → **Firestore → Rules**, paste:
+Replace the contents of **`firestore.rules`** (generated by `firebase init`) with the NKS allowlist rules:
 
 ```javascript
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    match /sessions/{code} {
-      // Anyone can read a session by code
-      allow read: if true;
+    // Helper: is the requesting user present in the authorisedUsers allowlist?
+    function isAuthorised() {
+      return request.auth != null
+        && exists(/databases/$(database)/documents/authorisedUsers/$(request.auth.uid));
+    }
 
-      // Only authenticated users can create
-      allow create: if request.auth != null;
+    // authorisedUsers — each user may read their own document (for the allowlist check).
+    // Write access is blocked from the client; managed manually via Firebase Console.
+    match /authorisedUsers/{uid} {
+      allow read: if request.auth != null && request.auth.uid == uid;
+      allow write: if false;
+    }
 
-      // Only the host can update the session itself
-      allow update: if request.auth.uid == resource.data.hostId;
-
-      match /players/{playerId} {
-        allow read: if true;
-
-        // Host can write any player
-        allow write: if request.auth.uid ==
-          get(/databases/$(database)/documents/sessions/$(code)).data.hostId;
-
-        // Player can claim their own slot (set claimedBy to their UID)
-        allow update: if request.auth != null
-          && resource.data.claimedBy == null
-          && request.resource.data.claimedBy == request.auth.uid;
-      }
-
-      match /games/{gameId} {
-        allow read: if true;
-
-        // Only host can create/manage games
-        allow write: if request.auth.uid ==
-          get(/databases/$(database)/documents/sessions/$(code)).data.hostId;
-
-        match /rounds/{roundId} {
-          allow read: if true;
-
-          // Host can write any round
-          allow write: if request.auth.uid ==
-            get(/databases/$(database)/documents/sessions/$(code)).data.hostId;
-
-          // A claimed player can write only their own score
-          allow update: if request.auth != null
-            && exists(/databases/$(database)/documents/sessions/$(code)/players/$(request.auth.uid));
-        }
-      }
+    // sessions and all subcollections — authorised host only
+    match /sessions/{sessionId}/{document=**} {
+      allow read, write: if isAuthorised();
     }
   }
 }
 ```
+
+**Why these rules:**
+- `authorisedUsers` read: the app's `checkAllowlist()` call reads `authorisedUsers/{uid}` — this permit is needed for that query to succeed
+- `authorisedUsers` write blocked: only you add/remove host entries, done manually in the Firebase Console
+- Sessions: full read/write for any allowlisted UID — the only users who can reach this code in v1 are the host(s)
+
+**Deploy to production when ready:**
+```bash
+firebase deploy --only firestore:rules
+```
+
+The local emulator reads `firestore.rules` automatically — no extra step needed for dev.
 
 ---
 
@@ -882,126 +900,65 @@ npx prettier --check "src/**/*.ts"
 
 ---
 
-## Step 13 — Admin Access
+## Step 13 — Google Auth & Allowlist Setup
 
-The app uses a two-code system to keep session creation private without requiring full authentication:
+NKS uses **Google Sign-In** (Firebase Auth) for authentication and a **Firestore allowlist** for authorisation. There is no admin code, no room code, and no in-app user management in v1.
 
-- **Room Code** (4-digit) — joins an existing session, shared at the table on the night
-- **Admin Code** — unlocks the ability to *create* a session, shared only with trusted people
+### How it works
 
-The admin code is never stored in plaintext. Only its SHA-256 hash lives in `environment.ts`. The real code is hashed at runtime using the browser's built-in Web Crypto API and compared against the stored hash — so even if someone inspects the compiled bundle they cannot reverse-engineer the original code.
-
-Admin access is remembered in `localStorage` for 30 days with an expiry timestamp. Anyone who knows the code can become a host — there is no single-host restriction.
-
-### Admin Service
-
-**`src/app/core/services/admin.service.ts`**:
-```typescript
-import { Injectable, signal } from '@angular/core';
-import { environment } from '../../../environments/environment';
-
-const STORAGE_KEY = 'nks-admin';
-const EXPIRY_DAYS = 30;
-
-@Injectable({ providedIn: 'root' })
-export class AdminService {
-  private _isAdmin = signal<boolean>(false);
-  readonly isAdmin = this._isAdmin.asReadonly();
-
-  /** Call in AppComponent.ngOnInit alongside themeService.init() */
-  init(): void {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return;
-
-    try {
-      const { expiry } = JSON.parse(raw);
-      if (Date.now() < expiry) {
-        this._isAdmin.set(true);  // still within 30-day window
-      } else {
-        localStorage.removeItem(STORAGE_KEY);  // expired, clean up silently
-      }
-    } catch {
-      localStorage.removeItem(STORAGE_KEY);
-    }
-  }
-
-  /** Hash the entered code and compare against the stored hash */
-  async unlock(code: string): Promise<boolean> {
-    const encoder = new TextEncoder();
-    const data = encoder.encode(code);
-    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-    const hashArray = Array.from(new Uint8Array(hashBuffer));
-    const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-
-    if (hashHex !== environment.adminCode) return false;
-
-    const expiry = Date.now() + EXPIRY_DAYS * 24 * 60 * 60 * 1000;
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({ expiry }));
-    this._isAdmin.set(true);
-    return true;
-  }
-
-  /** Manually revoke admin access (e.g. sign out) */
-  revoke(): void {
-    localStorage.removeItem(STORAGE_KEY);
-    this._isAdmin.set(false);
-  }
-}
+```
+User taps "Sign in with Google"
+        ↓
+Firebase Google OAuth popup
+        ↓
+  Success?
+  ├── No  → Firebase error → stay on unauthenticated Home
+  └── Yes → Query Firestore: authorisedUsers/{uid}
+                ↓
+          Document exists?
+          ├── No  → signOut() → navigate to /unauthorized
+          └── Yes → navigate to /  ← authenticated Home state renders
 ```
 
-### Home Screen Pattern
+### Wire up routes with the auth guard
 
-The admin entry point is a subtle link below the join field — not prominent enough to invite curiosity but accessible to anyone who knows it's there:
-
-```html
-<!-- home.component.html -->
-
-<!-- Always visible to everyone -->
-<input placeholder="Enter room code" />
-<button>Join Game</button>
-
-<!-- Subtle link — visible but not prominent -->
-@if (!isAdmin()) {
-  <button class="text-ink-400 text-sm mt-6 underline-offset-2"
-          (click)="showAdminInput.set(true)">
-    Host access
-  </button>
-}
-
-<!-- Revealed on tap, password input so code is masked -->
-@if (showAdminInput() && !isAdmin()) {
-  <input type="password" placeholder="Admin code"
-         [(ngModel)]="adminCodeInput" />
-  <button (click)="tryUnlock()">Unlock</button>
-}
-
-<!-- Only visible once unlocked — replaces the subtle link -->
-@if (isAdmin()) {
-  <button class="bg-felt-600 text-white rounded-lg px-6 py-3 mt-6">
-    + Create Night
-  </button>
-}
-```
+In **`src/app/app.routes.ts`**, protect all routes beyond `/` and `/unauthorized`:
 
 ```typescript
-// home.component.ts
-export class HomeComponent {
-  private adminService = inject(AdminService);
+import { Routes } from '@angular/router';
+import { authGuard } from './core/guards/auth.guard';
 
-  isAdmin = this.adminService.isAdmin;
-  showAdminInput = signal(false);
-  adminCodeInput = '';
-
-  async tryUnlock() {
-    const success = await this.adminService.unlock(this.adminCodeInput);
-    this.adminCodeInput = '';           // always clear the input
-    this.showAdminInput.set(false);     // hide regardless of outcome
-    // no error message — silent failure discourages brute-forcing
-  }
-}
+export const routes: Routes = [
+  {
+    path: '',
+    loadComponent: () => import('./features/home/home.component').then(m => m.HomeComponent),
+  },
+  {
+    path: 'unauthorized',
+    loadComponent: () => import('./features/unauthorised/unauthorised.component').then(m => m.UnauthorisedComponent),
+  },
+  {
+    path: 'game-setup',
+    canActivate: [authGuard],
+    loadComponent: () => import('./features/game-setup/game-setup.component').then(m => m.GameSetupComponent),
+  },
+  {
+    path: 'game/:id',
+    canActivate: [authGuard],
+    loadComponent: () => import('./features/scoreboard/scoreboard.component').then(m => m.ScoreboardComponent),
+  },
+];
 ```
 
-> ℹ️ **Security note:** This is social-layer protection, not cryptographic security. A determined attacker with time could brute-force the hash. For a personal game night PWA the realistic threat model is effectively zero — this is simply keeping casual visitors out of the host flow.
+### Adding or removing hosts
+
+| Action | Steps |
+|---|---|
+| Add a new host | Firebase Console → Firestore → `authorisedUsers` → **Add document** · Document ID = their UID · Fields: `email`, `displayName`, `addedAt` |
+| Remove a host | Firebase Console → Firestore → `authorisedUsers` → find their document → **Delete** |
+| Find a user's UID | Firebase Console → Authentication → Users tab |
+
+No code changes or redeployment needed — the allowlist check happens at sign-in.
 
 ---
 
@@ -1017,19 +974,20 @@ nks-app/
   │   │   │   │   ├── player.model.ts
   │   │   │   │   ├── game.model.ts
   │   │   │   │   └── round.model.ts
-  │   │   │   └── services/
-  │   │   │       ├── auth.service.ts
-  │   │   │       ├── session.service.ts
-  │   │   │       ├── theme.service.ts
-  │   │   │       └── admin.service.ts  ← host access + 30-day expiry
+  │   │   │   ├── services/
+  │   │   │   │   ├── auth.service.ts     ← Google Sign-In + allowlist check
+  │   │   │   │   ├── session.service.ts
+  │   │   │   │   └── theme.service.ts
+  │   │   │   └── guards/
+  │   │   │       └── auth.guard.ts       ← protects game-setup + scoreboard routes
   │   │   ├── features/         ← screens go here (next steps)
   │   │   ├── shared/           ← reusable components
   │   │   ├── app.config.ts     ← Firebase providers wired here
   │   │   └── app.routes.ts
   │   ├── environments/
   │   │   ├── environment.template.ts   ← committed — safe placeholder
-  │   │   ├── environment.ts            ← git ignored — real keys + hash
-  │   │   └── environment.prod.ts       ← git ignored — real keys + hash
+  │   │   ├── environment.ts            ← git ignored — real Firebase keys
+  │   │   └── environment.prod.ts       ← git ignored — real Firebase keys
   │   ├── styles.css            ← Tailwind @theme lives here
   │   └── index.html            ← Google Fonts link here
   ├── .postcssrc.json           ← auto-created by ng add tailwindcss
@@ -1039,6 +997,8 @@ nks-app/
   ├── .gitignore                ← excludes environment.ts, environment.prod.ts, emulator data
   ├── firebase.json             ← emulator ports + UI config
   ├── .firebaserc               ← Firebase project ID
+  ├── firestore.rules           ← Firestore security rules (allowlist-based)
+  ├── firestore.indexes.json    ← Firestore composite indexes
   ├── .vscode/
   │   └── settings.json         ← format on save + ESLint flat config
   └── src/manifest.webmanifest  ← PWA config
@@ -1082,7 +1042,7 @@ npm install firebase @angular/fire
 # ── Firebase CLI (check before installing) ────────────
 firebase --version || npm install -g firebase-tools
 firebase login
-firebase init emulators
+firebase init firestore,emulators
 
 # ── ESLint ────────────────────────────────────────────
 ng add @angular-eslint/schematics
@@ -1219,16 +1179,15 @@ git pull
 
 | Branch | Purpose |
 |---|---|
-| `feature/home-screen` | Create night + join by room code |
-| `feature/lobby` | Player list + claim flow |
-| `feature/game-setup` | Game type picker |
+| `feature/home-screen` | Unauthenticated + authenticated Home + /unauthorized |
+| `feature/auth-service` | Google Sign-In + Firestore allowlist check + AuthGuard |
+| `feature/game-setup` | Game type picker + player name entry |
 | `feature/scoreboard-core` | Shared scoreboard shell + leaderboard |
-| `feature/scoring-rummy` | Rummy-specific score entry rules |
-| `feature/scoring-whist` | Whist-specific score entry rules |
+| `feature/scoring-dirty-clubs` | Dirty Clubs scoring rules + entry UI |
+| `feature/scoring-canasta` | Canasta scoring rules + entry UI |
+| `feature/scoring-5-crowns` | 5 Crowns scoring rules + entry UI |
 | `feature/scoring-open` | Generic open round scorer |
-| `feature/archive` | Past sessions view |
 | `feature/theme-toggle` | Light/dark switch component |
-| `feature/admin-service` | Admin code + host access |
 | `feature/pwa-icons` | App icons + manifest polish |
 
 ### 14f — Useful gh commands to know
@@ -1271,7 +1230,7 @@ Tagline: *Not that anyone's counting*
 - Angular 21 — standalone components, signals, OnPush everywhere
 - Tailwind CSS v4 — CSS-first @theme config in styles.css (no tailwind.config.js)
 - Firebase Firestore — real-time database
-- Firebase Anonymous Authentication
+- Firebase Authentication — Google Sign-In only (no anonymous access in v1)
 - PWA — installable, offline-capable
 
 ## Colour Tokens (always use these, never raw hex)
@@ -1283,21 +1242,17 @@ Tagline: *Not that anyone's counting*
 - Fonts: Fraunces (display headings) + DM Sans (body)
 
 ## Firestore Structure
-sessions/{roomCode}
-  players/{playerId}  — name, claimedBy
-  games/{gameId}      — gameType, status, startedAt
-    rounds/{roundId}  — roundNumber, scores: {[playerId]: number}
+authorisedUsers/{uid}  — email, displayName, addedAt
+sessions/{sessionId}
+  players/{playerId}   — name (host-entered; no claiming in v1)
+  games/{gameId}       — gameType, status, startedAt, currentRound, config
+    rounds/{roundId}   — shape varies by gameType
 
-## Permission Model
-- Host (anonymous UID that created session): full control
-- Claimed player (UID matched to a slot): can enter own scores only
-- Viewer: read-only
-
-## Admin Access
-- Two-code system: 4-digit room code (join) + admin code (create)
-- Admin code stored as SHA-256 hash in environment.ts only — never plaintext
-- Unlocked state in localStorage with 30-day expiry
-- Entry point: subtle "Host access" link on home screen
+## Authentication & Authorisation
+- Auth provider: Google Sign-In via Firebase Auth
+- Authorisation: Firestore `authorisedUsers` collection — one document per approved UID
+- Unauthorised users: signed out immediately → routed to /unauthorized
+- No admin code, no room codes, no in-app user management in v1
 
 ## Key Conventions
 - Always use inject() not constructor injection
