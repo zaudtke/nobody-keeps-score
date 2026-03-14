@@ -344,7 +344,7 @@ npm install firebase @angular/fire
 
 ---
 
-## Step 5e — Set Up Firestore Emulator
+## Step 6 — Set Up Firebase CLI & Emulator
 
 The emulator lets you develop and test security rules safely without touching live data. It resets cleanly between runs and includes a browser UI for inspecting data and testing rules.
 
