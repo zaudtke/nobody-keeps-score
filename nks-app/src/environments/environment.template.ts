@@ -1,6 +1,5 @@
 export const environment = {
   production: false,
-  adminCode: 'REPLACE_WITH_SHA256_HASH_OF_YOUR_ADMIN_CODE',
   firebase: {
     apiKey: 'REPLACE_ME',
     authDomain: 'REPLACE_ME',
