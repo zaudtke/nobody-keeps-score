@@ -266,7 +266,7 @@ The following tasks can only be done in the browser. Do these once before writin
 | Register your web app (gets you `firebaseConfig`) | Console |
 | Enable Firestore and choose region | Console |
 | Enable Google Authentication | Console |
-| Add authorised host(s) to `authorisedUsers` collection | Console → Firestore → `authorisedUsers/{uid}` |
+| Add authorized host(s) to `authorizedUsers` collection | Console → Firestore → `authorizedUsers/{uid}` |
 
 **Firebase CLI (terminal) — everything from here on:**
 Once the project exists, the CLI handles all day-to-day work:
@@ -274,7 +274,7 @@ Once the project exists, the CLI handles all day-to-day work:
 | Task | Command |
 |---|---|
 | Link your local project to Firebase (Firestore rules + emulators) | `firebase init firestore,emulators` |
-| Run local dev database | `firebase emulators:start` |
+| Run local dev database | `npm run emulators` (from nks-app/) |
 | Deploy security rules to live Firestore | `firebase deploy --only firestore:rules` |
 | Check which project is active | `firebase projects:list` |
 | Switch between projects (dev/prod) | `firebase use --add` |
@@ -287,10 +287,10 @@ Once the project exists, the CLI handles all day-to-day work:
 4. Console  → Enable Google Authentication
 5. Console  → Sign in once with your Google account to get your UID
              (Firebase Console → Auth → Users tab shows it after first sign-in)
-6. Console  → Firestore → Create authorisedUsers/{your-uid} document
+6. Console  → Firestore → Create authorizedUsers/{your-uid} document
              Fields: email (string), displayName (string), addedAt (timestamp)
 7. Terminal → firebase init firestore,emulators  (links CLI; creates firestore.rules + firestore.indexes.json)
-8. Terminal → firebase emulators:start (all dev work from here on)
+8. Terminal → npm run emulators  (from nks-app/ — all dev work from here on)
 9. Terminal → firebase deploy --only firestore:rules (when ready for production)
 ```
 
@@ -330,11 +330,11 @@ After enabling Google Auth:
 1. Sign in to the app once with your Google account (or use the Firebase Console's **Authentication → Users** tab to trigger a sign-in)
 2. Copy your UID from **Console → Build → Authentication → Users**
 3. In **Console → Build → Firestore Database**, create the document:
-   - Collection: `authorisedUsers`
+   - Collection: `authorizedUsers`
    - Document ID: your UID (exact, no spaces)
    - Fields: `email` (string), `displayName` (string), `addedAt` (timestamp)
 
-Only UIDs present in `authorisedUsers` can use the app. To add more hosts later, repeat step 3 with their UID.
+Only UIDs present in `authorizedUsers` can use the app. To add more hosts later, repeat step 3 with their UID.
 
 ### 5d — Install Firebase SDK
 
@@ -394,13 +394,24 @@ ui-debug.log
 
 ### Start the emulators
 
+Add the following script to **`nks-app/package.json`** `"scripts"`:
+
+```json
+"emulators": "firebase emulators:start --export-on-exit=../emulator-data --import=../emulator-data"
+```
+
+The `../emulator-data` path places persisted data at the repo root (next to `firebase.json`), not inside `nks-app/`. Add `emulator-data/` to the **root** `.gitignore` (not `nks-app/.gitignore`).
+
+Then start with:
+
 ```bash
-firebase emulators:start
+# From nks-app/
+npm run emulators
 ```
 
 Visit `http://localhost:4000` to open the Emulator UI — you can browse Firestore documents, inspect Auth users, and use the **Rules Playground** to simulate reads/writes as different UIDs to verify your allowlist rules.
 
-> ℹ️ The emulator is **ephemeral by default** — all data is wiped when you stop it. To persist data between runs use `firebase emulators:start --export-on-exit=./emulator-data` and `--import=./emulator-data`.
+> ℹ️ The `--export-on-exit` and `--import` flags make emulator data persistent across restarts. All data is saved to `emulator-data/` at the repo root when you stop the emulator and reloaded on the next start.
 
 ### Create environment files
 
@@ -519,7 +530,7 @@ export class AuthService {
   }
 
   async checkAllowlist(uid: string): Promise<boolean> {
-    const snap = await getDoc(doc(this.firestore, `authorisedUsers/${uid}`));
+    const snap = await getDoc(doc(this.firestore, `authorizedUsers/${uid}`));
     return snap.exists();
   }
 
@@ -703,20 +714,20 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // Helper: is the requesting user present in the authorisedUsers allowlist?
+    // Helper: is the requesting user present in the authorizedUsers allowlist?
     function isAuthorised() {
       return request.auth != null
-        && exists(/databases/$(database)/documents/authorisedUsers/$(request.auth.uid));
+        && exists(/databases/$(database)/documents/authorizedUsers/$(request.auth.uid));
     }
 
-    // authorisedUsers — each user may read their own document (for the allowlist check).
+    // authorizedUsers — each user may read their own document (for the allowlist check).
     // Write access is blocked from the client; managed manually via Firebase Console.
-    match /authorisedUsers/{uid} {
+    match /authorizedUsers/{uid} {
       allow read: if request.auth != null && request.auth.uid == uid;
       allow write: if false;
     }
 
-    // sessions and all subcollections — authorised host only
+    // sessions and all subcollections — authorized host only
     match /sessions/{sessionId}/{document=**} {
       allow read, write: if isAuthorised();
     }
@@ -725,8 +736,8 @@ service cloud.firestore {
 ```
 
 **Why these rules:**
-- `authorisedUsers` read: the app's `checkAllowlist()` call reads `authorisedUsers/{uid}` — this permit is needed for that query to succeed
-- `authorisedUsers` write blocked: only you add/remove host entries, done manually in the Firebase Console
+- `authorizedUsers` read: the app's `checkAllowlist()` call reads `authorizedUsers/{uid}` — this permit is needed for that query to succeed
+- `authorizedUsers` write blocked: only you add/remove host entries, done manually in the Firebase Console
 - Sessions: full read/write for any allowlisted UID — the only users who can reach this code in v1 are the host(s)
 
 **Deploy to production when ready:**
@@ -905,7 +916,7 @@ npx prettier --check "src/**/*.ts"
 
 ## Step 13 — Google Auth & Allowlist Setup
 
-NKS uses **Google Sign-In** (Firebase Auth) for authentication and a **Firestore allowlist** for authorisation. There is no admin code, no room code, and no in-app user management in v1.
+NKS uses **Google Sign-In** (Firebase Auth) for authentication and a **Firestore allowlist** for authorization. There is no admin code, no room code, and no in-app user management in v1.
 
 ### How it works
 
@@ -916,7 +927,7 @@ Firebase Google OAuth popup
         ↓
   Success?
   ├── No  → Firebase error → stay on unauthenticated Home
-  └── Yes → Query Firestore: authorisedUsers/{uid}
+  └── Yes → Query Firestore: authorizedUsers/{uid}
                 ↓
           Document exists?
           ├── No  → signOut() → navigate to /unauthorized
@@ -938,7 +949,7 @@ export const routes: Routes = [
   },
   {
     path: 'unauthorized',
-    loadComponent: () => import('./features/unauthorised/unauthorised.component').then(m => m.UnauthorisedComponent),
+    loadComponent: () => import('./features/unauthorized/unauthorized.component').then(m => m.UnauthorizedComponent),
   },
   {
     path: 'game-setup',
@@ -957,8 +968,8 @@ export const routes: Routes = [
 
 | Action | Steps |
 |---|---|
-| Add a new host | Firebase Console → Firestore → `authorisedUsers` → **Add document** · Document ID = their UID · Fields: `email`, `displayName`, `addedAt` |
-| Remove a host | Firebase Console → Firestore → `authorisedUsers` → find their document → **Delete** |
+| Add a new host | Firebase Console → Firestore → `authorizedUsers` → **Add document** · Document ID = their UID · Fields: `email`, `displayName`, `addedAt` |
+| Remove a host | Firebase Console → Firestore → `authorizedUsers` → find their document → **Delete** |
 | Find a user's UID | Firebase Console → Authentication → Users tab |
 
 No code changes or redeployment needed — the allowlist check happens at sign-in.
@@ -1054,8 +1065,8 @@ ng add @angular-eslint/schematics
 npm install --save-dev prettier eslint-config-prettier eslint-plugin-prettier pretty-quick
 
 # ── Start dev environment (two terminals) ─────────────
-firebase emulators:start     # terminal 1
-ng serve                     # terminal 2
+npm run emulators            # terminal 1 (from nks-app/)
+npm start                    # terminal 2 (from nks-app/)
 ```
 
 ---
@@ -1245,16 +1256,16 @@ Tagline: *Not that anyone's counting*
 - Fonts: Fraunces (display headings) + DM Sans (body)
 
 ## Firestore Structure
-authorisedUsers/{uid}  — email, displayName, addedAt
+authorizedUsers/{uid}  — email, displayName, addedAt
 sessions/{sessionId}
   players/{playerId}   — name (host-entered; no claiming in v1)
   games/{gameId}       — gameType, status, startedAt, currentRound, config
     rounds/{roundId}   — shape varies by gameType
 
-## Authentication & Authorisation
+## Authentication & Authorization
 - Auth provider: Google Sign-In via Firebase Auth
-- Authorisation: Firestore `authorisedUsers` collection — one document per approved UID
-- Unauthorised users: signed out immediately → routed to /unauthorized
+- Authorization: Firestore `authorizedUsers` collection — one document per approved UID
+- Unauthorized users: signed out immediately → routed to /unauthorized
 - No admin code, no room codes, no in-app user management in v1
 
 ## Key Conventions
