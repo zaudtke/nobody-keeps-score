@@ -26,7 +26,7 @@ export class AuthService {
   }
 
   async checkAllowlist(uid: string): Promise<boolean> {
-    const snap = await getDoc(doc(this.firestore, `authorisedUsers/${uid}`));
+    const snap = await getDoc(doc(this.firestore, `authorizedUsers/${uid}`));
     return snap.exists();
   }
 

@@ -10,8 +10,8 @@ export const routes: Routes = [
   {
     path: 'unauthorized',
     loadComponent: () =>
-      import('./features/unauthorised/unauthorised.component').then(
-        m => m.UnauthorisedComponent,
+      import('./features/unauthorized/unauthorized.component').then(
+        m => m.UnauthorizedComponent,
       ),
   },
   {

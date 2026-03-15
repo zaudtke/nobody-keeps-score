@@ -49,6 +49,7 @@ src/environments/environment.prod.ts
 
 # Firebase emulator data
 .firebase/
+emulator-data/
 firebase-debug.log
 firestore-debug.log
 ui-debug.log

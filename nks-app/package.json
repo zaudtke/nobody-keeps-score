@@ -8,7 +8,8 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "pretty-quick": "pretty-quick --staged",
-    "lint": "ng lint --fix"
+    "lint": "ng lint --fix",
+    "emulators": "firebase emulators:start --export-on-exit=../emulator-data --import=../emulator-data"
   },
   "private": true,
   "packageManager": "npm@11.9.0",

@@ -3,15 +3,15 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // Helper: is the requesting user present in the authorisedUsers allowlist?
+    // Helper: is the requesting user present in the authorizedUsers allowlist?
     function isAuthorised() {
       return request.auth != null
-        && exists(/databases/$(database)/documents/authorisedUsers/$(request.auth.uid));
+        && exists(/databases/$(database)/documents/authorizedUsers/$(request.auth.uid));
     }
 
-    // authorisedUsers — each user may read their own document (for the allowlist check).
+    // authorizedUsers — each user may read their own document (for the allowlist check).
     // Write access is blocked from the client; managed manually via Firebase Console.
-    match /authorisedUsers/{uid} {
+    match /authorizedUsers/{uid} {
       allow read: if request.auth != null && request.auth.uid == uid;
       allow write: if false;
     }
