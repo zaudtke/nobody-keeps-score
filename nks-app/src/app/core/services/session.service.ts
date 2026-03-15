@@ -4,14 +4,19 @@ import {
   collection,
   doc,
   docData,
+  onSnapshot,
+  orderBy,
+  query,
   serverTimestamp,
   setDoc,
   updateDoc,
+  where,
 } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { AuthService } from './auth.service';
 import { Session } from '../models/session.model';
-import { GameType } from '../models/game.model';
+import { Game, GameType } from '../models/game.model';
+import { Player } from '../models/player.model';
 
 export interface GameSetupConfig {
   winDirection?: 'high' | 'low';
@@ -37,9 +42,9 @@ export class SessionService {
       status: 'active',
     });
 
-    for (const name of playerNames) {
+    for (let i = 0; i < playerNames.length; i++) {
       const playerRef = doc(collection(this.firestore, `sessions/${sessionRef.id}/players`));
-      await setDoc(playerRef, { name });
+      await setDoc(playerRef, { name: playerNames[i], order: i + 1 });
     }
 
     const gameRef = doc(collection(this.firestore, `sessions/${sessionRef.id}/games`));
@@ -58,6 +63,37 @@ export class SessionService {
     return docData(doc(this.firestore, `sessions/${sessionId}`), {
       idField: 'id',
     }) as Observable<Session>;
+  }
+
+  getPlayers$(sessionId: string): Observable<Player[]> {
+    return new Observable<Player[]>((subscriber) => {
+      const ref = query(
+        collection(this.firestore, `sessions/${sessionId}/players`),
+        orderBy('order'),
+      );
+      return onSnapshot(
+        ref,
+        (snap) => subscriber.next(snap.docs.map((d) => ({ id: d.id, ...d.data() }) as Player)),
+        (err) => subscriber.error(err),
+      );
+    });
+  }
+
+  getActiveGame$(sessionId: string): Observable<Game | null> {
+    return new Observable<Game | null>((subscriber) => {
+      const ref = query(
+        collection(this.firestore, `sessions/${sessionId}/games`),
+        where('status', '==', 'active'),
+      );
+      return onSnapshot(
+        ref,
+        (snap) => {
+          const games = snap.docs.map((d) => ({ id: d.id, ...d.data() }) as Game);
+          subscriber.next(games.length > 0 ? games[0] : null);
+        },
+        (err) => subscriber.error(err),
+      );
+    });
   }
 
   async archiveSession(sessionId: string): Promise<void> {
