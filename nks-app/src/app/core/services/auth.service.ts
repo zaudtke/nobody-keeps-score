@@ -17,7 +17,7 @@ export class AuthService {
   currentUser = signal<User | null>(null);
 
   constructor() {
-    onAuthStateChanged(this.auth, user => this.currentUser.set(user));
+    onAuthStateChanged(this.auth, (user) => this.currentUser.set(user));
   }
 
   async signInWithGoogle(): Promise<User | null> {
