@@ -361,15 +361,18 @@ npm install -g firebase-tools   # via npm
 firebase login
 ```
 
-### Initialise Firestore rules and emulators in your project
+### Initialise Firestore, Hosting, and emulators in your project
 
 ```bash
-firebase init firestore,emulators
+firebase init firestore,hosting,emulators
 ```
 
 When prompted:
 - ✅ **Firestore Rules** file: accept default `firestore.rules`
 - ✅ **Firestore Indexes** file: accept default `firestore.indexes.json`
+- ✅ **Hosting public directory**: enter `dist/nks-app/browser`
+- ✅ **Configure as single-page app**: **Yes** (adds catch-all rewrite to `index.html` for Angular routing)
+- ✅ **Set up automatic builds with GitHub Actions**: **No** (can add later)
 - ✅ Select **Firestore** and **Authentication** emulators
 - ✅ Accept default ports: **8080** (Firestore), **9099** (Auth)
 - ✅ Enable the Emulator UI: **Yes** (runs at `http://localhost:4000`)
@@ -1341,6 +1344,86 @@ When starting a Claude Code session for a new feature you can reference it direc
 | `CLAUDE.md` | `nks-app/` | Claude Code project memory — auto-loaded every session |
 | `copilot-instructions.md` | `nks-app/.github/` | VS Code AI + GitHub Copilot Angular rules |
 | `angular-best-practices.md` | `docs/` | Reference copy of Angular's official LLM prompt file |
+
+---
+
+## Step 17 — Deploy to Firebase Hosting
+
+Firebase Hosting serves the Angular PWA over HTTPS with a global CDN. HTTPS is required for service workers — so this is the production home for NKS.
+
+### Build the app
+
+```bash
+# From inside nks-app/
+ng build
+```
+
+This produces the production build at `dist/nks-app/browser/`. The Angular build optimises, tree-shakes, and generates the PWA service worker automatically.
+
+### Deploy
+
+```bash
+# Deploy hosting only
+firebase deploy --only hosting
+
+# Or deploy everything at once (hosting + Firestore rules)
+firebase deploy
+```
+
+Firebase CLI uploads the `dist/nks-app/browser/` folder and returns a live URL:
+```
+Hosting URL: https://nks-app.web.app
+```
+
+> ℹ️ Firebase Hosting also provides a second URL at `https://nks-app.firebaseapp.com` — both work. The `.web.app` URL is the canonical one.
+
+### What `firebase init hosting` configured in `firebase.json`
+
+The init command added a `hosting` block to `firebase.json`. Verify it looks like this:
+
+```json
+{
+  "hosting": {
+    "public": "dist/nks-app/browser",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  }
+}
+```
+
+The `rewrites` catch-all is essential — it ensures Angular's client-side router handles all routes (e.g. `/game-setup`, `/unauthorized`) rather than Firebase returning a 404.
+
+### Deploying updates
+
+Every time you want to push a new build to production:
+
+```bash
+ng build && firebase deploy --only hosting
+```
+
+Firestore rules only need redeploying when `firestore.rules` changes:
+
+```bash
+firebase deploy --only firestore:rules
+```
+
+### PWA notes
+
+| Concern | Detail |
+|---|---|
+| HTTPS | Firebase Hosting serves over HTTPS automatically — required for service workers |
+| Service worker | Angular's `ngsw-worker.js` is included in the build and activates on first load |
+| Install prompt | Users can install NKS to their home screen once served over HTTPS |
+| Cache busting | Angular adds content hashes to filenames — old caches are invalidated automatically on deploy |
 
 ---
 
