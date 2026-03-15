@@ -12,7 +12,8 @@ import { ThemeService } from '../../core/services/theme.service';
       class="w-8 h-8 rounded-full flex items-center justify-center text-sm border-none cursor-pointer
              bg-white/15 text-white
              dark:bg-white/7 dark:text-ink-300
-             focus-visible:ring-2 focus-visible:ring-felt-400 outline-none">
+             focus-visible:ring-2 focus-visible:ring-felt-400 outline-none"
+    >
       {{ theme.isDark() ? '☾' : '☀' }}
     </button>
   `,

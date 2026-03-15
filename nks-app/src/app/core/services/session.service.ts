@@ -4,25 +4,36 @@ import {
   collection,
   doc,
   docData,
+  serverTimestamp,
   setDoc,
   updateDoc,
 } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { AuthService } from './auth.service';
 import { Session } from '../models/session.model';
+import { GameType } from '../models/game.model';
+
+export interface GameSetupConfig {
+  winDirection?: 'high' | 'low';
+  gameName?: string;
+}
 
 @Injectable({ providedIn: 'root' })
 export class SessionService {
   private firestore = inject(Firestore);
   private auth = inject(AuthService);
 
-  async createSession(playerNames: string[]): Promise<string> {
+  async createSession(
+    gameType: GameType,
+    config: GameSetupConfig | null,
+    playerNames: string[],
+  ): Promise<string> {
     const hostId = this.auth.currentUser()!.uid;
     const sessionRef = doc(collection(this.firestore, 'sessions'));
 
     await setDoc(sessionRef, {
       hostId,
-      createdAt: new Date(),
+      createdAt: serverTimestamp(),
       status: 'active',
     });
 
@@ -30,6 +41,15 @@ export class SessionService {
       const playerRef = doc(collection(this.firestore, `sessions/${sessionRef.id}/players`));
       await setDoc(playerRef, { name });
     }
+
+    const gameRef = doc(collection(this.firestore, `sessions/${sessionRef.id}/games`));
+    await setDoc(gameRef, {
+      gameType,
+      status: 'active',
+      startedAt: serverTimestamp(),
+      currentRound: 1,
+      config: config ?? null,
+    });
 
     return sessionRef.id;
   }
