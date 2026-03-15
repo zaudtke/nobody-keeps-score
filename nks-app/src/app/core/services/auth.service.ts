@@ -1,18 +1,36 @@
-import { Injectable, inject } from '@angular/core';
-import { Auth, signInAnonymously, user } from '@angular/fire/auth';
-import { from } from 'rxjs';
+import { Injectable, inject, signal } from '@angular/core';
+import {
+  Auth,
+  GoogleAuthProvider,
+  User,
+  onAuthStateChanged,
+  signInWithPopup,
+  signOut,
+} from '@angular/fire/auth';
+import { Firestore, doc, getDoc } from '@angular/fire/firestore';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private auth = inject(Auth);
+  private firestore = inject(Firestore);
 
-  readonly currentUser$ = user(this.auth);
+  currentUser = signal<User | null>(null);
 
-  signInAnonymously() {
-    return from(signInAnonymously(this.auth));
+  constructor() {
+    onAuthStateChanged(this.auth, user => this.currentUser.set(user));
   }
 
-  get uid(): string | null {
-    return this.auth.currentUser?.uid ?? null;
+  async signInWithGoogle(): Promise<User | null> {
+    const result = await signInWithPopup(this.auth, new GoogleAuthProvider());
+    return result.user;
+  }
+
+  async checkAllowlist(uid: string): Promise<boolean> {
+    const snap = await getDoc(doc(this.firestore, `authorisedUsers/${uid}`));
+    return snap.exists();
+  }
+
+  async signOut(): Promise<void> {
+    await signOut(this.auth);
   }
 }
