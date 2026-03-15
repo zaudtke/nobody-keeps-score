@@ -18,7 +18,7 @@ Tagline: *Not that anyone's counting*
 - Fonts: Fraunces (display headings) + DM Sans (body)
 
 ## Firestore Structure
-authorisedUsers/{uid}
+authorizedUsers/{uid}
   ├── email: string
   ├── displayName: string
   └── addedAt: timestamp
@@ -46,15 +46,15 @@ sessions/{sessionId}
 **Open Scorer** — roundNumber, scores: { [playerId]: number }
 
 ## Permission Model (v1 — Host Only)
-- Host (Google Auth UID, present in `authorisedUsers`): full control — view scores, enter any player's score, start/end games, add/remove players
+- Host (Google Auth UID, present in `authorizedUsers`): full control — view scores, enter any player's score, start/end games, add/remove players
 - All other access is blocked — Firestore rules enforce allowlist
 - No viewer role, no claimed player slots, no room codes in v1
 
-## Authentication & Authorisation
+## Authentication & Authorization
 - Auth provider: Google Sign-In via Firebase Auth
-- Authorisation: Firestore `authorisedUsers` collection — one document per approved UID
-- Unauthorised users: signed out immediately → routed to `/unauthorized`
-- Adding hosts: manual — create `authorisedUsers/{uid}` doc in Firebase Console (fields: email, displayName, addedAt)
+- Authorization: Firestore `authorizedUsers` collection — one document per approved UID
+- Unauthorized users: signed out immediately → routed to `/unauthorized`
+- Adding hosts: manual — create `authorizedUsers/{uid}` doc in Firebase Console (fields: email, displayName, addedAt)
 - Removing hosts: delete the document from Firebase Console
 - No admin code, no room codes, no in-app user management in v1
 
