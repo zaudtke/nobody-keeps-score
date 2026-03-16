@@ -283,8 +283,11 @@ export class DirtyClubsScoreboardComponent implements OnInit {
     const winnerId = resolveWinnerId(updatedStandings, moonWin, moonShooterId);
 
     if (winnerId) {
-      await this.gameService.completeGame(this.sessionId(), this.gameId());
+      // Set game-over UI first so the parent's Firestore listener (which will emit null
+      // once status flips to 'complete') cannot destroy this component before the
+      // game-over screen is shown.
       this.gameOver.set(buildGameOverResult(updatedStandings, winnerId, moonWin));
+      await this.gameService.completeGame(this.sessionId(), this.gameId());
     }
 
     this.submitting.set(false);

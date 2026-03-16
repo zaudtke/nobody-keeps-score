@@ -7,6 +7,7 @@ import {
   signal,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { firstValueFrom } from 'rxjs';
 import { GameType } from '../../core/models/game.model';
 import { SessionService } from '../../core/services/session.service';
 import { AddPlayerRowComponent } from './components/add-player-row.component';
@@ -304,10 +305,21 @@ export class GameSetupComponent implements OnInit {
   }
 
   private async loadReturningSession(sessionId: string): Promise<void> {
-    // Returning flow — load previous session game type and players
-    // This is triggered from the Game Over screen (future feature)
-    // For now, the fresh start flow handles all current use cases
-    void sessionId;
+    const [game, players] = await Promise.all([
+      this.sessionService.getLastCompletedGame(sessionId),
+      firstValueFrom(this.sessionService.getPlayers$(sessionId)),
+    ]);
+
+    if (!game) return;
+
+    this.selectedGame.set(game.gameType);
+    if (game.gameType === 'open' && game.config) {
+      this.winDirection.set(game.config.winDirection);
+      // gameName intentionally not carried over — host re-enters if wanted
+    }
+    this.players.set(players.map((p) => ({ id: p.id, name: p.name, avatarPosition: p.order })));
+    this.isReturning.set(true);
+    this.previousGame.set(GAME_LABELS[game.gameType]);
   }
 
   // ── Methods ────────────────────────────────────

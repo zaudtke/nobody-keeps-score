@@ -4,6 +4,8 @@ import {
   collection,
   doc,
   docData,
+  getDocs,
+  limit,
   onSnapshot,
   orderBy,
   query,
@@ -94,6 +96,19 @@ export class SessionService {
         (err) => subscriber.error(err),
       );
     });
+  }
+
+  async getLastCompletedGame(sessionId: string): Promise<Game | null> {
+    const ref = query(
+      collection(this.firestore, `sessions/${sessionId}/games`),
+      where('status', '==', 'complete'),
+      orderBy('startedAt', 'desc'),
+      limit(1),
+    );
+    const snap = await getDocs(ref);
+    if (snap.empty) return null;
+    const d = snap.docs[0];
+    return { id: d.id, ...d.data() } as Game;
   }
 
   async archiveSession(sessionId: string): Promise<void> {

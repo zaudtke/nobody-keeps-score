@@ -68,7 +68,12 @@ export class ScoreboardComponent {
     ])
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(([game, players]) => {
-        this.game.set(game);
+        // Once a game is loaded, don't replace it with null if the status flips to
+        // 'complete' — the child scoreboard handles its own game-over screen and will
+        // navigate away when the user is done.
+        if (game !== null || this.game() === null) {
+          this.game.set(game);
+        }
         this.players.set(players);
         this.loading.set(false);
       });
