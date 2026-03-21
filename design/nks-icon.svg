@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1a7f4b"/>
+      <stop offset="100%" stop-color="#082518"/>
+    </linearGradient>
+    <linearGradient id="card-face" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#f8f4ec"/>
+    </linearGradient>
+    <filter id="card-shadow" x="-20%" y="-15%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="6" stdDeviation="14" flood-color="#000000" flood-opacity="0.35"/>
+    </filter>
+  </defs>
+
+  <!-- Background (rounded for standard, full bleed for maskable) -->
+  <rect width="512" height="512" rx="88" fill="url(#bg)"/>
+
+  <!-- Subtle felt texture: faint radial glow -->
+  <radialGradient id="glow" cx="40%" cy="35%" r="55%">
+    <stop offset="0%" stop-color="#279e5e" stop-opacity="0.45"/>
+    <stop offset="100%" stop-color="#000000" stop-opacity="0"/>
+  </radialGradient>
+  <rect width="512" height="512" rx="88" fill="url(#glow)"/>
+
+  <!-- Ghost card behind (rotated left, for depth) -->
+  <g transform="translate(256,258) rotate(-11)">
+    <rect x="-118" y="-162" width="236" height="324" rx="20"
+          fill="#ffffff" opacity="0.13"/>
+  </g>
+
+  <!-- Main card (slight clockwise lean) -->
+  <g transform="translate(256,255) rotate(7)" filter="url(#card-shadow)">
+    <rect x="-118" y="-162" width="236" height="324" rx="20" fill="url(#card-face)"/>
+
+    <!-- Top-left pip -->
+    <text x="-90" y="-115"
+          font-family="Georgia, 'Times New Roman', serif"
+          font-size="34" font-weight="700"
+          text-anchor="middle" fill="#1a7f4b">♣</text>
+
+    <!-- Bottom-right pip (flipped) -->
+    <g transform="rotate(180)">
+      <text x="-90" y="-115"
+            font-family="Georgia, 'Times New Roman', serif"
+            font-size="34" font-weight="700"
+            text-anchor="middle" fill="#1a7f4b">♣</text>
+    </g>
+
+    <!-- Centre: 2×2 suit grid -->
+    <!-- ♠ top-left -->
+    <text x="-34" y="-22"
+          font-family="Georgia, 'Times New Roman', serif"
+          font-size="72" text-anchor="middle" fill="#103f26">♠</text>
+    <!-- ♥ top-right -->
+    <text x="34" y="-22"
+          font-family="Georgia, 'Times New Roman', serif"
+          font-size="72" text-anchor="middle" fill="#c01422">♥</text>
+    <!-- ♦ bottom-left -->
+    <text x="-34" y="72"
+          font-family="Georgia, 'Times New Roman', serif"
+          font-size="72" text-anchor="middle" fill="#c01422">♦</text>
+    <!-- ♣ bottom-right -->
+    <text x="34" y="72"
+          font-family="Georgia, 'Times New Roman', serif"
+          font-size="72" text-anchor="middle" fill="#103f26">♣</text>
+
+    <!-- NKS wordmark at foot of card -->
+    <text x="0" y="135"
+          font-family="Georgia, 'Times New Roman', serif"
+          font-size="30" font-weight="700" letter-spacing="6"
+          text-anchor="middle" fill="#1a7f4b">NKS</text>
+  </g>
+</svg>
