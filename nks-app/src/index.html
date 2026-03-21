@@ -2,17 +2,33 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>NksApp</title>
+    <title>Nobody's Keeping Score</title>
     <base href="/" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="description" content="Not that anyone's counting" />
+
+    <!-- PWA theme -->
+    <meta name="theme-color" content="#1a7f4b" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#14151c" media="(prefers-color-scheme: dark)" />
+
+    <!-- iOS PWA -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="NKS" />
+    <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
+
+    <!-- Favicon & manifest -->
     <link rel="icon" type="image/x-icon" href="favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="icons/icon-32x32.png" />
+    <link rel="manifest" href="manifest.webmanifest" />
+
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
     <link
       href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,700;1,9..144,400&amp;family=DM+Sans:wght@300;400;500;600&amp;display=swap"
       rel="stylesheet"
     />
-    <link rel="manifest" href="manifest.webmanifest" />
   </head>
   <body>
     <app-root></app-root>
