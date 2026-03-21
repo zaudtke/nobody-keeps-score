@@ -6,11 +6,12 @@ import { SessionService } from '../../core/services/session.service';
 import { Game } from '../../core/models/game.model';
 import { Player } from '../../core/models/player.model';
 import { DirtyClubsScoreboardComponent } from '../dirty-clubs/dirty-clubs-scoreboard.component';
+import { CanastaScoreboardComponent } from '../canasta/canasta-scoreboard.component';
 
 @Component({
   selector: 'app-scoreboard',
   standalone: true,
-  imports: [DirtyClubsScoreboardComponent],
+  imports: [DirtyClubsScoreboardComponent, CanastaScoreboardComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'flex flex-col h-full' },
   template: `
@@ -22,6 +23,17 @@ import { DirtyClubsScoreboardComponent } from '../dirty-clubs/dirty-clubs-scoreb
       @switch (g.gameType) {
         @case ('dirty-clubs') {
           <app-dirty-clubs-scoreboard
+            [sessionId]="sessionId"
+            [gameId]="g.id"
+            [players]="players()"
+            [currentRound]="g.currentRound"
+            (back)="goHome()"
+            (navigateToSetup)="goToSetup($event)"
+            (sessionArchived)="archiveAndGoHome()"
+          />
+        }
+        @case ('canasta') {
+          <app-canasta-scoreboard
             [sessionId]="sessionId"
             [gameId]="g.id"
             [players]="players()"
