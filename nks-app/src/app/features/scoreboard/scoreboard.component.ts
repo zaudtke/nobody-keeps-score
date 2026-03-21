@@ -7,11 +7,12 @@ import { Game } from '../../core/models/game.model';
 import { Player } from '../../core/models/player.model';
 import { DirtyClubsScoreboardComponent } from '../dirty-clubs/dirty-clubs-scoreboard.component';
 import { CanastaScoreboardComponent } from '../canasta/canasta-scoreboard.component';
+import { FiveCrownsScoreboardComponent } from '../five-crowns/five-crowns-scoreboard.component';
 
 @Component({
   selector: 'app-scoreboard',
   standalone: true,
-  imports: [DirtyClubsScoreboardComponent, CanastaScoreboardComponent],
+  imports: [DirtyClubsScoreboardComponent, CanastaScoreboardComponent, FiveCrownsScoreboardComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'flex flex-col h-full' },
   template: `
@@ -34,6 +35,17 @@ import { CanastaScoreboardComponent } from '../canasta/canasta-scoreboard.compon
         }
         @case ('canasta') {
           <app-canasta-scoreboard
+            [sessionId]="sessionId"
+            [gameId]="g.id"
+            [players]="players()"
+            [currentRound]="g.currentRound"
+            (back)="goHome()"
+            (navigateToSetup)="goToSetup($event)"
+            (sessionArchived)="archiveAndGoHome()"
+          />
+        }
+        @case ('5-crowns') {
+          <app-five-crowns-scoreboard
             [sessionId]="sessionId"
             [gameId]="g.id"
             [players]="players()"
