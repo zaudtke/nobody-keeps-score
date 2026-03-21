@@ -8,11 +8,12 @@ import { Player } from '../../core/models/player.model';
 import { DirtyClubsScoreboardComponent } from '../dirty-clubs/dirty-clubs-scoreboard.component';
 import { CanastaScoreboardComponent } from '../canasta/canasta-scoreboard.component';
 import { FiveCrownsScoreboardComponent } from '../five-crowns/five-crowns-scoreboard.component';
+import { OpenScorerScoreboardComponent } from '../open-scorer/open-scorer-scoreboard.component';
 
 @Component({
   selector: 'app-scoreboard',
   standalone: true,
-  imports: [DirtyClubsScoreboardComponent, CanastaScoreboardComponent, FiveCrownsScoreboardComponent],
+  imports: [DirtyClubsScoreboardComponent, CanastaScoreboardComponent, FiveCrownsScoreboardComponent, OpenScorerScoreboardComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'flex flex-col h-full' },
   template: `
@@ -54,6 +55,20 @@ import { FiveCrownsScoreboardComponent } from '../five-crowns/five-crowns-scoreb
             (navigateToSetup)="goToSetup($event)"
             (sessionArchived)="archiveAndGoHome()"
           />
+        }
+        @case ('open') {
+          @if (g.config; as cfg) {
+            <app-open-scorer-scoreboard
+              [sessionId]="sessionId"
+              [gameId]="g.id"
+              [players]="players()"
+              [currentRound]="g.currentRound"
+              [config]="cfg"
+              (back)="goHome()"
+              (navigateToSetup)="goToSetup($event)"
+              (sessionArchived)="archiveAndGoHome()"
+            />
+          }
         }
         @default {
           <div class="flex-1 flex items-center justify-center bg-cream-50 dark:bg-ink-950">
