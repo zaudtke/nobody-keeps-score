@@ -23,6 +23,10 @@ import {
   CanastaScoreEntryComponent,
   type CanastaScoreEntryResult,
 } from './components/canasta-score-entry.component';
+import {
+  CanastaBaseEntrySheetComponent,
+  type CanastaBaseMap,
+} from './components/canasta-base-entry-sheet.component';
 import { CanastaGameOverComponent } from './components/canasta-game-over.component';
 import { Player } from '../../core/models/player.model';
 
@@ -34,7 +38,7 @@ interface PendingEntry {
 @Component({
   selector: 'app-canasta-scoreboard',
   standalone: true,
-  imports: [CanastaPlayerRowComponent, CanastaScoreEntryComponent, CanastaGameOverComponent],
+  imports: [CanastaPlayerRowComponent, CanastaScoreEntryComponent, CanastaBaseEntrySheetComponent, CanastaGameOverComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'flex flex-col h-full bg-cream-50 dark:bg-ink-950' },
   template: `
@@ -92,6 +96,23 @@ interface PendingEntry {
 
       <!-- Scrollable body -->
       <div class="flex-1 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <!-- Score Round button — visible until Phase 1 is complete -->
+        @if (lockedBases() === null) {
+          <div class="px-3 pt-3">
+            <button
+              type="button"
+              (click)="showBaseSheet.set(true)"
+              class="w-full py-3 px-4 rounded-[12px] font-display text-[0.9rem] font-semibold
+                     text-white cursor-pointer outline-none
+                     bg-felt-600
+                     shadow-[0_4px_16px_rgba(26,127,75,0.2)]
+                     focus-visible:ring-2 focus-visible:ring-felt-400"
+            >
+              ▶ Score Round {{ roundNumber() }}
+            </button>
+          </div>
+        }
+
         <!-- Standings -->
         <div class="px-3 pt-3 pb-2 flex flex-col gap-1.5">
           <p
@@ -194,11 +215,22 @@ interface PendingEntry {
         </div>
       }
 
-      <!-- Score entry sheet -->
+      <!-- Phase 1: Batch base entry sheet -->
+      @if (showBaseSheet()) {
+        <app-canasta-base-entry-sheet
+          [standings]="standings()"
+          [roundNumber]="roundNumber()"
+          (confirmed)="onBasesLocked($event)"
+          (dismiss)="showBaseSheet.set(false)"
+        />
+      }
+
+      <!-- Phase 2: Per-player score entry sheet -->
       @if (openSheetStanding(); as s) {
         <app-canasta-score-entry
           [playerName]="s.name"
           [currentScore]="s.total"
+          [lockedBase]="lockedBases()?.[s.playerId] ?? null"
           (confirmed)="onEntryConfirmed(s.playerId, $event)"
           (dismiss)="openSheetStanding.set(null)"
         />
@@ -224,6 +256,8 @@ export class CanastaScoreboardComponent implements OnInit {
   protected pendingEntries = signal<Record<string, PendingEntry>>({});
   protected submitting = signal(false);
   protected gameOver = signal<CanastaGameOverResult | null>(null);
+  protected showBaseSheet = signal(false);
+  protected lockedBases = signal<Record<string, number> | null>(null);
 
   // ── Rounds from Firestore ────────────────────────────────────────
   protected rounds = signal<CanastaRound[]>([]);
@@ -284,7 +318,16 @@ export class CanastaScoreboardComponent implements OnInit {
 
   // ── Interactions ─────────────────────────────────────────────────
   protected openEntry(standing: CanastaPlayerStanding): void {
-    this.openSheetStanding.set(standing);
+    if (this.lockedBases() === null) {
+      this.showBaseSheet.set(true);
+    } else {
+      this.openSheetStanding.set(standing);
+    }
+  }
+
+  protected onBasesLocked(baseMap: CanastaBaseMap): void {
+    this.lockedBases.set(baseMap);
+    this.showBaseSheet.set(false);
   }
 
   protected onEntryConfirmed(playerId: string, result: CanastaScoreEntryResult): void {
@@ -326,6 +369,7 @@ export class CanastaScoreboardComponent implements OnInit {
     }
 
     this.pendingEntries.set({});
+    this.lockedBases.set(null);
 
     // Check win condition
     const updatedStandings = currentStandings.map((s) => ({

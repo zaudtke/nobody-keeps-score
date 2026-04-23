@@ -89,6 +89,16 @@ export interface CanastaScoreEntryResult {
           <span class="font-display font-bold text-amber-500 dark:text-amber-400">
             {{ baseValue() }}
           </span>
+          @if (isLockedMode()) {
+            <span
+              class="text-[0.48rem] font-bold tracking-[0.05em] uppercase self-center
+                     text-amber-600 dark:text-amber-600
+                     bg-[rgba(217,119,6,0.12)] border border-[rgba(217,119,6,0.2)]
+                     px-1 py-[1px] rounded-[4px] -ml-1"
+            >
+              base
+            </span>
+          }
           <span class="text-ink-500 dark:text-ink-700 text-[0.7rem]">+</span>
           <span
             class="font-display font-bold"
@@ -111,7 +121,8 @@ export interface CanastaScoreEntryResult {
 
         <!-- Stacked rows (Option C) -->
         <div class="flex flex-col gap-2">
-          <!-- Base row -->
+          <!-- Base row — hidden in Phase 2 (lockedBase mode) -->
+          @if (!isLockedMode()) {
           <div
             class="flex items-stretch rounded-[10px] overflow-hidden border-[1.5px] transition-colors"
             [class]="
@@ -157,6 +168,7 @@ export interface CanastaScoreEntryResult {
               aria-label="Base value"
             />
           </div>
+          } <!-- end @if (!isLockedMode()) -->
 
           <!-- Score row -->
           <div
@@ -221,6 +233,7 @@ export interface CanastaScoreEntryResult {
 export class CanastaScoreEntryComponent {
   playerName = input.required<string>();
   currentScore = input.required<number>();
+  lockedBase = input<number | null>(null);
 
   confirmed = output<CanastaScoreEntryResult>();
   dismiss = output<void>();
@@ -229,9 +242,13 @@ export class CanastaScoreEntryComponent {
   protected baseRaw = signal<string>('');
   protected scoreRaw = signal<string>('');
 
+  protected isLockedMode = computed(() => this.lockedBase() !== null);
+
   protected currentMeldTier = computed(() => getMeldTier(this.currentScore()));
 
   protected baseValue = computed(() => {
+    const locked = this.lockedBase();
+    if (locked !== null) return locked;
     const v = parseFloat(this.baseRaw());
     return isNaN(v) ? 0 : Math.max(0, Math.floor(v));
   });

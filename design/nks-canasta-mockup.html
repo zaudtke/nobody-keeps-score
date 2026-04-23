@@ -617,6 +617,55 @@ body {
 .theme-dark .btn-outline { border-color: var(--ink-600); color: var(--ink-300); }
 .theme-light .btn-outline { border-color: var(--cream-300); color: var(--ink-600); }
 
+/* ════════ BATCH BASE SHEET (Phase 1) ════════ */
+.base-entry-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 14px; border-bottom: 1px solid;
+}
+.theme-dark .base-entry-row { border-color: rgba(255,255,255,0.06); }
+.theme-light .base-entry-row { border-color: var(--cream-200); }
+
+.base-player-info { flex: 1; min-width: 0; }
+.base-player-name { font-size: 0.88rem; font-weight: 600; }
+.theme-dark .base-player-name { color: var(--ink-100); }
+.theme-light .base-player-name { color: var(--ink-900); }
+.base-player-score { font-size: 0.62rem; margin-top: 1px; }
+.theme-dark .base-player-score { color: var(--ink-500); }
+.theme-light .base-player-score { color: var(--ink-400); }
+
+.base-quick-wrap { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; flex-shrink: 0; }
+.base-quick-label { font-size: 0.52rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; color: var(--amber-500); }
+.base-quick-input {
+  width: 72px; padding: 7px 10px; border-radius: 8px; border: 1.5px solid; outline: none;
+  font-family: var(--font-display); font-size: 1.1rem; font-weight: 700; text-align: right;
+}
+.theme-dark .base-quick-input { background: rgba(217,119,6,0.08); color: var(--amber-300); border-color: var(--amber-800); }
+.theme-dark .base-quick-input:focus { border-color: var(--amber-500); }
+.theme-light .base-quick-input { background: var(--amber-100); color: var(--amber-800); border-color: var(--amber-300); }
+.theme-light .base-quick-input:focus { border-color: var(--amber-500); }
+
+.sheet-phase-label {
+  font-size: 0.56rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+  padding: 2px 6px; border-radius: 5px;
+}
+.phase-base { background: rgba(217,119,6,0.15); color: var(--amber-400); border: 1px solid rgba(217,119,6,0.25); }
+.phase-score { background: rgba(39,158,94,0.15); color: var(--felt-400); border: 1px solid rgba(39,158,94,0.25); }
+
+.math-val.locked-val { color: var(--amber-400); }
+.math-locked-badge {
+  font-size: 0.48rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;
+  color: var(--amber-600); background: rgba(217,119,6,0.12); border: 1px solid rgba(217,119,6,0.2);
+  padding: 1px 4px; border-radius: 4px; margin-left: -3px; align-self: center;
+}
+
+.btn-score-round {
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  width: calc(100% - 28px); margin: 10px 14px 4px;
+  padding: 11px; border-radius: 10px; border: none; cursor: pointer;
+  font-family: var(--font-body); font-size: 0.88rem; font-weight: 700;
+  background: var(--felt-600); color: white;
+}
+
 /* ════════ SCREEN VIEWS ════════ */
 .screen-view { display: none; }
 .screen-view.active { display: flex; gap: 2rem; justify-content: center; flex-wrap: wrap; }
@@ -659,6 +708,8 @@ body {
   <button onclick="showScreen('entry-a')">Entry A — Two Fields</button>
   <button onclick="showScreen('entry-b')">Entry B — Score + Expander</button>
   <button onclick="showScreen('entry-c')">Entry C — Stacked Rows</button>
+  <button onclick="showScreen('phase1')">Phase 1 — Batch Base</button>
+  <button onclick="showScreen('phase2')">Phase 2 — Score Entry</button>
   <button onclick="showScreen('gameover')">Game Over</button>
 </div>
 
@@ -691,6 +742,7 @@ body {
         </div>
 
         <div class="scrollable">
+          <button class="btn-score-round" onclick="openSheet('sb','Sandra',3840,'meld-120','Meld 120')">▶ Score Round 4</button>
           <div class="section-label">Standings · Goal 5000</div>
 
           <!-- Player 1 — near win, meld 120 -->
@@ -1162,7 +1214,217 @@ body {
 </div>
 
 <!-- ════════════════════════════════════
-     SCREEN 5: GAME OVER
+     SCREEN 5: PHASE 1 — BATCH BASE ENTRY
+════════════════════════════════════ -->
+<div class="screen-view" id="screen-phase1">
+  <div class="phone-wrapper">
+    <div class="phone-label">Phase 1 · Batch Base Entry</div>
+    <div class="phone-frame">
+      <div class="phone-screen theme-dark" id="phone-p1">
+        <div class="status-bar"><span>9:41</span><div class="status-icons">▶ ●●●● ⬛</div></div>
+        <div class="app-bar">
+          <div class="app-bar-title">Nobody's Keeping Score<small>Room · 4827</small></div>
+          <button class="icon-btn">⋯</button>
+        </div>
+        <div class="game-strip">
+          <span class="game-strip-name">Canasta</span>
+          <span class="game-strip-round">Round 4</span>
+          <span class="game-strip-suits">♠ ♥ ♦ ♣</span>
+        </div>
+        <div class="scrollable">
+          <button class="btn-score-round">▶ Score Round 4</button>
+          <div class="section-label">Standings · Goal 5000</div>
+          <div class="player-score-row" style="pointer-events:none">
+            <div class="player-avatar av-ruby">K</div>
+            <div class="player-info">
+              <div class="player-name">Kim</div>
+              <div class="player-sub"><span class="meld-badge meld-90">Meld 90</span></div>
+            </div>
+            <div class="score-display"><div class="score-num">1,240</div></div>
+          </div>
+          <div class="player-score-row" style="pointer-events:none">
+            <div class="player-avatar av-green">K</div>
+            <div class="player-info">
+              <div class="player-name">Kelly</div>
+              <div class="player-sub"><span class="meld-badge meld-50">Meld 50</span></div>
+            </div>
+            <div class="score-display"><div class="score-num">840</div></div>
+          </div>
+          <div class="player-score-row" style="pointer-events:none">
+            <div class="player-avatar av-gold">A</div>
+            <div class="player-info">
+              <div class="player-name">Allen</div>
+              <div class="player-sub"><span class="meld-badge meld-none">No min.</span></div>
+            </div>
+            <div class="score-display"><div class="score-num negative">−85</div></div>
+          </div>
+        </div>
+
+        <!-- Batch base sheet — open -->
+        <div class="sheet-overlay" style="opacity:1;pointer-events:all;"></div>
+        <div class="bottom-sheet" style="transform:translateY(0);">
+          <div class="sheet-handle"></div>
+          <div class="sheet-header">
+            <div>
+              <div class="sheet-player-name" style="display:flex;align-items:center;gap:8px;">
+                Round 4 · Base
+                <span class="sheet-phase-label phase-base">Phase 1 of 2</span>
+              </div>
+              <div class="sheet-meta">Enter base for all players · defaults to 0</div>
+            </div>
+          </div>
+          <div class="base-entry-row">
+            <div class="player-avatar av-ruby" style="width:30px;height:30px;font-size:0.75rem;">K</div>
+            <div class="base-player-info">
+              <div class="base-player-name">Kim</div>
+              <div class="base-player-score">Current · 1,240</div>
+            </div>
+            <div class="base-quick-wrap">
+              <div class="base-quick-label">Base</div>
+              <input class="base-quick-input" type="number" placeholder="0" value="25">
+            </div>
+          </div>
+          <div class="base-entry-row">
+            <div class="player-avatar av-green" style="width:30px;height:30px;font-size:0.75rem;">K</div>
+            <div class="base-player-info">
+              <div class="base-player-name">Kelly</div>
+              <div class="base-player-score">Current · 840</div>
+            </div>
+            <div class="base-quick-wrap">
+              <div class="base-quick-label">Base</div>
+              <input class="base-quick-input" type="number" placeholder="0">
+            </div>
+          </div>
+          <div class="base-entry-row">
+            <div class="player-avatar av-gold" style="width:30px;height:30px;font-size:0.75rem;">A</div>
+            <div class="base-player-info">
+              <div class="base-player-name">Allen</div>
+              <div class="base-player-score">Current · −85</div>
+            </div>
+            <div class="base-quick-wrap">
+              <div class="base-quick-label">Base</div>
+              <input class="base-quick-input" type="number" placeholder="0">
+            </div>
+          </div>
+          <div style="padding:10px 14px 14px;">
+            <button class="btn-confirm">Lock Bases &amp; Start Scores</button>
+          </div>
+        </div>
+
+        <div class="tab-bar">
+          <div class="tab-item active"><div class="tab-icon">📋</div><div class="tab-label">Scores</div></div>
+          <div class="tab-item"><div class="tab-icon">📜</div><div class="tab-label">History</div></div>
+          <div class="tab-item"><div class="tab-icon">⚙️</div><div class="tab-label">Settings</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════
+     SCREEN 6: PHASE 2 — SCORE ENTRY (SCORE ONLY)
+════════════════════════════════════ -->
+<div class="screen-view" id="screen-phase2">
+  <div class="phone-wrapper">
+    <div class="phone-label">Phase 2 · Score Entry (per player)</div>
+    <div class="phone-frame">
+      <div class="phone-screen theme-dark" id="phone-p2">
+        <div class="status-bar"><span>9:41</span><div class="status-icons">▶ ●●●● ⬛</div></div>
+        <div class="app-bar">
+          <div class="app-bar-title">Nobody's Keeping Score<small>Room · 4827</small></div>
+          <button class="icon-btn">⋯</button>
+        </div>
+        <div class="game-strip">
+          <span class="game-strip-name">Canasta</span>
+          <span class="game-strip-round">Round 4</span>
+          <span class="game-strip-suits">♠ ♥ ♦ ♣</span>
+        </div>
+        <div class="scrollable">
+          <div class="section-label">Standings · Goal 5000</div>
+          <div class="player-score-row" style="pointer-events:none">
+            <div class="player-avatar av-ruby">K</div>
+            <div class="player-info">
+              <div class="player-name">Kim</div>
+              <div class="player-sub"><span class="meld-badge meld-90">Meld 90</span></div>
+            </div>
+            <div class="score-display"><div class="score-num">1,240</div></div>
+            <div class="tap-arrow">›</div>
+          </div>
+          <div class="player-score-row" style="pointer-events:none">
+            <div class="player-avatar av-green">K</div>
+            <div class="player-info">
+              <div class="player-name">Kelly</div>
+              <div class="player-sub"><span class="meld-badge meld-50">Meld 50</span></div>
+            </div>
+            <div class="score-display"><div class="score-num">840</div></div>
+            <div class="tap-arrow">›</div>
+          </div>
+          <div class="player-score-row" style="pointer-events:none">
+            <div class="player-avatar av-gold">A</div>
+            <div class="player-info">
+              <div class="player-name">Allen</div>
+              <div class="player-sub"><span class="meld-badge meld-none">No min.</span></div>
+            </div>
+            <div class="score-display"><div class="score-num negative">−85</div></div>
+            <div class="tap-arrow">›</div>
+          </div>
+        </div>
+
+        <!-- Score-only sheet — open for Kim, base=25 locked -->
+        <div class="sheet-overlay" style="opacity:1;pointer-events:all;"></div>
+        <div class="bottom-sheet" style="transform:translateY(0);">
+          <div class="sheet-handle"></div>
+          <div class="sheet-header">
+            <div>
+              <div class="sheet-player-name" style="display:flex;align-items:center;gap:8px;">
+                Kim
+                <span class="sheet-phase-label phase-score">Phase 2 of 2</span>
+              </div>
+              <div class="sheet-meta">
+                Score <span class="meta-score">1,240</span>
+                &nbsp;·&nbsp;
+                <span class="meta-meld" style="color:var(--amber-400)">Meld 90</span>
+              </div>
+            </div>
+            <button class="sheet-close">✕</button>
+          </div>
+          <div class="entry-body">
+            <div class="live-math" style="display:flex;flex-wrap:wrap;gap:5px;align-items:center;">
+              <span class="math-prev">1,240</span>
+              <span class="math-op">+</span>
+              <span class="math-val locked-val">25</span>
+              <span class="math-locked-badge">base</span>
+              <span class="math-op">+</span>
+              <span class="math-val score-val" id="p2-math-score">—</span>
+              <span class="math-eq">=</span>
+              <span class="math-result" id="p2-math-result">?</span>
+            </div>
+            <div class="entry-rows-c">
+              <div class="entry-row-c active-row">
+                <div class="row-c-label" style="background:rgba(39,158,94,0.12);border-color:var(--felt-700)">
+                  <div class="row-c-label-text lbl-score">Score</div>
+                  <div class="row-c-label-sub">this round</div>
+                </div>
+                <input class="row-c-input" type="number" id="p2-score"
+                  oninput="updateP2Math()" placeholder="—" style="color:var(--felt-300)">
+              </div>
+            </div>
+            <button class="btn-confirm" id="p2-confirm" disabled>Confirm Round Score</button>
+          </div>
+        </div>
+
+        <div class="tab-bar">
+          <div class="tab-item active"><div class="tab-icon">📋</div><div class="tab-label">Scores</div></div>
+          <div class="tab-item"><div class="tab-icon">📜</div><div class="tab-label">History</div></div>
+          <div class="tab-item"><div class="tab-icon">⚙️</div><div class="tab-label">Settings</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════
+     SCREEN 7: GAME OVER
 ════════════════════════════════════ -->
 <div class="screen-view" id="screen-gameover">
   <div class="phone-wrapper">
@@ -1296,6 +1558,26 @@ body {
   </ul>
 </div>
 
+<div class="annotations" id="ann-phase1" style="display:none">
+  <h3>Phase 1 — Batch Base Entry</h3>
+  <ul class="ann-list">
+    <li><strong>"Score Round" button</strong> appears at the top of the scoreboard scrollable area. Tapping it opens this sheet — no per-player row tap needed to start a round.</li>
+    <li><strong>All players listed at once.</strong> Avatar, name, and current score shown for context. Each player has a compact amber Base input on the right. Any order — fill in whoever is ready first.</li>
+    <li><strong>Base defaults to 0.</strong> Placeholder shows "0". If nothing is entered, 0 is used when bases are locked. No required entry — keeps the flow fast when base is zero for everyone.</li>
+    <li><strong>"Lock Bases &amp; Start Scores" button</strong> confirms all base values and closes the sheet. Phase 2 begins immediately — the scoreboard returns and the host taps each player as they finish counting cards.</li>
+  </ul>
+</div>
+
+<div class="annotations" id="ann-phase2" style="display:none">
+  <h3>Phase 2 — Score Entry (per player, any order)</h3>
+  <ul class="ann-list">
+    <li><strong>Same scoreboard, same tap-to-open flow.</strong> No visual change to player rows — the host taps whoever is ready first. No queue, no waiting.</li>
+    <li><strong>Score-only sheet.</strong> The Base field is gone — base was already locked in Phase 1. Only the Score input appears, reducing entry to a single field per player.</li>
+    <li><strong>Locked base in the math bar.</strong> The base value from Phase 1 is shown in amber with a small "base" chip so it's clear it's already confirmed. The full equation <em>prev + base + score = result</em> still updates live as Score is typed.</li>
+    <li><strong>Confirm closes the sheet.</strong> Running total and meld badge update immediately. Repeat for remaining players until the round is complete.</li>
+  </ul>
+</div>
+
 <div class="annotations" id="ann-gameover" style="display:none">
   <h3>Game Over Screen — Design Notes</h3>
   <ul class="ann-list">
@@ -1310,12 +1592,14 @@ body {
 <script>
 let isDark = true;
 
-const screens = ['scoreboard','entry-a','entry-b','entry-c','gameover'];
+const screens = ['scoreboard','entry-a','entry-b','entry-c','phase1','phase2','gameover'];
 const annMap = {
   'scoreboard':'ann-scoreboard',
   'entry-a':'ann-entry-a',
   'entry-b':'ann-entry-b',
   'entry-c':'ann-entry-c',
+  'phase1':'ann-phase1',
+  'phase2':'ann-phase2',
   'gameover':'ann-gameover'
 };
 
@@ -1479,6 +1763,26 @@ function activateRow(rowId, labelId, type) {
 }
 function deactivateRow(rowId, labelId, type) {
   // keep active-row on score by default
+}
+
+/* ── Phase 2 math ── */
+function updateP2Math() {
+  const base = 25; // locked from Phase 1
+  const scoreVal = document.getElementById('p2-score').value;
+  if (scoreVal === '') {
+    document.getElementById('p2-math-score').textContent = '—';
+    document.getElementById('p2-math-result').textContent = '?';
+    document.getElementById('p2-confirm').disabled = true;
+    return;
+  }
+  const s = parseFloat(scoreVal) || 0;
+  const result = 1240 + base + s;
+  document.getElementById('p2-math-score').textContent = s;
+  document.getElementById('p2-math-score').className = 'math-val ' + (s < 0 ? 'neg-val' : 'score-val');
+  const resEl = document.getElementById('p2-math-result');
+  resEl.textContent = result.toLocaleString();
+  resEl.className = 'math-result' + (result < 0 ? ' neg-result' : '');
+  document.getElementById('p2-confirm').disabled = false;
 }
 
 showScreen('scoreboard');
